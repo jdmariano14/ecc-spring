@@ -18,7 +18,7 @@ public class Person {
 
   private Date dateHired;
 
-  private boolean currentlyEmployed;
+  private boolean employed;
 
   private Collection<ContactDetail> contactDetails;
 
@@ -72,12 +72,12 @@ public class Person {
     dateHired = newDateHired;
   }
 
-  public boolean getCurrentlyEmployed() {
-    return currentlyEmployed;
+  public boolean isEmployed() {
+    return employed;
   }
 
-  public void setCurrentlyEmployed(boolean newCurrentlyEmployed) {
-    currentlyEmployed = newCurrentlyEmployed;
+  public void setEmployed(boolean newEmployed) {
+    employed = newEmployed;
   }
 
   public Collection<ContactDetail> getContactDetails() {
