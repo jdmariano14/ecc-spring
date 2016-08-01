@@ -25,7 +25,7 @@ public class Person {
   private Collection<Role> roles;
 
   public long getPersonId() {
-    return PersonId;
+    return personId;
   }
 
   public void setPersonId(long newPersonId) {
