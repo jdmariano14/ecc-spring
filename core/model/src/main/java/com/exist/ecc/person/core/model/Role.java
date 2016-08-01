@@ -6,4 +6,20 @@ public class Role {
   
   private String name;
 
+  public long getRoleId() {
+    return roleId;
+  }
+
+  public void setRoleId(long newRoleId) {
+    roleId = newRoleId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String newName) {
+    name = newName;
+  }
+
 }
