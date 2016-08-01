@@ -22,7 +22,7 @@ public class Person {
 
   private Collection<ContactInfo> contactInfo;
 
-  private Collection<Role> role;
+  private Collection<Role> roles;
 
   public long getPersonId() {
     return PersonId;
@@ -89,10 +89,10 @@ public class Person {
   }
 
   public Collection<Role> getRole() {
-    return role;
+    return roles;
   }
 
   public void setRole(Collection<Role> newRole) {
-    role = newRole;
+    roles = newRole;
   }
 }
