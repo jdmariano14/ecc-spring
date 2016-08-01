@@ -1,5 +1,5 @@
 package com.exist.ecc.person.core.model;
 
-public class Mobile extends ContactInfo {
+public class Mobile extends ContactDetail {
   
 }

@@ -20,7 +20,7 @@ public class Person {
 
   private boolean currentlyEmployed;
 
-  private Collection<ContactInfo> contactInfo;
+  private Collection<ContactDetail> contactDetails;
 
   private Collection<Role> roles;
 
@@ -80,12 +80,12 @@ public class Person {
     currentlyEmployed = newCurrentlyEmployed;
   }
 
-  public Collection<ContactInfo> getContactInfo() {
-    return contactInfo;
+  public Collection<ContactDetail> getContactDetails() {
+    return contactDetails;
   }
 
-  public void setContactInfo(Collection<ContactInfo> newContactInfo) {
-    contactInfo = newContactInfo;
+  public void setContactDetails(Collection<ContactDetail> newContactDetails) {
+    contactDetails = newContactDetails;
   }
 
   public Collection<Role> getRole() {
