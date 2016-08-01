@@ -1,5 +1,9 @@
 package com.exist.ecc.person.core.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Collection;
+
 public class Person {
 
   private long personId;
