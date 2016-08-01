@@ -2,8 +2,12 @@ package com.exist.ecc.person.core.model;
 
 public abstract class ContactDetail {
 
+  private long contactDetailId;
+
   private String detail;
-  
+
+  private Person person;
+
   public String getDetail() {
     return detail;
   }
