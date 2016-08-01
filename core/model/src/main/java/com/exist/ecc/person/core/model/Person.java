@@ -88,11 +88,11 @@ public class Person {
     contactDetails = newContactDetails;
   }
 
-  public Collection<Role> getRole() {
+  public Collection<Role> getRoles() {
     return roles;
   }
 
-  public void setRole(Collection<Role> newRole) {
+  public void setRoles(Collection<Role> newRole) {
     roles = newRole;
   }
 }
