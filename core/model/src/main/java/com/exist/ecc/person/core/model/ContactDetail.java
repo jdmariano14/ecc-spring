@@ -8,6 +8,14 @@ public abstract class ContactDetail {
 
   private Person person;
 
+  public long getContactDetailId() {
+    return contactDetailId;
+  }
+
+  public void setContactDetailId(long newContactDetailId) {
+    contactDetailId = newContactDetailId;
+  }
+
   public String getDetail() {
     return detail;
   }
@@ -18,6 +26,14 @@ public abstract class ContactDetail {
     } else {
       throw new IllegalArgumentException();
     }
+  }
+
+  public Person getPerson() {
+    return person;
+  }
+
+  public void setPerson(Person newPerson) {
+    person = newPerson;
   }
 
   protected abstract boolean isValidDetail(String detail);
