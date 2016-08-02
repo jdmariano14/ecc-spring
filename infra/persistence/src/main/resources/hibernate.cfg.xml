@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+  "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+  <session-factory>
+    <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+    <property name="connection.driver_class">com.postgresql.Driver</property>
+    <property name="connection.url">jdbc:postgresql://${hibernate_host}</property>
+    <property name="connection.username">${hibernate_username}</property>
+    <property name="connection.password">${hibernate_password}</property>
+
+    <property name="show_sql">true</property>
+
+    <mapping class="com.exist.ecc.person.core.model.Person"/>
+    <mapping class="com.exist.ecc.person.core.model.Role"/>
+    <mapping class="com.exist.ecc.person.core.model.ContactDetail"/>
+  </session-factory>
+</hibernate-configuration>
