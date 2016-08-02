@@ -5,13 +5,10 @@
 
 <hibernate-configuration>
   <session-factory>
-    <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-    <property name="connection.driver_class">com.postgresql.Driver</property>
-    <property name="connection.url">jdbc:postgresql://${hibernate_host}</property>
-    <property name="connection.username">${hibernate_username}</property>
-    <property name="connection.password">${hibernate_password}</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
 
-    <property name="show_sql">true</property>
+    <property name="hibernate.show_sql">true</property>
 
     <mapping class="com.exist.ecc.person.core.model.Person"/>
     <mapping class="com.exist.ecc.person.core.model.Role"/>
