@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>com.exist.ecc</groupId>
-  <artifactId>ecc-hibernate-buildtools</artifactId>
+  <artifactId>ecc-hibernate-infra-buildtools</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>buildtools</name>
   <url>http://maven.apache.org</url>
