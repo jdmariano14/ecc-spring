@@ -25,7 +25,7 @@ public class AbstractDao<T, I extends Serializable> implements Dao<T, I> {
   }
   
   protected Session getSession() {
-    if(this.session == null) {
+    if (this.session == null) {
       this.session = HibernateUtil.getSessionFactory().getCurrentSession();
     }
     return this.session;
@@ -48,7 +48,7 @@ public class AbstractDao<T, I extends Serializable> implements Dao<T, I> {
   protected List<T> findByCriteria(Criterion ... crit) {
     Criteria criteria = this.getSession().createCriteria(this.getPersistentClass());
     
-    for(Criterion c : crit) {
+    for (Criterion c : crit) {
       criteria.add(c);
     }
 
