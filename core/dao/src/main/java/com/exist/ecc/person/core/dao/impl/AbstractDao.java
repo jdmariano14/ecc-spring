@@ -41,12 +41,12 @@ public class AbstractDao<T, I extends Serializable> implements Dao<T, I> {
   }
   
   @Override
-  public T findById(I id) {
+  public T get(I id) {
     return (T) getSession().load(this.getPersistentClass(), id);
   }
 
   @Override
-  public List<T> findAll() {
+  public List<T> getAll() {
     return this.findByCriteria();
   }
 

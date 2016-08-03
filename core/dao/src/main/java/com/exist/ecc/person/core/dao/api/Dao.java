@@ -6,13 +6,13 @@ import org.hibernate.Session;
 
 public interface Dao<T, I> {
 
-  public abstract T findById(I id);
-
-  public default T get(I id) {
-    return findById(id);
+  public abstract T get(I id);
+  
+  public default T find(I id) {
+    return get(id);
   }
   
-  public abstract List<T> findAll();
+  public abstract List<T> getAll();
   
   public abstract T save(T entity);
   
