@@ -100,7 +100,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>com.exist.ecc.person.core.dao.App</mainClass>
+                  <mainClass>com.exist.ecc.person.app.App</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
