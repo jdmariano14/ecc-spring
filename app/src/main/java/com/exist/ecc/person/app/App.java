@@ -33,7 +33,7 @@ public class App {
     PromptUtil.setScanner(scanner);
     
     String[] options = {
-      "add role", "exit"
+      "add role", "list role", "exit"
     };
 
     try {
@@ -70,6 +70,9 @@ public class App {
       case "add role":
         addRole();
         break;
+      case "list role":
+        listRole();
+        break;
       case "exit":
         return false;
     }
@@ -80,16 +83,30 @@ public class App {
   private static void addRole() {
     Transaction transaction;
     List<String> errors = new ArrayList();
-
     Role role = new Role();
-    
+    RoleDao roleDao = new RoleHibernateDao(session);
+
     String name = PromptUtil.promptForValidField("role name", RoleValidator::validateName, InvalidInputStrategy.THROW_EXCEPTION);
-    
+  
     role.setName(name);
 
     transaction = session.beginTransaction();
-    session.save(role);
+    roleDao.save(role);
     transaction.commit();
+  }
+
+  private static void listRole() {
+    Transaction transaction;
+    List<Role> roles;
+    RoleDao roleDao = new RoleHibernateDao(session);
+
+    transaction = session.beginTransaction();
+    roles = roleDao.getAll();
+    transaction.commit();
+
+    for (Role role : roles) {
+      System.out.println(role);
+    }
   }
 
   private static void diene() {
