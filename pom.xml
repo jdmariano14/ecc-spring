@@ -56,12 +56,17 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>ecc-hibernate-core-dao</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>ecc-hibernate-core-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>ecc-hibernate-core-dao</artifactId>
+        <artifactId>ecc-hibernate-core-service</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

@@ -18,11 +18,15 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>ecc-hibernate-core-dao</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>ecc-hibernate-core-model</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-hibernate-core-dao</artifactId>
+      <artifactId>ecc-hibernate-core-service</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>

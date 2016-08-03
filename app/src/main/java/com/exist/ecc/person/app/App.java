@@ -3,6 +3,9 @@ package com.exist.ecc.person.app;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -14,13 +17,13 @@ import com.exist.ecc.person.util.HibernateUtil;
 import com.exist.ecc.person.core.model.Role;
 import com.exist.ecc.person.core.dao.api.RoleDao;
 import com.exist.ecc.person.core.dao.impl.RoleHibernateDao;
+import com.exist.ecc.person.core.service.validation.RoleValidator;
 
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Address;
 import com.exist.ecc.person.core.dao.api.PersonDao;
 import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
-
 
 public class App {
   private static Session session = HibernateUtil.getSessionFactory().openSession();
@@ -69,10 +72,23 @@ public class App {
 
   private static void addRole() {
     Transaction transaction = session.beginTransaction();
-    String name = PromptUtil.promptForLine("Enter the role name: ");
+    List<String> errors = new ArrayList();
+
     Role role = new Role();
+    String name;
+
+    do {
+      name = PromptUtil.promptForLine("Enter the role name: ");
+      errors.addAll(RoleValidator.validateName(name));
+
+      if (errors.size() > 0) {
+        String errMsg = errors.stream().collect(Collectors.joining(", ", "Please correct the ff. error(s): ", ""));
+        System.out.print(errMsg);
+      }
+    } while (errors.size() > 0);
     
     role.setName(name);
+
     session.save(role);
     transaction.commit();
   }
