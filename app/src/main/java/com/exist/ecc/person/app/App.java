@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,6 +14,8 @@ import com.exist.ecc.person.util.HibernateUtil;
 import com.exist.ecc.person.util.MenuUtil;
 import com.exist.ecc.person.util.PromptUtil;
 import com.exist.ecc.person.util.InvalidInputStrategy;
+
+import com.exist.ecc.person.core.dao.Transactions;
 
 import com.exist.ecc.person.core.model.Role;
 import com.exist.ecc.person.core.dao.api.RoleDao;
@@ -26,7 +29,6 @@ import com.exist.ecc.person.core.dao.api.PersonDao;
 import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
 
 public class App {
-  private static Session session;
 
   public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
@@ -37,26 +39,19 @@ public class App {
     };
 
     try {
-      session = HibernateUtil.getSessionFactory().openSession();
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException("Database connection failed.");
-    }
-
-    try {
       while (appLoop(options)) {
         continue;
       }
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      session.close();
       HibernateUtil.getSessionFactory().close();
     }
 
   }
 
   private static boolean appLoop(String[] options) {
+    System.out.println();
     System.out.println("Select an action:");
     System.out.println(MenuUtil.getMenu(options));
 
@@ -81,32 +76,25 @@ public class App {
   }
 
   private static void addRole() {
-    Transaction transaction;
-    List<String> errors = new ArrayList();
     Role role = new Role();
-    RoleDao roleDao = new RoleHibernateDao(session);
+    RoleDao roleDao = new RoleHibernateDao();
 
     String name = PromptUtil.promptForValidField("role name", RoleValidator::validateName, InvalidInputStrategy.THROW_EXCEPTION);
   
     role.setName(name);
 
-    transaction = session.beginTransaction();
-    roleDao.save(role);
-    transaction.commit();
+    Transactions.conduct(roleDao, () -> { 
+      roleDao.save(role); 
+    });
   }
 
   private static void listRole() {
-    Transaction transaction;
-    List<Role> roles;
-    RoleDao roleDao = new RoleHibernateDao(session);
+    Role role = new Role();
+    RoleDao roleDao = new RoleHibernateDao();
 
-    transaction = session.beginTransaction();
-    roles = roleDao.getAll();
-    transaction.commit();
-
-    for (Role role : roles) {
-      System.out.println(role);
-    }
+    Transactions.conduct(roleDao, () -> { 
+      roleDao.getAll().forEach(System.out::println); 
+    });
   }
 
   private static void diene() {
