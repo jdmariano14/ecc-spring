@@ -1,6 +1,10 @@
 package com.exist.ecc.person.util;
 
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class PromptUtil {
   private static Scanner scanner;
@@ -31,6 +35,38 @@ public class PromptUtil {
     System.out.print(promptMsg);
 
     return scanner.nextLine();
+  }
+
+  public static String promptForValidField(String fieldName, Function<String, List<String>> validator, boolean loop) {
+    String fieldInput = null;
+
+    while (loop) {
+      List<String> errors = new ArrayList();
+      StringBuilder promptMsg = new StringBuilder();
+      promptMsg.append("Enter the ");
+      promptMsg.append(fieldName);
+      promptMsg.append(": ");
+
+      fieldInput = promptForLine(promptMsg.toString());
+      errors.addAll(validator.apply(fieldInput));
+
+      if (errors.size() > 0) {
+        StringBuilder errMsg = new StringBuilder();
+        errMsg.append(loop ? "Please correct " : "Operation aborted due to ");
+        errMsg.append("the ff. errors: ");
+        errMsg.append(errors.stream().collect(Collectors.joining(", ")));
+
+        System.out.println(errMsg.toString());
+
+        if (!loop) {
+          return null;
+        }
+      } else {
+        loop = false;
+      }
+    }
+
+    return fieldInput;
   }
 
 }

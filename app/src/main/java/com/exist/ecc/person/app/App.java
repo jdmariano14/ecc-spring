@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -75,21 +74,11 @@ public class App {
     List<String> errors = new ArrayList();
 
     Role role = new Role();
-    String name;
-
-    do {
-      errors.clear();
-
-      name = PromptUtil.promptForLine("Enter the role name: ");
-      errors.addAll(RoleValidator.validateName(name));
-
-      if (errors.size() > 0) {
-        String errMsg = errors.stream().collect(Collectors.joining(", ", "Please correct the ff. error(s): ", ""));
-        System.out.println(errMsg);
-      }
-    } while (errors.size() > 0);
+    String name = PromptUtil.promptForValidField("role name", RoleValidator::validateName, true);
     
-    role.setName(name);
+    if (name != null) { 
+      role.setName(name);
+    }
 
     session.save(role);
     transaction.commit();
