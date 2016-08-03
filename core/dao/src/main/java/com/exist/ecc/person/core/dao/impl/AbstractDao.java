@@ -19,6 +19,11 @@ public class AbstractDao<T, I extends Serializable> implements Dao<T, I> {
   public AbstractDao() {
     this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
   }
+
+  public AbstractDao(Session session) {
+    this();
+    setSession(session);
+  }
   
   public void setSession(Session session) {
     this.session = session;

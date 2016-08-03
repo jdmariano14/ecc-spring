@@ -11,11 +11,14 @@ import com.exist.ecc.person.util.HibernateUtil;
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Address;
+import com.exist.ecc.person.core.dao.api.PersonDao;
+import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
 
 public class App {
 
   public static void main( String[] args ) {
     Session session = HibernateUtil.getSessionFactory().openSession();
+    PersonDao personDao = new PersonHibernateDao(session);
 
     try {
       Transaction transaction = session.beginTransaction();
@@ -39,7 +42,7 @@ public class App {
       diene.setName(name);
       diene.setAddress(address);
 
-      session.save(diene);
+      personDao.save(diene);
       
       transaction.commit();
       
