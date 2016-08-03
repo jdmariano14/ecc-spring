@@ -26,18 +26,25 @@ import com.exist.ecc.person.core.dao.api.PersonDao;
 import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
 
 public class App {
-  private static Session session = HibernateUtil.getSessionFactory().openSession();
+  private static Session session;
 
   public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
     PromptUtil.setScanner(scanner);
-
+    
     String[] options = {
       "add role", "exit"
     };
 
     try {
-      while (selectAction(options)) {
+      session = HibernateUtil.getSessionFactory().openSession();
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException("Database connection failed.");
+    }
+
+    try {
+      while (appLoop(options)) {
         continue;
       }
     } catch (Exception e) {
@@ -49,7 +56,7 @@ public class App {
 
   }
 
-  private static boolean selectAction(String[] options) {
+  private static boolean appLoop(String[] options) {
     System.out.println("Select an action:");
     System.out.println(MenuUtil.getMenu(options));
 
