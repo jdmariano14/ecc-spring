@@ -37,10 +37,10 @@ public class PromptUtil {
     return scanner.nextLine();
   }
 
-  public static String promptForValidField(String fieldName, Function<String, List<String>> validator, boolean loop) {
+  public static String promptForValidField(String fieldName, Function<String, List<String>> validator, InvalidInputStrategy strat) {
     String fieldInput = null;
 
-    while (loop) {
+    while (true) {
       List<String> errors = new ArrayList();
       StringBuilder promptMsg = new StringBuilder();
       promptMsg.append("Enter the ");
@@ -52,17 +52,31 @@ public class PromptUtil {
 
       if (errors.size() > 0) {
         StringBuilder errMsg = new StringBuilder();
-        errMsg.append(loop ? "Please correct " : "Operation aborted due to ");
+
+        switch (strat) {
+          case THROW_EXCEPTION:
+            errMsg.append("Exception caused by");
+          case RETURN_NULL:
+            errMsg.append("Operation aborted due to ");
+          case ASK_AGAIN:
+            errMsg.append("Please correct ");
+        }
+
         errMsg.append("the ff. errors: ");
         errMsg.append(errors.stream().collect(Collectors.joining(", ")));
 
-        System.out.println(errMsg.toString());
-
-        if (!loop) {
-          return null;
+        switch (strat) {
+          case THROW_EXCEPTION:
+            throw new RuntimeException(errMsg.toString());
+          case RETURN_NULL:
+            System.out.println(errMsg.toString());
+            return null;
+          case ASK_AGAIN:
+            System.out.println(errMsg.toString());
+            continue;
         }
       } else {
-        loop = false;
+        break;
       }
     }
 

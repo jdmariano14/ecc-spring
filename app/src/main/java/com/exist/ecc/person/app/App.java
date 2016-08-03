@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.exist.ecc.person.util.HibernateUtil;
 import com.exist.ecc.person.util.MenuUtil;
 import com.exist.ecc.person.util.PromptUtil;
-import com.exist.ecc.person.util.HibernateUtil;
+import com.exist.ecc.person.util.InvalidInputStrategy;
 
 import com.exist.ecc.person.core.model.Role;
 import com.exist.ecc.person.core.dao.api.RoleDao;
@@ -70,16 +71,16 @@ public class App {
   }
 
   private static void addRole() {
-    Transaction transaction = session.beginTransaction();
+    Transaction transaction;
     List<String> errors = new ArrayList();
 
     Role role = new Role();
-    String name = PromptUtil.promptForValidField("role name", RoleValidator::validateName, true);
     
-    if (name != null) { 
-      role.setName(name);
-    }
+    String name = PromptUtil.promptForValidField("role name", RoleValidator::validateName, InvalidInputStrategy.THROW_EXCEPTION);
+    
+    role.setName(name);
 
+    transaction = session.beginTransaction();
     session.save(role);
     transaction.commit();
   }
