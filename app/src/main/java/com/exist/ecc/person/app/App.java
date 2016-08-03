@@ -35,7 +35,7 @@ public class App {
     PromptUtil.setScanner(scanner);
     
     String[] options = {
-      "add role", "list role", "update role", "exit"
+      "add role", "update role", "delete role", "list role", "exit"
     };
 
     try {
@@ -67,6 +67,9 @@ public class App {
         break;
       case "update role":
         updateRole();
+        break;
+      case "delete role":
+        deleteRole();
         break;
       case "list role":
         listRole();
@@ -112,6 +115,26 @@ public class App {
       if (name != null) {
         role.setName(name);
         roleDao.save(role);
+      }
+    });
+  }
+
+  private static void deleteRole() {
+    RoleDao roleDao = new RoleHibernateDao();
+
+    long id = PromptUtil.promptForLong("Enter role ID: ");
+
+    Transactions.conduct(roleDao, () -> { 
+      Role role = roleDao.get(id);
+      String choice;
+      StringBuilder confirmMsg = new StringBuilder("Confirm delete of role '");
+      confirmMsg.append(role.getName());
+      confirmMsg.append("' (y/n): ");
+
+      choice = PromptUtil.promptForLine(confirmMsg.toString());
+
+      if (choice.equalsIgnoreCase("Y")) {
+        roleDao.delete(role);
       }
     });
   }
