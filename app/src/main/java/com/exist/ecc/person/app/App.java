@@ -35,7 +35,7 @@ public class App {
     PromptUtil.setScanner(scanner);
     
     String[] options = {
-      "add role", "list role", "exit"
+      "add role", "list role", "update role", "exit"
     };
 
     try {
@@ -65,6 +65,9 @@ public class App {
       case "add role":
         addRole();
         break;
+      case "update role":
+        updateRole();
+        break;
       case "list role":
         listRole();
         break;
@@ -79,12 +82,37 @@ public class App {
     Role role = new Role();
     RoleDao roleDao = new RoleHibernateDao();
 
-    String name = PromptUtil.promptForValidField("role name", RoleValidator::validateName, InvalidInputStrategy.THROW_EXCEPTION);
+    String name = PromptUtil.promptForValidField(
+                    "Enter the name:", 
+                    RoleValidator::validateName, 
+                    InvalidInputStrategy.THROW_EXCEPTION
+                  );
   
     role.setName(name);
 
     Transactions.conduct(roleDao, () -> { 
-      roleDao.save(role); 
+      roleDao.save(role);
+    });
+  }
+
+  private static void updateRole() {
+    RoleDao roleDao = new RoleHibernateDao();
+
+    long id = PromptUtil.promptForLong("Enter role ID: ");
+
+    Transactions.conduct(roleDao, () -> { 
+      Role role = roleDao.get(id);
+
+      String name = PromptUtil.promptForValidField(
+                    "Enter the name (" + role.getName() + "): ", 
+                    RoleValidator::validateName, 
+                    InvalidInputStrategy.RETURN_NULL
+                  );
+      
+      if (name != null) {
+        role.setName(name);
+        roleDao.save(role);
+      }
     });
   }
 

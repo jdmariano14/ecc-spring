@@ -14,7 +14,7 @@ public class PromptUtil {
   }
 
   public static int promptForInt(String promptMsg) {
-    int input = Integer.MIN_VALUE;
+    Integer input = null;
 
     do {
       try {
@@ -22,7 +22,21 @@ public class PromptUtil {
       } catch (NumberFormatException e) {
         System.out.println("Please enter an integer value.");
       }
-    } while (input == Integer.MIN_VALUE);
+    } while (input == null);
+
+    return input;
+  }
+
+  public static long promptForLong(String promptMsg) {
+    Long input = Long.MIN_VALUE;
+
+    do {
+      try {
+        input = Long.parseLong(promptForLine(promptMsg));
+      } catch (NumberFormatException e) {
+        System.out.println("Please enter an integer value.");
+      }
+    } while (input == null);
 
     return input;
   }
@@ -37,17 +51,13 @@ public class PromptUtil {
     return scanner.nextLine();
   }
 
-  public static String promptForValidField(String fieldName, Function<String, List<String>> validator, InvalidInputStrategy strat) {
+  public static String promptForValidField(String promptMsg, Function<String, List<String>> validator, InvalidInputStrategy strat) {
     String fieldInput = null;
 
     while (true) {
       List<String> errors = new ArrayList();
-      StringBuilder promptMsg = new StringBuilder();
-      promptMsg.append("Enter the ");
-      promptMsg.append(fieldName);
-      promptMsg.append(": ");
 
-      fieldInput = promptForLine(promptMsg.toString());
+      fieldInput = promptForLine(promptMsg);
       errors.addAll(validator.apply(fieldInput));
 
       if (errors.size() > 0) {
