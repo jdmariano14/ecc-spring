@@ -8,7 +8,7 @@ public class RoleValidator {
   public static List<String> validateName(String name) {
     List<String> errors = new ArrayList();
 
-    Validations.validatePresence("name", name, errors);
+    errors.addAll(Validations.validatePresence("name", name));
 
     return errors;
   }
