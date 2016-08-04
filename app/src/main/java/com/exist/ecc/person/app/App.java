@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.exist.ecc.person.util.HibernateUtil;
+import com.exist.ecc.person.util.SessionUtil;
 import com.exist.ecc.person.util.MenuUtil;
 import com.exist.ecc.person.util.PromptUtil;
 import com.exist.ecc.person.util.InvalidInputStrategy;
@@ -45,7 +45,7 @@ public class App {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      HibernateUtil.getSessionFactory().close();
+      SessionUtil.getSessionFactory().close();
     }
 
   }
@@ -149,7 +149,7 @@ public class App {
   }
 
   private static void diene() {
-    Session session = HibernateUtil.getSessionFactory().openSession();
+    Session session = SessionUtil.getSessionFactory().openSession();
     PersonDao personDao = new PersonHibernateDao(session);
 
     try {
@@ -182,7 +182,7 @@ public class App {
       e.printStackTrace();
     } finally {
       session.close();
-      HibernateUtil.getSessionFactory().close();
+      SessionUtil.getSessionFactory().close();
     }
   }
 

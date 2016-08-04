@@ -8,7 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 
-import com.exist.ecc.person.util.HibernateUtil;
+import com.exist.ecc.person.util.SessionUtil;
 import com.exist.ecc.person.core.dao.api.Dao;
 
 public class AbstractDao<T, I extends Serializable> implements Dao<T, I> {
@@ -31,7 +31,7 @@ public class AbstractDao<T, I extends Serializable> implements Dao<T, I> {
   
   protected Session getSession() {
     if (this.session == null) {
-      this.session = HibernateUtil.getSessionFactory().getCurrentSession();
+      this.session = SessionUtil.getSessionFactory().getCurrentSession();
     }
     return this.session;
   }
