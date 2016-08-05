@@ -101,8 +101,10 @@ public class App {
     Role role = new Role();
     RoleDao roleDao = new RoleHibernateDao();
 
-    String name = input.getValidString("Enter role name: ", 
-      Validations.getValidation(Role.class, "name"));
+    String name = input.getValidString(
+      "Enter role name: ", 
+      Validations.get(Role.class, "name")
+    );
 
     role.setName(name);
 
@@ -118,14 +120,16 @@ public class App {
 
     Transactions.conduct(roleDao, () -> { 
       Role role = roleDao.get(id);
+      String defaultValue = role.getName();
 
-      String name = input.getValidString("Enter role name: ", 
-        Validations.getValidation(Role.class, "name"));
+      String name = input.getValidString(
+        "Enter role name (" + defaultValue  + "): ", 
+        Validations.get(Role.class, "name"),
+        defaultValue
+      );
       
-      if (name != null) {
-        role.setName(name);
-        roleDao.save(role);
-      }
+      role.setName(name);
+      roleDao.save(role);
     });
   }
 

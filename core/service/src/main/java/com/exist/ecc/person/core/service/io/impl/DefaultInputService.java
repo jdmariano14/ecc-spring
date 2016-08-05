@@ -33,22 +33,30 @@ public class DefaultInputService implements InputService {
   }
 
   @Override
-  public <R> R getInput(String promptMsg, Function<String, R> parse) {
+  public <R> R getInput(String promptMsg, Function<String, R> parse, R defaultValue) {
     return exceptionHandler.handle(() -> {
-      return parse.apply(extractor.extract(promptMsg));
+      String input = extractor.extract(promptMsg);
+      R returnValue = defaultValue != null && input.isEmpty()
+                      ? defaultValue 
+                      : parse.apply(input);
+
+      return returnValue;
     });
   }
 
   @Override
   public <T, R> R getValidInput(String promptMsg, Function<String, R> parse,
-    Consumer<R> validation) 
+    Consumer<R> validation, R defaultValue) 
   {
     return exceptionHandler.handle(() -> {
-      R value = parse.apply(extractor.extract(promptMsg));
+      String input = extractor.extract(promptMsg);
+      R returnValue = defaultValue != null && input.isEmpty()
+                      ? defaultValue 
+                      : parse.apply(input);
 
-      validation.accept(value);
+      validation.accept(returnValue);
 
-      return value;
+      return returnValue;
     });
   }
 }

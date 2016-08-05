@@ -11,9 +11,7 @@ import com.exist.ecc.person.util.ValidateUtil;
 
 public class Validations {
 
-  public static <T, E> Consumer<T> getValidation(Class<E> beanType, 
-    String propertyName) 
-  {
+  public static <T, E> Consumer<T> get(Class<E> beanType, String propertyName) {
     return (T value) -> {
       Validator validator = ValidateUtil.getValidatorFactory().getValidator();
       
