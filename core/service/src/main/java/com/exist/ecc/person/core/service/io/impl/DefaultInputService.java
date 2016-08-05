@@ -1,6 +1,13 @@
 package com.exist.ecc.person.core.service.io.impl;
 
+import java.util.Set;
 import java.util.Scanner;
+import java.util.function.Function;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+
+import com.exist.ecc.person.util.ValidateUtil;
 
 import com.exist.ecc.person.core.service.io.api.InputService;
 import com.exist.ecc.person.core.service.io.api.InputExtractor;
@@ -30,28 +37,28 @@ public class DefaultInputService implements InputService {
   }
 
   @Override
-  public String getString(String promptMsg) {
+  public <R> R getInput(String promptMsg, Function<String, R> parse) {
     return exceptionHandler.handle(() -> {
-      return extractor.extract(promptMsg);
+      return parse.apply(extractor.extract(promptMsg));
     });
   }
 
   @Override
-  public int getInt(String promptMsg) {
+  public <T, R> R getValidInput(String promptMsg, Class<T> beanType, 
+    String propertyName, Function<String, R> parse) 
+  {
     return exceptionHandler.handle(() -> {
-      return Integer.parseInt(extractor.extract(promptMsg));
-    });
-  }
+      R value = parse.apply(extractor.extract(promptMsg));
+      Validator validator = ValidateUtil.getValidatorFactory().getValidator();
+      
+      Set<ConstraintViolation<T>> constraintViolations = 
+        validator.validateValue(beanType, propertyName, value);
 
-  @Override
-  public long getLong(String promptMsg) {
-    return exceptionHandler.handle(() -> {
-      return Long.parseLong(extractor.extract(promptMsg));
-    });
-  }
+      if (!constraintViolations.isEmpty()) {
+        throw new IllegalArgumentException("invalid value");
+      }
 
-  @Override
-  public String getValidInput(String promptMsg) {
-    throw new UnsupportedOperationException();
+      return value;
+    });
   }
 }

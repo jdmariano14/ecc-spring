@@ -26,7 +26,6 @@ import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.model.Role;
 import com.exist.ecc.person.core.dao.api.RoleDao;
 import com.exist.ecc.person.core.dao.impl.RoleHibernateDao;
-import com.exist.ecc.person.core.service.validation.RoleValidator;
 
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Name;
@@ -68,7 +67,7 @@ public class App {
     System.out.println("Select an action:");
     System.out.println(MenuUtil.getMenu(options));
 
-    int choice = input.getInt("");
+    int choice = input.getInput("", Integer::parseInt);
 
     if (choice < 1 || choice > options.length) {
       return true;
@@ -110,7 +109,7 @@ public class App {
   private static void updateRole() {
     RoleDao roleDao = new RoleHibernateDao();
 
-    long id = input.getLong("Enter role ID: ");
+    long id = input.getInput("Enter role ID: ", Long::parseLong);
 
     Transactions.conduct(roleDao, () -> { 
       Role role = roleDao.get(id);
@@ -127,7 +126,7 @@ public class App {
   private static void deleteRole() {
     RoleDao roleDao = new RoleHibernateDao();
 
-    long id = input.getLong("Enter role ID: ");
+    long id = input.getInput("Enter role ID: ", Long::parseLong);
 
     Transactions.conduct(roleDao, () -> { 
       Role role = roleDao.get(id);

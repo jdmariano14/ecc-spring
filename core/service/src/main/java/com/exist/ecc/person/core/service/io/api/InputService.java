@@ -1,13 +1,30 @@
 package com.exist.ecc.person.core.service.io.api;
 
+import java.util.function.Function;
+
 public interface InputService {
 
-  public abstract String getString(String promptMsg);
+  public abstract <R> R getInput(String promptMsg, Function<String, R> parse);
 
-  public abstract int getInt(String promptMsg);
+  public default String getString(String promptMsg) {
+    Function<String, String> identity = (str) -> {
+      return str;
+    };
 
-  public abstract long getLong(String promptMsg);
+    return getInput(promptMsg, identity);
+  }
 
-  public abstract String getValidInput(String promptMsg);
+  public abstract <T, R> R getValidInput(String promptMsg, Class<T> beanType, 
+    String propertyName, Function<String, R> parse);
+
+  public default <T> String getValidString(String promptMsg, Class<T> beanType, 
+    String propertyName) 
+  {
+    Function<String, String> identity = (str) -> {
+      return str;
+    };
+
+    return getValidInput(promptMsg, beanType, propertyName, identity);
+  }
 
 }
