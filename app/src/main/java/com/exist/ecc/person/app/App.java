@@ -23,6 +23,8 @@ import com.exist.ecc.person.util.MenuUtil;
 
 import com.exist.ecc.person.core.dao.Transactions;
 
+import com.exist.ecc.person.core.service.validation.Validations;
+
 import com.exist.ecc.person.core.model.Role;
 import com.exist.ecc.person.core.dao.api.RoleDao;
 import com.exist.ecc.person.core.dao.impl.RoleHibernateDao;
@@ -99,7 +101,8 @@ public class App {
     Role role = new Role();
     RoleDao roleDao = new RoleHibernateDao();
 
-    String name = input.getString("Enter role name: ");
+    String name = input.getValidString("Enter role name: ", 
+      Validations.getValidation(Role.class, "name"));
 
     role.setName(name);
 
@@ -116,7 +119,8 @@ public class App {
     Transactions.conduct(roleDao, () -> { 
       Role role = roleDao.get(id);
 
-      String name = input.getString("Enter role name: ");
+      String name = input.getValidString("Enter role name: ", 
+        Validations.getValidation(Role.class, "name"));
       
       if (name != null) {
         role.setName(name);
