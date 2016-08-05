@@ -6,7 +6,7 @@ import com.exist.ecc.person.core.service.io.api.InputService;
 import com.exist.ecc.person.core.service.io.api.InputExtractor;
 import com.exist.ecc.person.core.service.io.api.InputExceptionHandler;
 
-public abstract class DefaultInputService implements InputService {
+public class DefaultInputService implements InputService {
 
   private InputExtractor extractor;
   private InputExceptionHandler exceptionHandler;
@@ -31,12 +31,27 @@ public abstract class DefaultInputService implements InputService {
 
   @Override
   public String getString(String promptMsg) {
-
-    String input = exceptionHandler.handle(() -> {
+    return exceptionHandler.handle(() -> {
       return extractor.extract(promptMsg);
     });
-
-    return input;
   }
 
+  @Override
+  public int getInt(String promptMsg) {
+    return exceptionHandler.handle(() -> {
+      return Integer.parseInt(extractor.extract(promptMsg));
+    });
+  }
+
+  @Override
+  public long getLong(String promptMsg) {
+    return exceptionHandler.handle(() -> {
+      return Long.parseLong(extractor.extract(promptMsg));
+    });
+  }
+
+  @Override
+  public String getValidInput(String promptMsg) {
+    throw new UnsupportedOperationException();
+  }
 }

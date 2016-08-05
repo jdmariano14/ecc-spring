@@ -10,10 +10,16 @@ import java.util.function.Consumer;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.exist.ecc.person.core.service.io.api.InputService;
+import com.exist.ecc.person.core.service.io.api.InputExtractor;
+import com.exist.ecc.person.core.service.io.api.InputExceptionHandler;
+
+import com.exist.ecc.person.core.service.io.impl.DefaultInputService;
+import com.exist.ecc.person.core.service.io.impl.ConsoleInputExtractor;
+import com.exist.ecc.person.core.service.io.impl.RepeatExtractionExceptionHandler;
+
 import com.exist.ecc.person.util.SessionUtil;
 import com.exist.ecc.person.util.MenuUtil;
-import com.exist.ecc.person.util.PromptUtil;
-import com.exist.ecc.person.util.InvalidInputStrategy;
 
 import com.exist.ecc.person.core.dao.Transactions;
 
@@ -29,11 +35,18 @@ import com.exist.ecc.person.core.dao.api.PersonDao;
 import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
 
 public class App {
+  private static Scanner scanner;
+  private static InputService input;
+
+  static {
+    scanner = new Scanner(System.in);
+    input = new DefaultInputService(
+      new ConsoleInputExtractor(scanner), 
+      new RepeatExtractionExceptionHandler()
+    );
+  }
 
   public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
-    PromptUtil.setScanner(scanner);
-    
     String[] options = {
       "add role", "update role", "delete role", "list role", "exit"
     };
@@ -55,7 +68,7 @@ public class App {
     System.out.println("Select an action:");
     System.out.println(MenuUtil.getMenu(options));
 
-    int choice = PromptUtil.promptForInt("");
+    int choice = input.getInt("");
 
     if (choice < 1 || choice > options.length) {
       return true;
@@ -85,12 +98,8 @@ public class App {
     Role role = new Role();
     RoleDao roleDao = new RoleHibernateDao();
 
-    String name = PromptUtil.promptForValidField(
-                    "Enter the name:", 
-                    RoleValidator::validateName, 
-                    InvalidInputStrategy.THROW_EXCEPTION
-                  );
-  
+    String name = input.getString("Enter role name: ");
+
     role.setName(name);
 
     Transactions.conduct(roleDao, () -> { 
@@ -101,16 +110,12 @@ public class App {
   private static void updateRole() {
     RoleDao roleDao = new RoleHibernateDao();
 
-    long id = PromptUtil.promptForLong("Enter role ID: ");
+    long id = input.getLong("Enter role ID: ");
 
     Transactions.conduct(roleDao, () -> { 
       Role role = roleDao.get(id);
 
-      String name = PromptUtil.promptForValidField(
-                    "Enter the name (" + role.getName() + "): ", 
-                    RoleValidator::validateName, 
-                    InvalidInputStrategy.RETURN_NULL
-                  );
+      String name = input.getString("Enter role name: ");
       
       if (name != null) {
         role.setName(name);
@@ -122,7 +127,7 @@ public class App {
   private static void deleteRole() {
     RoleDao roleDao = new RoleHibernateDao();
 
-    long id = PromptUtil.promptForLong("Enter role ID: ");
+    long id = input.getLong("Enter role ID: ");
 
     Transactions.conduct(roleDao, () -> { 
       Role role = roleDao.get(id);
@@ -131,7 +136,7 @@ public class App {
       confirmMsg.append(role.getName());
       confirmMsg.append("' (y/n): ");
 
-      choice = PromptUtil.promptForLine(confirmMsg.toString());
+      choice = input.getString(confirmMsg.toString());
 
       if (choice.equalsIgnoreCase("Y")) {
         roleDao.delete(role);
