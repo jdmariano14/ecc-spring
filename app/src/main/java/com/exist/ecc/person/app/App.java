@@ -63,15 +63,17 @@ public class App {
   }
 
   private static boolean appLoop(String[] options) {
-    System.out.println();
-    System.out.println("Select an action:");
-    System.out.println(MenuUtil.getMenu(options));
+    StringBuilder menuPrompt = new StringBuilder(System.lineSeparator());
+    menuPrompt.append("Select an action:");
+    menuPrompt.append(System.lineSeparator());
+    menuPrompt.append(MenuUtil.getMenu(options));
+    menuPrompt.append(System.lineSeparator());
 
-    int choice = input.getInput("", Integer::parseInt);
-
-    if (choice < 1 || choice > options.length) {
-      return true;
-    }
+    Integer choice = input.getValidInput(menuPrompt.toString(), Integer::parseInt, (i) -> {
+      if (i < 1 || i > options.length) {
+        throw new IllegalArgumentException("Input does not correspond to an option");
+      }
+    });
 
     switch (options[choice - 1]) {
       case "add role":

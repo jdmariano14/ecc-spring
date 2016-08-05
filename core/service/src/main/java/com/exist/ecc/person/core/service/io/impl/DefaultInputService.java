@@ -3,6 +3,7 @@ package com.exist.ecc.person.core.service.io.impl;
 import java.util.Set;
 import java.util.Scanner;
 import java.util.function.Function;
+import java.util.function.Consumer;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -44,19 +45,13 @@ public class DefaultInputService implements InputService {
   }
 
   @Override
-  public <T, R> R getValidInput(String promptMsg, Class<T> beanType, 
-    String propertyName, Function<String, R> parse) 
+  public <T, R> R getValidInput(String promptMsg, Function<String, R> parse,
+    Consumer<R> validation) 
   {
     return exceptionHandler.handle(() -> {
       R value = parse.apply(extractor.extract(promptMsg));
-      Validator validator = ValidateUtil.getValidatorFactory().getValidator();
-      
-      Set<ConstraintViolation<T>> constraintViolations = 
-        validator.validateValue(beanType, propertyName, value);
 
-      if (!constraintViolations.isEmpty()) {
-        throw new IllegalArgumentException("invalid value");
-      }
+      validation.accept(value);
 
       return value;
     });
