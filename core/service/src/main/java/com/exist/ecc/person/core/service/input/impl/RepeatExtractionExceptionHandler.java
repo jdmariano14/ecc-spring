@@ -1,8 +1,8 @@
-package com.exist.ecc.person.core.service.io.impl;
+package com.exist.ecc.person.core.service.input.impl;
 
 import java.util.function.Supplier;
 
-import com.exist.ecc.person.core.service.io.api.InputExceptionHandler;
+import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 
 public class RepeatExtractionExceptionHandler implements InputExceptionHandler {
 

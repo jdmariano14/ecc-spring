@@ -1,8 +1,8 @@
-package com.exist.ecc.person.core.service.io.impl;
+package com.exist.ecc.person.core.service.input.impl;
 
 import java.util.Scanner;
 
-import com.exist.ecc.person.core.service.io.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.api.InputExtractor;
 
 public class ConsoleInputExtractor implements InputExtractor {
 

@@ -1,4 +1,4 @@
-package com.exist.ecc.person.core.service.io.api;
+package com.exist.ecc.person.core.service.input.api;
 
 public interface InputExtractor {
 

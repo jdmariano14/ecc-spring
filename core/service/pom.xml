@@ -23,7 +23,8 @@
     <dependency>
      <groupId>org.hibernate</groupId>
      <artifactId>hibernate-validator-cdi</artifactId>
-    </dependency>      
+    </dependency>
+
     <dependency>
        <groupId>javax.el</groupId>
        <artifactId>javax.el-api</artifactId>
@@ -32,9 +33,20 @@
        <groupId>org.glassfish.web</groupId>
        <artifactId>javax.el</artifactId>
     </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>ecc-hibernate-core-model</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>

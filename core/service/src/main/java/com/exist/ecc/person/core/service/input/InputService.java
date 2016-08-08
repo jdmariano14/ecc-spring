@@ -1,10 +1,10 @@
-package com.exist.ecc.person.core.service.io;
+package com.exist.ecc.person.core.service.input;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import com.exist.ecc.person.core.service.io.api.InputExtractor;
-import com.exist.ecc.person.core.service.io.api.InputExceptionHandler;
+import com.exist.ecc.person.core.service.input.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 
 public class InputService<T> {
 
@@ -51,9 +51,17 @@ public class InputService<T> {
       defaultValue = null;
     }
 
+    public String getMessage() {
+      return message;
+    }
+
     public Builder<T> message(String message) {
       this.message = message;
       return this;
+    }
+
+    public Function<String, T> getConversion() {
+      return conversion;
     }
 
     public Builder<T> conversion(Function<String, T> conversion) {
@@ -61,24 +69,30 @@ public class InputService<T> {
       return this;
     }
 
+    public Consumer<T> getValidation() {
+      return validation;
+    }
+
     public Builder<T> validation(Consumer<T> validation) {
       this.validation = validation;
       return this;
+    }
+
+    public T getDefaultValue() {
+      return defaultValue;
     }
 
     public Builder<T> defaultValue(T defaultValue) {
       this.defaultValue = defaultValue;
       return this;
     }
-
+    
     public InputService<T> build() {
       return new InputService<T>(
         extractor, exceptionHandler, message,
         conversion, validation, defaultValue);
     }
-
   }
-
 
   public T getInput() {
     return exceptionHandler.handle(() -> {

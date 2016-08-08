@@ -10,12 +10,12 @@ import java.util.function.Consumer;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-
-import com.exist.ecc.person.core.service.io.InputService;
-import com.exist.ecc.person.core.service.io.api.InputExtractor;
-import com.exist.ecc.person.core.service.io.api.InputExceptionHandler;
-import com.exist.ecc.person.core.service.io.impl.ConsoleInputExtractor;
-import com.exist.ecc.person.core.service.io.impl.RepeatExtractionExceptionHandler;
+import com.exist.ecc.person.core.service.input.InputService;
+import com.exist.ecc.person.core.service.input.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
+import com.exist.ecc.person.core.service.input.impl.RoleInputWizard;
+import com.exist.ecc.person.core.service.input.impl.ConsoleInputExtractor;
+import com.exist.ecc.person.core.service.input.impl.RepeatExtractionExceptionHandler;
 
 import com.exist.ecc.person.util.SessionUtil;
 import com.exist.ecc.person.util.MenuUtil;
@@ -47,6 +47,7 @@ public class App {
 
 
   public static void main(String[] args) {
+
     String[] options = {
       "add role", "update role", "delete role", "list role", "exit"
     };
@@ -106,16 +107,10 @@ public class App {
   }
 
   private static void addRole() {
-    Role role = new Role();
+    Role role = new RoleInputWizard(extractor, handler)
+                .createEntity(new Role());
+
     RoleDao roleDao = new RoleHibernateDao();
-
-    String name =
-      new InputService.Builder<String>(extractor, handler)
-          .message("Enter role name: ")
-          .validation(Validations.get(Role.class, "name"))
-          .build().getInput();
-
-    role.setName(name);
 
     Transactions.conduct(roleDao, () -> { 
       roleDao.save(role);
@@ -132,16 +127,9 @@ public class App {
           .build().getInput();
 
     Transactions.conduct(roleDao, () -> { 
-      Role role = roleDao.get(id);
-      String defaultValue = role.getName();
+      Role role = new RoleInputWizard(extractor, handler)
+                  .setProperties(roleDao.get(id));
 
-      String name = 
-        new InputService.Builder<String>(extractor, handler)
-            .message("Enter role name: ")
-            .validation(Validations.get(Role.class, "name"))
-            .build().getInput();
-      
-      role.setName(name);
       roleDao.save(role);
     });
   }
