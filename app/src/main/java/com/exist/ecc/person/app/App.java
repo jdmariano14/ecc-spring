@@ -108,7 +108,7 @@ public class App {
 
   private static void addRole() {
     Role role = new RoleInputWizard(extractor, handler)
-                .createEntity(new Role());
+                .setProperties(new Role());
 
     RoleDao roleDao = new RoleHibernateDao();
 

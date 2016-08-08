@@ -18,7 +18,7 @@ public class NameInputWizard extends AbstractInputWizard<Name> {
     super(extractor, exceptionHandler);
   }
 
-  public void populateData(Map<String, InputService.Builder> data) {
+  public void initializeData(Map<String, InputService.Builder> data) {
     String[] stringProperties = {
       "firstName", "lastName", "middleName", "suffix", "title"};
 

@@ -18,7 +18,7 @@ public class RoleInputWizard extends AbstractInputWizard<Role> {
     super(extractor, exceptionHandler);
   }
 
-  public void populateData(Map<String, InputService.Builder> data) {
+  public void initializeData(Map<String, InputService.Builder> data) {
     data.put("name", 
       new InputService.Builder<String>(getExtractor(), getExceptionHandler())
       .message("name")

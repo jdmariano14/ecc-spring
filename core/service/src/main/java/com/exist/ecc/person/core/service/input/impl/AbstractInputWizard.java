@@ -24,7 +24,7 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
     setExtractor(extractor);
     setExceptionHandler(exceptionHandler);
     
-    populateData(data);
+    initializeData(data);
   }
 
   public InputExtractor getExtractor() {
@@ -43,7 +43,7 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
     exceptionHandler = newExceptionHandler;
   }
 
-  public abstract void populateData(Map<String, InputService.Builder> data);
+  public abstract void initializeData(Map<String, InputService.Builder> data);
 
   public void processMessage(String propertyName, 
     UnaryOperator<String> stringOp)
