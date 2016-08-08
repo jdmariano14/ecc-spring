@@ -6,6 +6,7 @@ import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -19,6 +20,7 @@ import com.exist.ecc.person.core.service.input.impl.RepeatExtractionExceptionHan
 
 import com.exist.ecc.person.util.SessionUtil;
 import com.exist.ecc.person.util.MenuUtil;
+import com.exist.ecc.person.util.StringUtil;
 
 import com.exist.ecc.person.core.dao.Transactions;
 
@@ -44,7 +46,6 @@ public class App {
     extractor = new ConsoleInputExtractor(scanner);
     handler = new RepeatExtractionExceptionHandler();
   }
-
 
   public static void main(String[] args) {
 
@@ -76,7 +77,7 @@ public class App {
       new StringBuilder(System.lineSeparator())
           .append("Select an action:")
           .append(System.lineSeparator())
-          .append(MenuUtil.getMenu(options))
+          .append(MenuUtil.getMenu(options, StringUtil::capitalize))
           .append(System.lineSeparator())
           .toString();
     int choice = 
@@ -107,10 +108,12 @@ public class App {
   }
 
   private static void addRole() {
-    Role role = new RoleInputWizard(extractor, handler)
-                .setProperties(new Role());
+    final RoleDao roleDao = new RoleHibernateDao();
+    final Role role = new Role();
+    RoleInputWizard wizard = new RoleInputWizard(extractor, handler);
 
-    RoleDao roleDao = new RoleHibernateDao();
+    wizard.batchProcessMessages(standardPropertyMessage(0));
+    wizard.setProperties(role);
 
     Transactions.conduct(roleDao, () -> { 
       roleDao.save(role);
@@ -118,7 +121,7 @@ public class App {
   }
 
   private static void updateRole() {
-    RoleDao roleDao = new RoleHibernateDao();
+    final RoleDao roleDao = new RoleHibernateDao();
 
     long id =
       new InputService.Builder<Long>(extractor, handler)
@@ -126,9 +129,12 @@ public class App {
           .conversion(Long::parseLong)
           .build().getInput();
 
-    Transactions.conduct(roleDao, () -> { 
-      Role role = new RoleInputWizard(extractor, handler)
-                  .setProperties(roleDao.get(id));
+    Transactions.conduct(roleDao, () -> {
+      final Role role = roleDao.get(id);
+      RoleInputWizard wizard = new RoleInputWizard(extractor, handler);
+      
+      wizard.batchProcessMessages(standardPropertyMessage(0));
+      wizard.setProperties(role);
 
       roleDao.save(role);
     });
@@ -168,6 +174,17 @@ public class App {
     Transactions.conduct(roleDao, () -> { 
       roleDao.getAll().forEach(System.out::println); 
     });
+  }
+
+  private static UnaryOperator<String> standardPropertyMessage(int level) {
+    return s -> {
+      StringBuilder sb = new StringBuilder()
+        .append(StringUtil.getSpaces(2 * level))
+        .append(StringUtil.capitalize(StringUtil.camelCaseToSpaces(s)))
+        .append(": ");
+
+      return sb.toString();
+    };
   }
 
 }

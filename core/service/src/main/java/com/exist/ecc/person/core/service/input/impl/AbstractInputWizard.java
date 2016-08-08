@@ -58,7 +58,7 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
     }
   }
 
-  public T setProperties(T baseObject) {
+  public void setProperties(T baseObject) {
     for (String propertyName : data.keySet()) {
       Object inputValue;
 
@@ -82,8 +82,6 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
         throw new RuntimeException(e.getMessage());
       }
     }
-
-    return baseObject;
   }
 
 }
