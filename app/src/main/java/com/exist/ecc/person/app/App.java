@@ -1,12 +1,15 @@
 package com.exist.ecc.person.app;
 
 import java.math.BigDecimal;
+
 import java.util.Date;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
+
+import java.lang.reflect.Method;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -37,6 +40,7 @@ import com.exist.ecc.person.core.dao.api.PersonDao;
 import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
 
 public class App {
+  private static boolean exit;
   private static Scanner scanner;
   private static InputExtractor extractor;
   private static InputExceptionHandler handler;
@@ -50,12 +54,15 @@ public class App {
   public static void main(String[] args) {
 
     String[] options = {
-      "add role", "update role", "delete role", "list role", "exit"
+      "createPerson",
+      "addRole", "updateRole", "deleteRole", "listRole",
+      "exit"
     };
 
+
     try {
-      while (appLoop(options)) {
-        continue;
+      while (!exit) {
+        appLoop(options);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -65,7 +72,7 @@ public class App {
 
   }
 
-  private static boolean appLoop(String[] options) {
+  private static void appLoop(String[] options) {
     Consumer<Integer> validation = 
       i -> {
         if (i < 1 || i > options.length) {
@@ -73,13 +80,15 @@ public class App {
             "Input does not correspond to an option");
         }
       };
+
     String menuPrompt = 
       new StringBuilder(System.lineSeparator())
           .append("Select an action:")
           .append(System.lineSeparator())
-          .append(MenuUtil.getMenu(options, StringUtil::capitalize))
+          .append(MenuUtil.getMenu(options, uncamelcase()))
           .append(System.lineSeparator())
           .toString();
+
     int choice = 
       new InputService.Builder<Integer>(extractor, handler)
           .message(menuPrompt)
@@ -87,24 +96,20 @@ public class App {
           .validation(validation)
           .build().getInput();
 
-    switch (options[choice - 1]) {
-      case "add role":
-        addRole();
-        break;
-      case "update role":
-        updateRole();
-        break;
-      case "delete role":
-        deleteRole();
-        break;
-      case "list role":
-        listRole();
-        break;
-      case "exit":
-        return false;
+    try {
+      App.class.getDeclaredMethod(options[choice - 1]).invoke(App.class);
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage());
     }
+    
+  }
 
-    return true;
+  private static void exit() {
+    exit = true;
+  }
+
+  private static void createPerson() {
+
   }
 
   private static void addRole() {
@@ -112,7 +117,7 @@ public class App {
     final Role role = new Role();
     RoleInputWizard wizard = new RoleInputWizard(extractor, handler);
 
-    wizard.batchProcessMessages(standardPropertyMessage(0));
+    wizard.batchProcessMessages(standardPropertyMessage());
     wizard.setProperties(role);
 
     Transactions.conduct(roleDao, () -> { 
@@ -133,7 +138,7 @@ public class App {
       final Role role = roleDao.get(id);
       RoleInputWizard wizard = new RoleInputWizard(extractor, handler);
       
-      wizard.batchProcessMessages(standardPropertyMessage(0));
+      wizard.batchProcessMessages(standardPropertyMessage());
       wizard.setProperties(role);
 
       roleDao.save(role);
@@ -176,12 +181,17 @@ public class App {
     });
   }
 
-  private static UnaryOperator<String> standardPropertyMessage(int level) {
+  private static UnaryOperator<String> uncamelcase() {
+    return s -> {
+      return StringUtil.capitalize(s);
+    };
+  }
+
+  private static UnaryOperator<String> standardPropertyMessage() {
     return s -> {
       StringBuilder sb = new StringBuilder()
-        .append(StringUtil.getSpaces(2 * level))
-        .append(StringUtil.capitalize(StringUtil.camelCaseToSpaces(s)))
-        .append(": ");
+                         .append(uncamelcase().apply(s))
+                         .append(": ");
 
       return sb.toString();
     };
