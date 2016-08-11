@@ -250,39 +250,48 @@ public class App {
     AddressInputWizard addressWizard = 
       new AddressInputWizard(extractor, handler);
 
-    BiFunction<String, Object, String> dateFormat = (s, o) -> {
-      DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-      String s2 = defaultTransform(s);
-      String o2 = df.format(o);
-
+    BiFunction<String, Object, String> defaultFormat = (s, o) -> {
       return o == null
-             ? String.format("%s (yyyy-mm-dd): ", s2)
-             : String.format("%s (%s): ", s2, o2);
+             ? String.format("%s: ", defaultTransform(s))
+             : String.format("%s (%s): ", defaultTransform(s), o);
     };
 
-
-    System.out.println("Name: ");
-    nameWizard.setDefaultFormat((s, o) -> {
+    BiFunction<String, Object, String> nestedFormat = (s, o) -> {
       return o == null
              ? String.format("  %s: ", defaultTransform(s))
              : String.format("  %s (%s): ", defaultTransform(s), o);
-    });
+    };
+
+    BiFunction<String, Object, String> dateFormat = (s, o) -> {
+      DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+      return o == null
+             ? String.format("%s (yyyy-mm-dd): ", defaultTransform(s))
+             : String.format("%s (%s): ", defaultTransform(s), df.format(o));
+    };
+
+    BiFunction<String, Object, String> booleanFormat = (s, o) -> {
+      String o2 = (Boolean) o ? "y" : "n";
+
+      return o == null
+             ? String.format("%s (y/n): ", defaultTransform(s))
+             : String.format("%s (%s) (y/n): ", defaultTransform(s), o2);
+    };
+
+    System.out.println("Name: ");
+    nameWizard.setDefaultFormat(nestedFormat);
     nameWizard.setProperties(name);
     person.setName(name);
 
     System.out.println("Address: ");
-    addressWizard.setDefaultFormat((s, o) -> {
-      return o == null
-             ? String.format("  %s: ", defaultTransform(s))
-             : String.format("  %s (%s): ", defaultTransform(s), o);
-    });
+    addressWizard.setDefaultFormat(nestedFormat);
     addressWizard.setProperties(address);
     person.setAddress(address);
-    personWizard.setFormat((s, o) -> {
-      return o == null
-             ? String.format("%s: ", defaultTransform(s))
-             : String.format("%s (%s): ", defaultTransform(s), o);
-    });
+
+    personWizard.setDefaultFormat(defaultFormat);
+    personWizard.setFormat("birthDate", dateFormat);
+    personWizard.setFormat("dateHired", dateFormat);
+    personWizard.setFormat("employed", booleanFormat);
     personWizard.setProperties(person);
   }
 
