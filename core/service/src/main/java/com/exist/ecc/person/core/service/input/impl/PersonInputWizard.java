@@ -54,7 +54,11 @@ public class PersonInputWizard extends AbstractInputWizard<Person> {
         new InputService
         .Builder<Boolean>(getExtractor(), getExceptionHandler())
         .message(booleanProperty)
-        .conversion(Boolean::valueOf)
+        .conversion(b -> {
+          return Boolean.valueOf(b) 
+                 || b.toString().equalsIgnoreCase("t")
+                 || b.toString().equalsIgnoreCase("y");
+        })
         .validation(Validations.get(Person.class, booleanProperty))));
     }
 
