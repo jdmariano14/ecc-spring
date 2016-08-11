@@ -8,13 +8,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -252,10 +250,21 @@ public class App {
     AddressInputWizard addressWizard = 
       new AddressInputWizard(extractor, handler);
 
+    BiFunction<String, Object, String> dateFormat = (s, o) -> {
+      DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+      String s2 = defaultTransform(s);
+      String o2 = df.format(o);
+
+      return o == null
+             ? String.format("%s (yyyy-mm-dd): ", s2)
+             : String.format("%s (%s): ", s2, o2);
+    };
+
+
     System.out.println("Name: ");
     nameWizard.setDefaultFormat((s, o) -> {
       return o == null
-             ? String.format("  %s: ", s)
+             ? String.format("  %s: ", defaultTransform(s))
              : String.format("  %s (%s): ", defaultTransform(s), o);
     });
     nameWizard.setProperties(name);
@@ -264,15 +273,14 @@ public class App {
     System.out.println("Address: ");
     addressWizard.setDefaultFormat((s, o) -> {
       return o == null
-             ? String.format("  %s: ", s)
+             ? String.format("  %s: ", defaultTransform(s))
              : String.format("  %s (%s): ", defaultTransform(s), o);
     });
     addressWizard.setProperties(address);
     person.setAddress(address);
-
-    personWizard.setDefaultFormat((s, o) -> {
+    personWizard.setFormat((s, o) -> {
       return o == null
-             ? String.format("%s: ", s)
+             ? String.format("%s: ", defaultTransform(s))
              : String.format("%s (%s): ", defaultTransform(s), o);
     });
     personWizard.setProperties(person);
@@ -283,7 +291,7 @@ public class App {
     
     roleWizard.setDefaultFormat((s, o) -> {
       return o == null
-             ? String.format("%s: ", s)
+             ? String.format("%s: ", defaultTransform(s))
              : String.format("%s (%s): ", defaultTransform(s), o);
     });
     roleWizard.setProperties(role);
