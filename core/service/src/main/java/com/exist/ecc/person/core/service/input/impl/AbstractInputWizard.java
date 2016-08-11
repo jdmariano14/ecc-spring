@@ -1,7 +1,7 @@
 package com.exist.ecc.person.core.service.input.impl;
 
 import java.util.Map;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.function.BiFunction;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -56,7 +56,7 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
   public AbstractInputWizard(InputExtractor extractor, 
     InputExceptionHandler exceptionHandler)
   {
-    data = new HashMap();
+    data = new LinkedHashMap();
     setExtractor(extractor);
     setExceptionHandler(exceptionHandler);
     

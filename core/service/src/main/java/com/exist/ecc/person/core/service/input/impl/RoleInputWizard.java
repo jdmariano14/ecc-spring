@@ -18,11 +18,11 @@ public class RoleInputWizard extends AbstractInputWizard<Role> {
     super(extractor, exceptionHandler);
   }
 
-  public void initializeData(Map<String, InputService.Builder> data) {
-    data.put("name", 
+  public void initializeData(Map<String, PropertyData> data) {
+    data.put("name", new PropertyData(
       new InputService.Builder<String>(getExtractor(), getExceptionHandler())
       .message("name")
-      .validation(Validations.get(Role.class, "name")));
+      .validation(Validations.get(Role.class, "name"))));
   }
 
 }
