@@ -2,7 +2,7 @@ package com.exist.ecc.person.core.service.input.impl;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.function.UnaryOperator;
+import java.util.function.BiFunction;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -13,9 +13,45 @@ import com.exist.ecc.person.core.service.input.api.InputWizard;
 
 public abstract class AbstractInputWizard<T> implements InputWizard<T> {
   
-  private Map<String, InputService.Builder> data;
+  private Map<String, PropertyData> data;
   private InputExtractor extractor;
   private InputExceptionHandler exceptionHandler;
+
+  public static class PropertyData {
+    private InputService.Builder builder;
+    private BiFunction<String, Object, String> format;
+
+    public PropertyData(InputService.Builder builder,
+      BiFunction<String, Object, String> format) 
+    {
+      setBuilder(builder);
+      setFormat(format);
+    }
+
+    public PropertyData(InputService.Builder builder) {
+      this(builder, (s, o) -> {
+        return o == null
+               ? String.format("%s: ", s)
+               : String.format("%s (%s): ", s, o);
+      });
+    }
+
+    public InputService.Builder getBuilder() {
+      return builder;
+    }
+
+    public void setBuilder(InputService.Builder newBuilder) {
+      builder = newBuilder;
+    }
+
+    public BiFunction<String, Object, String> getFormat() {
+      return format;
+    }
+
+    public void setFormat(BiFunction<String, Object, String> newFormat) {
+      format = newFormat;
+    }
+  }
 
   public AbstractInputWizard(InputExtractor extractor, 
     InputExceptionHandler exceptionHandler)
@@ -43,44 +79,61 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
     exceptionHandler = newExceptionHandler;
   }
 
-  public abstract void initializeData(Map<String, InputService.Builder> data);
-
-  public void processMessage(String propertyName, 
-    UnaryOperator<String> stringOp)
+  public void setFormat(String propertyName, 
+    BiFunction<String, Object, String> format) 
   {
-    data.get(propertyName).message(
-      stringOp.apply(data.get(propertyName).getMessage()));
+    data.get(propertyName).setFormat(format);
   }
 
-  public void batchProcessMessages(UnaryOperator<String> stringOp) {
-    for (String propertyName : data.keySet()) {
-      processMessage(propertyName, stringOp);
+  public void setDefaultFormat(BiFunction<String, Object, String> format) {
+    for (PropertyData propertyData : data.values()) {
+      propertyData.setFormat(format);
     }
   }
 
+  public abstract void initializeData(Map<String, PropertyData> data);
+
   public void setProperties(T baseObject) {
+    useExistingValues(baseObject);
+    processMessages();
+
     for (String propertyName : data.keySet()) {
-      Object inputValue;
-
-      try {
-        String defaultValueString =
-          BeanUtils.getProperty(baseObject, propertyName);
-
-        data.get(propertyName).defaultValue(
-          data.get(propertyName).getConversion().apply(defaultValueString));
-      } catch (NullPointerException e) {
-
-      } catch (Exception e) {
-        throw new RuntimeException(e.getMessage());
-      }
-
-      inputValue = data.get(propertyName).build().getInput();
+      Object inputValue =
+        data.get(propertyName).getBuilder().build().getInput();
 
       try {
         BeanUtils.setProperty(baseObject, propertyName, inputValue); 
       } catch (Exception e) {
         throw new RuntimeException(e.getMessage());
       }
+    }
+  }
+
+   private void useExistingValues(T baseObject) {
+    for (String propertyName : data.keySet()) {
+      try {
+        String defaultValueString =
+          BeanUtils.getProperty(baseObject, propertyName);
+
+        data.get(propertyName).getBuilder().defaultValue(
+          data.get(propertyName)
+          .getBuilder()
+          .getConversion()
+          .apply(defaultValueString));
+      } catch (NullPointerException e) {
+
+      } catch (Exception e) {
+        throw new RuntimeException(e.getMessage());
+      }
+    }
+  }
+
+  private void processMessages() {
+    for (PropertyData propertyData : data.values()) {
+      propertyData.getBuilder().message(
+        propertyData.getFormat().apply(
+          propertyData.getBuilder().getMessage(),
+          propertyData.getBuilder().getDefaultValue()));
     }
   }
 
