@@ -57,22 +57,25 @@ public class Name {
   @Override
   public String toString() {
     String nameString = new StringBuilder()
-                        .append(propertyToString(title, false))
-                        .append(propertyToString(firstName, false))
-                        .append(propertyToString(middleName, false))
+                        .append(propertyToString(title, "", " "))
+                        .append(propertyToString(firstName, "", " "))
+                        .append(propertyToString(middleName, "", " "))
                         .append(lastName)
-                        .append(propertyToString(suffix, true))
+                        .append(propertyToString(suffix, ", ", ""))
                         .toString();
 
     return nameString;
   }
 
-  private String propertyToString(String property, boolean spacePrefix) {
+  private String propertyToString(String property, String prefix, 
+    String suffix) 
+  {
     return StringUtils.isEmpty(property) 
            ? new String()
-           : spacePrefix
-             ? String.format(" %s", property)
-             : String.format("%s ", property);
+           : new StringBuilder(prefix)
+             .append(property)
+             .append(suffix)
+             .toString();
   }
 
 }
