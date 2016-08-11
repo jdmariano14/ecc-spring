@@ -36,10 +36,6 @@ public class Role {
 
   @Override
   public String toString() {
-    StringBuilder roleString = new StringBuilder();
-    roleString.append(String.format("[%s] ", roleId));
-    roleString.append(name);
-    
-    return roleString.toString();
+    return String.format("[%d] %s", roleId, name);
   }
 }

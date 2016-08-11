@@ -1,5 +1,7 @@
 package com.exist.ecc.person.core.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Name {
 
   private String firstName;
@@ -50,6 +52,27 @@ public class Name {
 
   public void setTitle(String newTitle) {
     title = newTitle;
+  }
+
+  @Override
+  public String toString() {
+    String nameString = new StringBuilder()
+                        .append(propertyToString(title, false))
+                        .append(propertyToString(firstName, false))
+                        .append(propertyToString(middleName, false))
+                        .append(lastName)
+                        .append(propertyToString(suffix, true))
+                        .toString();
+
+    return nameString;
+  }
+
+  private String propertyToString(String property, boolean spacePrefix) {
+    return StringUtils.isEmpty(property) 
+           ? new String()
+           : spacePrefix
+             ? String.format(" %s", property)
+             : String.format("%s ", property);
   }
 
 }
