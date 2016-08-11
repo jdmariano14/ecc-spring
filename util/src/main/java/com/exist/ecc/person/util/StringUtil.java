@@ -3,7 +3,7 @@ package com.exist.ecc.person.util;
 public class StringUtil {
 
   public static String camelCaseToSpaces(String str) {
-    return String.join(" ", str.split("\\p{Upper}\\p{Lower}+"));
+    return str.replaceAll("(.)(\\p{Upper})", "$1 $2");
   }
 
   public static String capitalize(String str) {
