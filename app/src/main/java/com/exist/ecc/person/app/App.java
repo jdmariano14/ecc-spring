@@ -286,6 +286,12 @@ public class App {
              : String.format("  %s (%s): ", defaultTransform(s), o);
     };
 
+    BiFunction<String, Object, String> nestedRequiredFormat = (s, o) -> {
+      return o == null
+             ? String.format("  %s*: ", defaultTransform(s))
+             : String.format(  "%s (%s)*: ", defaultTransform(s), o);
+    };
+
     BiFunction<String, Object, String> dateFormat = (s, o) -> {
       DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
@@ -304,6 +310,8 @@ public class App {
 
     System.out.println("Name: ");
     nameWizard.setDefaultFormat(nestedFormat);
+    nameWizard.setFormat("lastName", nestedRequiredFormat);
+    nameWizard.setFormat("firstName", nestedRequiredFormat);
     nameWizard.setProperties(name);
     person.setName(name);
 
