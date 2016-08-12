@@ -9,7 +9,7 @@ import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 public class InputService<T> {
 
   private InputReader reader;
-  private InputExceptionHandler exceptionHandler;
+  private InputExceptionHandler handler;
   private String message;
   private Function<String, T> conversion;
   private Consumer<T> validation;
@@ -17,14 +17,14 @@ public class InputService<T> {
 
   public InputService(
     final InputReader reader,
-    final InputExceptionHandler exceptionHandler,
+    final InputExceptionHandler handler,
     final String message,
     final Function<String, T> conversion,
     final Consumer<T> validation,
     final T defaultValue)
   {
     this.reader = reader;
-    this.exceptionHandler = exceptionHandler;
+    this.handler = handler;
     this.message = message;
     this.conversion = conversion;
     this.validation = validation;
@@ -34,17 +34,17 @@ public class InputService<T> {
   public static class Builder<T> {
 
     private InputReader reader;
-    private InputExceptionHandler exceptionHandler;
+    private InputExceptionHandler handler;
     private String message;
     private Function<String, T> conversion;
     private Consumer<T> validation;
     private T defaultValue;
 
     public Builder(InputReader reader, 
-      InputExceptionHandler exceptionHandler) 
+      InputExceptionHandler handler) 
     {
       this.reader = reader;
-      this.exceptionHandler = exceptionHandler;
+      this.handler = handler;
       message = "";
       conversion = x -> { return (T) x; };
       validation = x -> {};
@@ -89,19 +89,21 @@ public class InputService<T> {
     
     public InputService<T> build() {
       return new InputService<T>(
-        reader, exceptionHandler, message,
+        reader, handler, message,
         conversion, validation, defaultValue);
     }
   }
 
   public T getInput() {
-    return exceptionHandler.handle(() -> {
+    return handler.handle(() -> {
       String input = reader.read(message);
       T returnValue = null;
 
       if (input.isEmpty()) {
         if (defaultValue != null) {
           returnValue = defaultValue;
+        } else {
+          returnValue = conversion.apply(input);  
         }
       } else {
         returnValue = conversion.apply(input);

@@ -17,6 +17,7 @@ import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
+import com.exist.ecc.person.core.service.input.impl.ReturnNullHandler;
 import com.exist.ecc.person.core.service.validation.Validations;
 
 public class PersonInputWizard extends AbstractInputWizard<Person> {

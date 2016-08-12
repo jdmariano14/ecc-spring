@@ -38,7 +38,7 @@ import com.exist.ecc.person.core.service.input.impl.AddressInputWizard;
 import com.exist.ecc.person.core.service.input.impl.ConsoleInputReader;
 import com.exist.ecc.person.core.service.input.impl.NameInputWizard;
 import com.exist.ecc.person.core.service.input.impl.PersonInputWizard;
-import com.exist.ecc.person.core.service.input.impl.RepeatExtractionExceptionHandler;
+import com.exist.ecc.person.core.service.input.impl.RepeatReadHandler;
 import com.exist.ecc.person.core.service.input.impl.RoleInputWizard;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 import com.exist.ecc.person.core.service.output.api.OutputWriter;
@@ -59,7 +59,7 @@ public class App {
   static {
     scanner = new Scanner(System.in);
     reader = new ConsoleInputReader(scanner);
-    handler = new RepeatExtractionExceptionHandler();
+    handler = new RepeatReadHandler();
   }
 
   public static void main(String[] args) {

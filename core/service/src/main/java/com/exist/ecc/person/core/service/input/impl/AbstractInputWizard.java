@@ -54,11 +54,11 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
   }
 
   public AbstractInputWizard(InputReader reader, 
-    InputExceptionHandler exceptionHandler)
+    InputExceptionHandler handler)
   {
     data = new LinkedHashMap();
     setReader(reader);
-    setExceptionHandler(exceptionHandler);
+    setDefaultHandler(handler);
     
     initializeData(data);
   }
@@ -71,12 +71,12 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
     reader = newReader;
   }
 
-  public InputExceptionHandler getExceptionHandler() {
-    return exceptionHandler;
+  public InputExceptionHandler getDefaultHandler() {
+    return handler;
   }
 
-  public void setExceptionHandler(InputExceptionHandler newExceptionHandler) {
-    exceptionHandler = newExceptionHandler;
+  public void setDefaultHandler(InputExceptionHandler newHandler) {
+    handler = newHandler;
   }
 
   public void setFormat(String propertyName, 
