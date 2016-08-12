@@ -32,7 +32,7 @@ public class PersonOutputFormatter implements OutputFormatter<Person> {
 
     String personString = 
       new StringBuilder()
-      .append(StringUtil.formatUnlessEmpty(idString, "[%d] "))
+      .append(StringUtil.formatUnlessEmpty(idString, "[%s] "))
       .append(StringUtil.formatUnlessEmpty(
         nameString, "%s" + System.lineSeparator()))
       .append(StringUtil.formatUnlessEmpty(
