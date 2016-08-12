@@ -8,7 +8,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.function.BiFunction;
@@ -194,30 +196,10 @@ public class App {
 
     try {
       App.class.getDeclaredMethod(listMethod, Boolean.class)
-               .invoke(App.class, sortOrder);
+         .invoke(App.class, sortOrder);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private static void listPersonByProperty(String propertyName, 
-    boolean desc) 
-  {
-    final PersonDao personDao = new PersonHibernateDao();
-
-    System.out.println();
-
-    Transactions.conduct(personDao, () -> { 
-      OutputWriter writer = new ConsoleOutputWriter();
-      OutputFormatter formatter = new PersonOutputFormatter();
-      UnaryOperator<Criteria> query = 
-        desc ? c -> c.addOrder(Order.desc(propertyName))
-             : c -> c.addOrder(Order.asc(propertyName));
-
-      personDao.query(query).forEach(p -> {
-        writer.write(formatter.format(p));
-      }); 
-    });
   }
 
   private static void listPersonByLastName(Boolean desc) {
@@ -229,7 +211,43 @@ public class App {
   }
 
   private static void listPersonByGwa(Boolean desc) {
-    listPersonByProperty("gwa", desc);
+    final PersonDao personDao = new PersonHibernateDao();
+
+    System.out.println();
+
+    Transactions.conduct(personDao, () -> { 
+      OutputWriter writer = new ConsoleOutputWriter();
+      OutputFormatter formatter = new PersonOutputFormatter();
+
+      List<Person> results = personDao.getAll();
+
+      Collections.sort(results, (p1, p2) -> {
+        return desc ? p2.getGwa().compareTo(p1.getGwa())
+                    : p1.getGwa().compareTo(p2.getGwa());
+      });
+
+      results.forEach(p -> {
+        writer.write(formatter.format(p));
+      }); 
+    });
+  }
+
+  private static void listPersonByProperty(String property, boolean desc) {
+    final PersonDao personDao = new PersonHibernateDao();
+
+    System.out.println();
+
+    Transactions.conduct(personDao, () -> { 
+      OutputWriter writer = new ConsoleOutputWriter();
+      OutputFormatter formatter = new PersonOutputFormatter();
+      UnaryOperator<Criteria> query = 
+        desc ? c -> c.addOrder(Order.desc(property))
+             : c -> c.addOrder(Order.asc(property));
+
+      personDao.query(query).forEach(p -> {
+        writer.write(formatter.format(p));
+      }); 
+    });
   }
 
   private static void addRole() {
