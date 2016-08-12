@@ -125,6 +125,7 @@ public class App {
     final Name name = new Name();
     final Address address = new Address();
     
+    System.out.println();
     setPersonFields(person, name, address);
 
     Transactions.conduct(personDao, () -> { 
@@ -141,7 +142,9 @@ public class App {
       final Person person = personDao.get(id);
       final Name name = person.getName();
       final Address address = person.getAddress();
-      
+
+      System.out.println();
+      System.out.println("Enter '\\null' to clear a field");
       setPersonFields(person, name, address);
       personDao.save(person);
     });
@@ -155,6 +158,7 @@ public class App {
     Transactions.conduct(personDao, () -> { 
       final Person person = personDao.get(id);
       
+      System.out.println();
       if (getDeleteConfirmation("person", person.toString())) {
         personDao.delete(person);
       }
@@ -163,6 +167,8 @@ public class App {
 
   private static void listPerson() {
     final PersonDao personDao = new PersonHibernateDao();
+
+    System.out.println();
 
     Transactions.conduct(personDao, () -> { 
       OutputWriter writer = new ConsoleOutputWriter();
@@ -177,7 +183,8 @@ public class App {
   private static void addRole() {
     final RoleDao roleDao = new RoleHibernateDao();
     final Role role = new Role();
-    
+        
+    System.out.println();
     setRoleFields(role);
 
     Transactions.conduct(roleDao, () -> { 
@@ -192,7 +199,8 @@ public class App {
 
     Transactions.conduct(roleDao, () -> {
       final Role role = roleDao.get(id);
-      
+          
+      System.out.println();
       setRoleFields(role);
       roleDao.save(role);
     });
@@ -205,7 +213,9 @@ public class App {
 
     Transactions.conduct(roleDao, () -> { 
       final Role role = roleDao.get(id);
-      
+          
+      System.out.println();
+
       if (getDeleteConfirmation("role", role.toString())) {
         roleDao.delete(role);
       }
@@ -214,6 +224,8 @@ public class App {
 
   private static void listRole() {
     final RoleDao roleDao = new RoleHibernateDao();
+
+    System.out.println();
 
     Transactions.conduct(roleDao, () -> { 
       roleDao.query(c -> c.addOrder(Order.asc("roleId")))
@@ -309,7 +321,7 @@ public class App {
 
   private static void setRoleFields(Role role) {    
     RoleInputWizard roleWizard = new RoleInputWizard(reader, handler);
-    
+
     roleWizard.setDefaultFormat((s, o) -> {
       return o == null
              ? String.format("%s: ", defaultTransform(s))

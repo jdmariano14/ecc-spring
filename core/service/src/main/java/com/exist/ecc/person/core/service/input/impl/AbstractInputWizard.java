@@ -102,7 +102,11 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
         data.get(propertyName).getBuilder().build().getInput();
 
       try {
-        BeanUtils.setProperty(baseObject, propertyName, inputValue); 
+        if (inputValue.toString().equals("\\null")) {
+          BeanUtils.setProperty(baseObject, propertyName, null); 
+        } else {
+          BeanUtils.setProperty(baseObject, propertyName, inputValue);
+        }
       } catch (Exception e) {
         throw new RuntimeException(e.getMessage());
       }
