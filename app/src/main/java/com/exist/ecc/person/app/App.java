@@ -160,34 +160,41 @@ public class App {
 
   private static void listPerson() {
     final PersonDao personDao = new PersonHibernateDao();
+    String[] sortFields = {"lastName", "dateHired", "gwa"};
+    Consumer<Integer> validation = optionValidation(sortFields.length);
 
-    String[] options = {"lastName", "dateHired", "gwa"};
-    int choice;
-    String listMethod;
-
-    Consumer<Integer> validation = optionValidation(options.length);
-    String menuPrompt = 
+    String sortFieldMessage = 
       new StringBuilder(System.lineSeparator())
           .append("Sort by:")
           .append(System.lineSeparator())
-          .append(MenuUtil.getMenu(options, App::defaultTransform))
+          .append(MenuUtil.getMenu(sortFields, App::defaultTransform))
           .append(System.lineSeparator())
           .toString();
 
-    choice = 
+    int sortField = 
       new InputService.Builder<Integer>(reader, handler)
-          .message(menuPrompt)
+          .message(sortFieldMessage)
           .conversion(Integer::parseInt)
           .validation(validation)
           .build().getInput();
-    listMethod 
-      = new StringBuilder()
+
+    String sortOrderMessage = "Ascending/descending order (a/d): ";
+
+    boolean sortOrder = 
+      new InputService.Builder<Boolean>(reader, handler)
+          .message(sortOrderMessage)
+          .conversion(s -> s.equalsIgnoreCase("d"))
+          .build().getInput();
+
+    String listMethod =
+      new StringBuilder()
         .append("listPersonBy")
-        .append(StringUtil.capitalize(options[choice - 1]))
+        .append(StringUtil.capitalize(sortFields[sortField - 1]))
         .toString();
 
     try {
-      App.class.getDeclaredMethod(listMethod).invoke(App.class);
+      App.class.getDeclaredMethod(listMethod, Boolean.class)
+               .invoke(App.class, sortOrder);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -213,16 +220,16 @@ public class App {
     });
   }
 
-  private static void listPersonByLastName() {
-    listPersonByProperty("name.lastName", true);
+  private static void listPersonByLastName(Boolean desc) {
+    listPersonByProperty("name.lastName", desc);
   }
 
-  private static void listPersonByDateHired() {
-    listPersonByProperty("dateHired", true);
+  private static void listPersonByDateHired(Boolean desc) {
+    listPersonByProperty("dateHired", desc);
   }
 
-  private static void listPersonByGwa() {
-    listPersonByProperty("gwa", true);
+  private static void listPersonByGwa(Boolean desc) {
+    listPersonByProperty("gwa", desc);
   }
 
   private static void addRole() {
