@@ -10,8 +10,10 @@ import java.util.Locale;
 import com.exist.ecc.person.core.model.Address;
 import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Person;
+import com.exist.ecc.person.core.model.Role;
 
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
+import com.exist.ecc.person.core.service.output.api.CollectionOutputFormatter;
 
 import com.exist.ecc.person.util.StringUtil;
 
@@ -20,10 +22,13 @@ public class PersonOutputFormatter implements OutputFormatter<Person> {
   public String format(Person person) {
     OutputFormatter<Name> nameFormatter = new NameOutputFormatter();
     OutputFormatter<Address> addressFormatter = new AddressOutputFormatter();
+    CollectionOutputFormatter<Role> rolesFormatter =
+      new CommaCollectionFormatter<Role>(new RoleOutputFormatter());
     
     String nameString = nameFormatter.format(person.getName());
     String addressString = addressFormatter.format(person.getAddress());
     String employedString = person.isEmployed() ? "Yes" : "No";
+    String rolesString = rolesFormatter.format(person.getRoles());
     String birthDateString;
     String dateHiredString;
 
@@ -45,21 +50,29 @@ public class PersonOutputFormatter implements OutputFormatter<Person> {
     String personString = 
       new StringBuilder()
       .append(StringUtil.formatUnlessBlank("[%d] ", person.getPersonId()))
+      .append(StringUtil.formatUnlessBlank("%s" + lineBreak(), nameString))
       .append(StringUtil.formatUnlessBlank(
-        "%s" + System.lineSeparator(), nameString))
+        indent() + "Address:  %s" + lineBreak(), addressString))
       .append(StringUtil.formatUnlessBlank(
-        "  Address:  %s" + System.lineSeparator(), addressString))
+        indent() + "Birth date:  %s" + lineBreak(), birthDateString))
       .append(StringUtil.formatUnlessBlank(
-        "  Birth date:  %s" + System.lineSeparator(), birthDateString))
+        indent() + "Date hired:  %s" + lineBreak(), dateHiredString))
       .append(StringUtil.formatUnlessBlank(
-        "  Date hired:  %s" + System.lineSeparator(), dateHiredString))
+        indent() + "GWA:  %s" + lineBreak(), person.getGwa()))
       .append(StringUtil.formatUnlessBlank(
-        "  GWA:  %s" + System.lineSeparator(), person.getGwa()))
+        indent() + "Employed:  %s" + lineBreak(), employedString))
       .append(StringUtil.formatUnlessBlank(
-        "  Employed:  %s" + System.lineSeparator(), employedString))
+        lineBreak() + indent() + "Roles:  %s" + lineBreak(), rolesString))
       .toString();
 
     return personString;
+  }
+
+  private String indent() {
+    return "     ";
+  }
+  private String lineBreak() {
+    return System.lineSeparator();
   }
 
 }
