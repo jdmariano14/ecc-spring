@@ -36,7 +36,7 @@ public class PersonOutputFormatter implements OutputFormatter<Person> {
       .append(StringUtil.formatUnlessEmpty(
         nameString, "%s" + System.lineSeparator()))
       .append(StringUtil.formatUnlessEmpty(
-        addressString, "  Address: %s" + System.lineSeparator()))
+        addressString, "  Address:  %s" + System.lineSeparator()))
       .append(StringUtil.formatUnlessEmpty(
         birthDateString, "  Birth date:  %s" + System.lineSeparator()))
       .append(StringUtil.formatUnlessEmpty(
