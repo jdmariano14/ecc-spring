@@ -23,7 +23,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 
-import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.api.PersonDao;
 import com.exist.ecc.person.core.dao.api.RoleDao;
 import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
@@ -34,6 +33,7 @@ import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Role;
 
+import com.exist.ecc.person.core.service.db.Transactions;
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.api.InputReader;
@@ -123,9 +123,9 @@ public class App {
     System.out.println();
     setPersonFields(person, name, address);
 
-    Transactions.conduct(personDao, () -> { 
+    Transactions.conduct(() -> { 
       personDao.save(person);
-    });
+    }, personDao);
   }
 
   private static void updatePerson() {
@@ -133,7 +133,7 @@ public class App {
 
     long id = getId("person");
 
-    Transactions.conduct(personDao, () -> {
+    Transactions.conduct(() -> {
       final Person person = personDao.get(id);
       final Name name = person.getName();
       final Address address = person.getAddress();
@@ -142,7 +142,7 @@ public class App {
       System.out.println("Enter '\\null' to clear a field");
       setPersonFields(person, name, address);
       personDao.save(person);
-    });
+    }, personDao);
   }
 
   private static void deletePerson() {
@@ -150,14 +150,14 @@ public class App {
 
     long id = getId("person");
 
-    Transactions.conduct(personDao, () -> { 
+    Transactions.conduct(() -> { 
       final Person person = personDao.get(id);
       
       System.out.println();
       if (getDeleteConfirmation("person", person.toString())) {
         personDao.delete(person);
       }
-    });
+    }, personDao);
   }
 
   private static void listPerson() {
@@ -215,7 +215,7 @@ public class App {
 
     System.out.println();
 
-    Transactions.conduct(personDao, () -> { 
+    Transactions.conduct(() -> { 
       OutputWriter writer = new ConsoleOutputWriter();
       OutputFormatter formatter = new PersonOutputFormatter();
 
@@ -229,7 +229,7 @@ public class App {
       results.forEach(p -> {
         writer.write(formatter.format(p));
       }); 
-    });
+    }, personDao);
   }
 
   private static void listPersonByProperty(String property, boolean desc) {
@@ -237,7 +237,7 @@ public class App {
 
     System.out.println();
 
-    Transactions.conduct(personDao, () -> { 
+    Transactions.conduct(() -> { 
       OutputWriter writer = new ConsoleOutputWriter();
       OutputFormatter formatter = new PersonOutputFormatter();
       UnaryOperator<Criteria> query = 
@@ -247,7 +247,7 @@ public class App {
       personDao.query(query).forEach(p -> {
         writer.write(formatter.format(p));
       }); 
-    });
+    }, personDao);
   }
 
   private static void addRole() {
@@ -257,9 +257,9 @@ public class App {
     System.out.println();
     setRoleFields(role);
 
-    Transactions.conduct(roleDao, () -> { 
+    Transactions.conduct(() -> { 
       roleDao.save(role);
-    });
+    }, roleDao);
   }
 
   private static void updateRole() {
@@ -267,13 +267,13 @@ public class App {
 
     long id = getId("role");
 
-    Transactions.conduct(roleDao, () -> {
+    Transactions.conduct(() -> {
       final Role role = roleDao.get(id);
           
       System.out.println();
       setRoleFields(role);
       roleDao.save(role);
-    });
+    }, roleDao);
   }
 
   private static void deleteRole() {
@@ -281,7 +281,7 @@ public class App {
     
     long id = getId("role");
 
-    Transactions.conduct(roleDao, () -> { 
+    Transactions.conduct(() -> { 
       final Role role = roleDao.get(id);
           
       System.out.println();
@@ -289,7 +289,7 @@ public class App {
       if (getDeleteConfirmation("role", role.toString())) {
         roleDao.delete(role);
       }
-    });
+    }, roleDao);
   }
 
   private static void listRole() {
@@ -297,10 +297,10 @@ public class App {
 
     System.out.println();
 
-    Transactions.conduct(roleDao, () -> { 
+    Transactions.conduct(() -> { 
       roleDao.query(c -> c.addOrder(Order.asc("roleId")))
              .forEach(System.out::println); 
-    });
+    }, roleDao);
   }
 
   private static long getId(String entityClass) {
