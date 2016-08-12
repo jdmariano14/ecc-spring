@@ -11,11 +11,11 @@ public class AddressOutputFormatter implements OutputFormatter<Address> {
   public String format(Address address) {
     String addressString = 
       new StringBuilder()
-      .append(StringUtil.formatUnlessEmpty(
-        address.getStreetAddress(), "%s, "))
-      .append(StringUtil.formatUnlessEmpty(address.getBarangay(), "%s, "))
-      .append(StringUtil.formatUnlessEmpty(address.getMunicipality(), "%s "))
-      .append(StringUtil.formatUnlessEmpty(address.getZipCode(), "%s"))
+      .append(StringUtil.formatUnlessBlank(
+        "%s, ", address.getStreetAddress()))
+      .append(StringUtil.formatUnlessBlank("%s, ", address.getBarangay()))
+      .append(StringUtil.formatUnlessBlank("%s ", address.getMunicipality()))
+      .append(StringUtil.formatUnlessBlank("%s", address.getZipCode()))
       .toString();
 
     return addressString;

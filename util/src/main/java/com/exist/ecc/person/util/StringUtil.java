@@ -32,10 +32,14 @@ public class StringUtil {
     return sb.toString();
   }
 
-  public static String formatUnlessEmpty(String str, String format) {
-    return StringUtils.isEmpty(str) 
-           ? new String()
-           : String.format(format, str);
+  public static String formatUnlessBlank(String format, Object... args) {
+    for (Object arg : args) {
+      if (arg == null || StringUtils.isBlank(arg.toString())) {
+        return "";
+      }
+    }
+
+    return String.format(format, args);
   }
 
 

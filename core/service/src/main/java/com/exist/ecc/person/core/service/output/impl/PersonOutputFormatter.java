@@ -18,12 +18,10 @@ import com.exist.ecc.person.util.StringUtil;
 public class PersonOutputFormatter implements OutputFormatter<Person> {
 
   public String format(Person person) {
-    OutputFormatter nameFormatter = new NameOutputFormatter();
-    OutputFormatter addressFormatter = new AddressOutputFormatter();
-    String idString = String.valueOf(person.getPersonId());
+    OutputFormatter<Name> nameFormatter = new NameOutputFormatter();
+    OutputFormatter<Address> addressFormatter = new AddressOutputFormatter();
     String nameString = nameFormatter.format(person.getName());
     String addressString = addressFormatter.format(person.getAddress());
-    String gwaString = person.getGwa().toString();
     String employedString = person.isEmployed() ? "Yes" : "No";
     DateFormat dateFormat =
       new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -32,19 +30,19 @@ public class PersonOutputFormatter implements OutputFormatter<Person> {
 
     String personString = 
       new StringBuilder()
-      .append(StringUtil.formatUnlessEmpty(idString, "[%s] "))
-      .append(StringUtil.formatUnlessEmpty(
-        nameString, "%s" + System.lineSeparator()))
-      .append(StringUtil.formatUnlessEmpty(
-        addressString, "  Address:  %s" + System.lineSeparator()))
-      .append(StringUtil.formatUnlessEmpty(
-        birthDateString, "  Birth date:  %s" + System.lineSeparator()))
-      .append(StringUtil.formatUnlessEmpty(
-        dateHiredString, "  Date hired:  %s" + System.lineSeparator()))
-      .append(StringUtil.formatUnlessEmpty(
-        gwaString, "  GWA:  %s" + System.lineSeparator()))
-      .append(StringUtil.formatUnlessEmpty(
-        employedString, "  Employed:  %s" + System.lineSeparator()))
+      .append(StringUtil.formatUnlessBlank("[%d] ", person.getPersonId()))
+      .append(StringUtil.formatUnlessBlank(
+        "%s" + System.lineSeparator(), nameString))
+      .append(StringUtil.formatUnlessBlank(
+        "  Address:  %s" + System.lineSeparator(), addressString))
+      .append(StringUtil.formatUnlessBlank(
+        "  Birth date:  %s" + System.lineSeparator(), birthDateString))
+      .append(StringUtil.formatUnlessBlank(
+        "  Date hired:  %s" + System.lineSeparator(), dateHiredString))
+      .append(StringUtil.formatUnlessBlank(
+        "  GWA:  %s" + System.lineSeparator(), person.getGwa()))
+      .append(StringUtil.formatUnlessBlank(
+        "  Employed:  %s" + System.lineSeparator(), employedString))
       .toString();
 
     return personString;

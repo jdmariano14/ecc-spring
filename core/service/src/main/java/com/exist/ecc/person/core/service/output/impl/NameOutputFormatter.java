@@ -11,11 +11,11 @@ public class NameOutputFormatter implements OutputFormatter<Name> {
   public String format(Name name) {
     String nameString = 
       new StringBuilder()
-      .append(StringUtil.formatUnlessEmpty(name.getTitle(), "%s "))
-      .append(StringUtil.formatUnlessEmpty(name.getFirstName(), "%s "))
-      .append(StringUtil.formatUnlessEmpty(name.getMiddleName(), "%s "))
-      .append(StringUtil.formatUnlessEmpty(name.getLastName(), "%s"))
-      .append(StringUtil.formatUnlessEmpty(name.getSuffix(), ", %s"))
+      .append(StringUtil.formatUnlessBlank("%s ", name.getTitle()))
+      .append(StringUtil.formatUnlessBlank("%s ", name.getFirstName()))
+      .append(StringUtil.formatUnlessBlank("%s ", name.getMiddleName()))
+      .append(StringUtil.formatUnlessBlank("%s", name.getLastName()))
+      .append(StringUtil.formatUnlessBlank(", %s", name.getSuffix()))
       .toString();
 
     return nameString;
