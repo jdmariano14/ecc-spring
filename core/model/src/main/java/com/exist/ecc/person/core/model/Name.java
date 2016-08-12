@@ -1,6 +1,6 @@
 package com.exist.ecc.person.core.model;
 
-import org.apache.commons.lang3.StringUtils;
+import com.exist.ecc.person.util.StringUtil;
 
 public class Name {
 
@@ -56,26 +56,15 @@ public class Name {
 
   @Override
   public String toString() {
-    String nameString = new StringBuilder()
-                        .append(propertyToString(title, "", " "))
-                        .append(propertyToString(firstName, "", " "))
-                        .append(propertyToString(middleName, "", " "))
-                        .append(lastName)
-                        .append(propertyToString(suffix, ", ", ""))
-                        .toString();
+    String nameString = 
+      new StringBuilder(StringUtil.formatUnlessEmpty(title, "%s "))
+      .append(StringUtil.formatUnlessEmpty(firstName, "%s "))
+      .append(StringUtil.formatUnlessEmpty(middleName, "%s "))
+      .append(lastName)
+      .append(StringUtil.formatUnlessEmpty(suffix, ", %s"))
+      .toString();
 
     return nameString;
-  }
-
-  private String propertyToString(String property, String prefix, 
-    String suffix) 
-  {
-    return StringUtils.isEmpty(property) 
-           ? new String()
-           : new StringBuilder(prefix)
-             .append(property)
-             .append(suffix)
-             .toString();
   }
 
 }

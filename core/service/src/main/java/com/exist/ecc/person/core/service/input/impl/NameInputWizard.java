@@ -20,7 +20,7 @@ public class NameInputWizard extends AbstractInputWizard<Name> {
 
   public void initializeData(Map<String, PropertyData> data) {
     String[] stringProperties = {
-      "firstName", "lastName", "middleName", "suffix", "title"};
+      "lastName", "firstName", "middleName", "suffix", "title"};
 
     for (String stringProperty : stringProperties) {
       data.put(stringProperty, new PropertyData(

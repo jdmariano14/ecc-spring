@@ -1,5 +1,7 @@
 package com.exist.ecc.person.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class StringUtil {
 
   public static String camelCaseToSpaces(String str) {
@@ -28,6 +30,12 @@ public class StringUtil {
     }
 
     return sb.toString();
+  }
+
+  public static String formatUnlessEmpty(String str, String format) {
+    return StringUtils.isEmpty(str) 
+           ? new String()
+           : String.format(format, str);
   }
 
 
