@@ -14,8 +14,11 @@ import java.util.Scanner;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 
 import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.api.PersonDao;

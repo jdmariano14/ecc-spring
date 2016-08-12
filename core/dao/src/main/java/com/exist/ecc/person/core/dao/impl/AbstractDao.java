@@ -3,6 +3,7 @@ package com.exist.ecc.person.core.dao.impl;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -46,18 +47,10 @@ public class AbstractDao<T, I extends Serializable> implements Dao<T, I> {
   }
 
   @Override
-  public List<T> getAll() {
-    return this.findByCriteria();
-  }
-
-  protected List<T> findByCriteria(Criterion ... crit) {
+  public List<T> query(UnaryOperator<Criteria> crit) {
     Criteria criteria = this.getSession().createCriteria(this.getPersistentClass());
     
-    for (Criterion c : crit) {
-      criteria.add(c);
-    }
-
-    return (List<T>) criteria.list(); 
+    return (List<T>) crit.apply(criteria).list(); 
   }
   
   @Override
