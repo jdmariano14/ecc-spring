@@ -97,9 +97,15 @@ public class InputService<T> {
   public T getInput() {
     return exceptionHandler.handle(() -> {
       String input = reader.read(message);
-      T returnValue = defaultValue != null && input.isEmpty()
-                      ? defaultValue 
-                      : conversion.apply(input);
+      T returnValue = null;
+
+      if (input.isEmpty()) {
+        if (defaultValue != null) {
+          returnValue = defaultValue;
+        }
+      } else {
+        returnValue = conversion.apply(input);
+      }
 
       validation.accept(returnValue);
 
