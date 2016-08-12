@@ -25,21 +25,21 @@ public class PersonInputWizard extends AbstractInputWizard<Person> {
   private DateFormat dateFormat;
 
   public PersonInputWizard(InputReader reader, 
-    InputExceptionHandler exceptionHandler) {
-    super(reader, exceptionHandler);
+    InputExceptionHandler handler) {
+    super(reader, handler);
     dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
   }
 
   public void initializeData(Map<String, PropertyData> data) {
-    String[] dateProperties = {"birthDate", "dateHired"};
-    String[] bigDecimalProperties = {"gwa"};
-    String[] booleanProperties = {"employed"};
+    String[] optionalDates = {"birthDate", "dateHired"};
+    String[] optionalBigDecimals = {"gwa"};
+    String[] optionalBooleans = {"employed"};
 
-    for (String dateProperty : dateProperties) {
-      data.put(dateProperty, new PropertyData(
+    for (String optionalDate : optionalDates) {
+      data.put(optionalDate, new PropertyData(
         new InputService
-        .Builder<Date>(getReader(), getExceptionHandler())
-        .message(dateProperty)
+        .Builder<Date>(getReader(), new ReturnNullHandler())
+        .message(optionalDate)
         .conversion(s -> { 
           try {
             return dateFormat.parse(s);
@@ -47,29 +47,29 @@ public class PersonInputWizard extends AbstractInputWizard<Person> {
             throw new RuntimeException(e.getMessage());
           }
         })
-        .validation(Validations.get(Person.class, dateProperty))));
+        .validation(Validations.get(Person.class, optionalDate))));
     }
 
-    for (String booleanProperty : booleanProperties) {
-      data.put(booleanProperty, new PropertyData(
+    for (String optionalBoolean : optionalBooleans) {
+      data.put(optionalBoolean, new PropertyData(
         new InputService
-        .Builder<Boolean>(getReader(), getExceptionHandler())
-        .message(booleanProperty)
+        .Builder<Boolean>(getReader(), new ReturnNullHandler())
+        .message(optionalBoolean)
         .conversion(b -> {
           return Boolean.valueOf(b) 
                  || b.toString().equalsIgnoreCase("t")
                  || b.toString().equalsIgnoreCase("y");
         })
-        .validation(Validations.get(Person.class, booleanProperty))));
+        .validation(Validations.get(Person.class, optionalBoolean))));
     }
 
-    for (String bigDecimalProperty : bigDecimalProperties) {
-      data.put(bigDecimalProperty, new PropertyData(
+    for (String optionalBigDecimal : optionalBigDecimals) {
+      data.put(optionalBigDecimal, new PropertyData(
         new InputService
-        .Builder<BigDecimal>(getReader(), getExceptionHandler())
-        .message(bigDecimalProperty)
+        .Builder<BigDecimal>(getReader(), new ReturnNullHandler())
+        .message(optionalBigDecimal)
         .conversion(s -> { return new BigDecimal(s); })
-        .validation(Validations.get(Person.class, bigDecimalProperty))));
+        .validation(Validations.get(Person.class, optionalBigDecimal))));
     }
   }
 

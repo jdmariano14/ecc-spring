@@ -9,24 +9,25 @@ import com.exist.ecc.person.core.model.Address;
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
+import com.exist.ecc.person.core.service.input.impl.ReturnNullHandler;
 import com.exist.ecc.person.core.service.validation.Validations;
 
 public class AddressInputWizard extends AbstractInputWizard<Address> {
 
   public AddressInputWizard(InputReader reader, 
-    InputExceptionHandler exceptionHandler) {
-    super(reader, exceptionHandler);
+    InputExceptionHandler handler) {
+    super(reader, handler);
   }
 
   public void initializeData(Map<String, PropertyData> data) {
-    String[] stringProperties = {
+    String[] optionalStrings = {
       "streetAddress", "barangay", "municipality", "zipCode"};
 
-    for (String stringProperty : stringProperties) {
-      data.put(stringProperty, new PropertyData(
-        new InputService.Builder<String>(getReader(), getExceptionHandler())
-        .message(stringProperty)
-        .validation(Validations.get(Address.class, stringProperty))));
+    for (String optionalString : optionalStrings) {
+      data.put(optionalString, new PropertyData(
+        new InputService.Builder<String>(getReader(), getDefaultHandler())
+        .message(optionalString)
+        .validation(Validations.get(Address.class, optionalString))));
     }
         
   }
