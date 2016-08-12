@@ -44,7 +44,7 @@ public class PersonInputWizard extends AbstractInputWizard<Person> {
           try {
             return dateFormat.parse(s);
           } catch(ParseException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
           }
         })
         .validation(Validations.get(Person.class, optionalDate))));

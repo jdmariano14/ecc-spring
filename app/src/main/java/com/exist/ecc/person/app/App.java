@@ -104,7 +104,7 @@ public class App {
     try {
       App.class.getDeclaredMethod(options[choice - 1]).invoke(App.class);
     } catch (Exception e) {
-      throw new RuntimeException(e.getMessage());
+      throw new RuntimeException(e);
     } 
   }
 
@@ -189,7 +189,7 @@ public class App {
     try {
       App.class.getDeclaredMethod(listMethod).invoke(App.class);
     } catch (Exception e) {
-      throw new RuntimeException(e.getMessage());
+      throw new RuntimeException(e);
     }
   }
 

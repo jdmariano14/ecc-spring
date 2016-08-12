@@ -113,7 +113,7 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
           BeanUtils.setProperty(baseObject, propertyName, inputValue);
         }
       } catch (Exception e) {
-        throw new RuntimeException(e.getMessage());
+        throw new RuntimeException(e);
       }
     }
   }
@@ -132,7 +132,7 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
       } catch (NullPointerException e) {
 
       } catch (Exception e) {
-        throw new RuntimeException(e.getMessage());
+        throw new RuntimeException(e);
       }
     }
   }
