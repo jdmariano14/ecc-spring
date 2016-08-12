@@ -168,7 +168,7 @@ public class App {
       OutputWriter writer = new ConsoleOutputWriter();
       OutputFormatter formatter = new PersonOutputFormatter();
 
-      personDao.getAll().forEach(p -> {
+      personDao.query(c -> c.addOrder(Order.asc("personId"))).forEach(p -> {
         writer.write(formatter.format(p));
       }); 
     });
@@ -216,7 +216,8 @@ public class App {
     final RoleDao roleDao = new RoleHibernateDao();
 
     Transactions.conduct(roleDao, () -> { 
-      roleDao.getAll().forEach(System.out::println); 
+      roleDao.query(c -> c.addOrder(Order.asc("roleId")))
+             .forEach(System.out::println); 
     });
   }
 
