@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Scanner;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -70,7 +71,6 @@ public class App {
       "exit"
     };
 
-
     try {
       while (!exit) {
         appLoop(options);
@@ -84,13 +84,7 @@ public class App {
   }
 
   private static void appLoop(String[] options) {
-    Consumer<Integer> validation = 
-      i -> {
-        if (i < 1 || i > options.length) {
-          throw new IllegalArgumentException(
-            "Input does not correspond to an option");
-        }
-      };
+    Consumer<Integer> validation = optionValidation(options.length);
 
     String menuPrompt = 
       new StringBuilder(System.lineSeparator())
@@ -111,8 +105,7 @@ public class App {
       App.class.getDeclaredMethod(options[choice - 1]).invoke(App.class);
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage());
-    }
-    
+    } 
   }
 
   private static void exit() {
@@ -168,16 +161,68 @@ public class App {
   private static void listPerson() {
     final PersonDao personDao = new PersonHibernateDao();
 
+    String[] options = {"lastName", "dateHired", "gwa"};
+    int choice;
+    String listMethod;
+
+    Consumer<Integer> validation = optionValidation(options.length);
+    String menuPrompt = 
+      new StringBuilder(System.lineSeparator())
+          .append("Sort by:")
+          .append(System.lineSeparator())
+          .append(MenuUtil.getMenu(options, App::defaultTransform))
+          .append(System.lineSeparator())
+          .toString();
+
+    choice = 
+      new InputService.Builder<Integer>(reader, handler)
+          .message(menuPrompt)
+          .conversion(Integer::parseInt)
+          .validation(validation)
+          .build().getInput();
+    listMethod 
+      = new StringBuilder()
+        .append("listPersonBy")
+        .append(StringUtil.capitalize(options[choice - 1]))
+        .toString();
+
+    try {
+      App.class.getDeclaredMethod(listMethod).invoke(App.class);
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage());
+    }
+  }
+
+  private static void listPersonByProperty(String propertyName, 
+    boolean desc) 
+  {
+    final PersonDao personDao = new PersonHibernateDao();
+
     System.out.println();
 
     Transactions.conduct(personDao, () -> { 
       OutputWriter writer = new ConsoleOutputWriter();
       OutputFormatter formatter = new PersonOutputFormatter();
+      UnaryOperator<Criteria> query = 
+        desc ? c -> c.addOrder(Order.desc(propertyName))
+             : c -> c.addOrder(Order.asc(propertyName));
 
-      personDao.query(c -> c.addOrder(Order.asc("personId"))).forEach(p -> {
+      personDao.query(query).forEach(p -> {
         writer.write(formatter.format(p));
       }); 
     });
+  }
+
+  private static void listPersonByLastName() {
+    listPersonByProperty("name.lastName", true);
+  }
+
+  private static void listPersonByDateHired() {
+    listPersonByProperty("dateHired", true);
+  }
+
+  private static void listPersonByGwa() {
+    listPersonByProperty("gwa", true);
   }
 
   private static void addRole() {
@@ -336,6 +381,15 @@ public class App {
              : String.format("%s (%s): ", defaultTransform(s), o);
     });
     roleWizard.setProperties(role);
+  }
+
+  private static Consumer<Integer> optionValidation(int bound) {
+    return i -> {
+      if (i < 1 || i > bound) {
+        throw new IllegalArgumentException(
+          "Input does not correspond to an option");
+      }
+    };
   }
 
   private static String defaultTransform(String str) {
