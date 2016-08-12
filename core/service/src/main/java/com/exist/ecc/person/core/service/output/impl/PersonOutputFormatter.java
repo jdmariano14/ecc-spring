@@ -20,13 +20,27 @@ public class PersonOutputFormatter implements OutputFormatter<Person> {
   public String format(Person person) {
     OutputFormatter<Name> nameFormatter = new NameOutputFormatter();
     OutputFormatter<Address> addressFormatter = new AddressOutputFormatter();
+    
     String nameString = nameFormatter.format(person.getName());
     String addressString = addressFormatter.format(person.getAddress());
     String employedString = person.isEmployed() ? "Yes" : "No";
+    String birthDateString;
+    String dateHiredString;
+
     DateFormat dateFormat =
       new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    String birthDateString = dateFormat.format(person.getBirthDate());
-    String dateHiredString = dateFormat.format(person.getDateHired());
+
+    try {
+      birthDateString = dateFormat.format(person.getBirthDate()); 
+    } catch (NullPointerException e) {
+      birthDateString = "";
+    }
+
+    try {
+      dateHiredString = dateFormat.format(person.getDateHired());
+    } catch (NullPointerException e) {
+      dateHiredString = "";
+    }
 
     String personString = 
       new StringBuilder()
