@@ -17,16 +17,6 @@ import java.util.function.Consumer;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.exist.ecc.person.core.service.input.InputService;
-import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
-import com.exist.ecc.person.core.service.input.api.InputExtractor;
-import com.exist.ecc.person.core.service.input.impl.AddressInputWizard;
-import com.exist.ecc.person.core.service.input.impl.ConsoleInputExtractor;
-import com.exist.ecc.person.core.service.input.impl.NameInputWizard;
-import com.exist.ecc.person.core.service.input.impl.PersonInputWizard;
-import com.exist.ecc.person.core.service.input.impl.RepeatExtractionExceptionHandler;
-import com.exist.ecc.person.core.service.input.impl.RoleInputWizard;
-
 import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.api.PersonDao;
 import com.exist.ecc.person.core.dao.api.RoleDao;
@@ -38,6 +28,19 @@ import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Role;
 
+import com.exist.ecc.person.core.service.input.InputService;
+import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
+import com.exist.ecc.person.core.service.input.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.impl.AddressInputWizard;
+import com.exist.ecc.person.core.service.input.impl.ConsoleInputExtractor;
+import com.exist.ecc.person.core.service.input.impl.NameInputWizard;
+import com.exist.ecc.person.core.service.input.impl.PersonInputWizard;
+import com.exist.ecc.person.core.service.input.impl.RepeatExtractionExceptionHandler;
+import com.exist.ecc.person.core.service.input.impl.RoleInputWizard;
+import com.exist.ecc.person.core.service.output.api.OutputFormatter;
+import com.exist.ecc.person.core.service.output.api.OutputWriter;
+import com.exist.ecc.person.core.service.output.impl.ConsoleOutputWriter;
+import com.exist.ecc.person.core.service.output.impl.PersonOutputFormatter;
 import com.exist.ecc.person.core.service.validation.Validations;
 
 import com.exist.ecc.person.util.MenuUtil;
@@ -159,7 +162,12 @@ public class App {
     final PersonDao personDao = new PersonHibernateDao();
 
     Transactions.conduct(personDao, () -> { 
-      personDao.getAll().forEach(System.out::println); 
+      OutputWriter writer = new ConsoleOutputWriter();
+      OutputFormatter formatter = new PersonOutputFormatter();
+
+      personDao.getAll().forEach(p -> {
+        writer.write(formatter.format(p));
+      }); 
     });
   }
 
