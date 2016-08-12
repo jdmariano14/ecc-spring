@@ -70,6 +70,7 @@ public class App {
     String[] options = {
       "createPerson", "updatePerson", "deletePerson", "listPerson",
       "addRole", "updateRole", "deleteRole", "listRole",
+      "addPersonRole",
       "exit"
     };
 
@@ -301,6 +302,22 @@ public class App {
       roleDao.query(c -> c.addOrder(Order.asc("roleId")))
              .forEach(System.out::println); 
     }, roleDao);
+  }
+
+  private static void addPersonRole() {
+    final PersonDao personDao = new PersonHibernateDao();
+    final RoleDao roleDao = new RoleHibernateDao();
+    
+    long personId = getId("person");
+    long roleId = getId("role");
+
+    Transactions.conduct(() -> { 
+      final Person person = personDao.get(personId);
+      final Role role = roleDao.get(roleId);
+      
+      person.getRoles().add(role);
+      personDao.save(person);
+    }, personDao, roleDao);
   }
 
   private static long getId(String entityClass) {
