@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.function.BiFunction;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
 
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputReader;
@@ -15,7 +16,11 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
   
   private Map<String, PropertyData> data;
   private InputReader reader;
-  private InputExceptionHandler exceptionHandler;
+  private InputExceptionHandler handler;
+
+  static {
+    BeanUtilsBean.getInstance().getConvertUtils().register(false, false, 0);
+  }
 
   public static class PropertyData {
     private InputService.Builder builder;
@@ -102,7 +107,7 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
         data.get(propertyName).getBuilder().build().getInput();
 
       try {
-        if (inputValue.toString().equals("\\null")) {
+        if (inputValue == null || inputValue.toString().equals("\\null")) {
           BeanUtils.setProperty(baseObject, propertyName, null); 
         } else {
           BeanUtils.setProperty(baseObject, propertyName, inputValue);
