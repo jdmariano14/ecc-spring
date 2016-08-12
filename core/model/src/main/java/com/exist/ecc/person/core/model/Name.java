@@ -1,7 +1,5 @@
 package com.exist.ecc.person.core.model;
 
-import com.exist.ecc.person.util.StringUtil;
-
 public class Name {
 
   private String firstName;
@@ -52,19 +50,6 @@ public class Name {
 
   public void setTitle(String newTitle) {
     title = newTitle;
-  }
-
-  @Override
-  public String toString() {
-    String nameString = 
-      new StringBuilder(StringUtil.formatUnlessEmpty(title, "%s "))
-      .append(StringUtil.formatUnlessEmpty(firstName, "%s "))
-      .append(StringUtil.formatUnlessEmpty(middleName, "%s "))
-      .append(lastName)
-      .append(StringUtil.formatUnlessEmpty(suffix, ", %s"))
-      .toString();
-
-    return nameString;
   }
 
 }

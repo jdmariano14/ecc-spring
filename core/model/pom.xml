@@ -40,10 +40,5 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
-    
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-hibernate-util</artifactId>
-    </dependency>
   </dependencies>
 </project>

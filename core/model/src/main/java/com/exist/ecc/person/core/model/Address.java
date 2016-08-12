@@ -1,7 +1,5 @@
 package com.exist.ecc.person.core.model;
 
-import com.exist.ecc.person.util.StringUtil;
-
 public class Address {
 
   private String streetAddress;
@@ -42,18 +40,6 @@ public class Address {
 
   public void setZipCode(String newZipCode) {
     zipCode = newZipCode;
-  }
-
-  @Override
-  public String toString() {
-    String addressString = 
-      new StringBuilder(StringUtil.formatUnlessEmpty(streetAddress, "%s, "))
-      .append(StringUtil.formatUnlessEmpty(barangay, "%s, "))
-      .append(StringUtil.formatUnlessEmpty(municipality, "%s "))
-      .append(StringUtil.formatUnlessEmpty(zipCode, "%s"))
-      .toString();
-
-    return addressString;
   }
 
 }

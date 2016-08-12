@@ -95,9 +95,5 @@ public class Person {
   public void setRoles(Collection<Role> newRole) {
     roles = newRole;
   }
-
-  @Override
-  public String toString() {
-    return String.format("[%d] %s", personId, name.toString());
-  }
+  
 }
