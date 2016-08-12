@@ -3,12 +3,12 @@ package com.exist.ecc.person.core.service.input;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import com.exist.ecc.person.core.service.input.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 
 public class InputService<T> {
 
-  private InputExtractor extractor;
+  private InputReader reader;
   private InputExceptionHandler exceptionHandler;
   private String message;
   private Function<String, T> conversion;
@@ -16,14 +16,14 @@ public class InputService<T> {
   private T defaultValue;
 
   public InputService(
-    final InputExtractor extractor,
+    final InputReader reader,
     final InputExceptionHandler exceptionHandler,
     final String message,
     final Function<String, T> conversion,
     final Consumer<T> validation,
     final T defaultValue)
   {
-    this.extractor = extractor;
+    this.reader = reader;
     this.exceptionHandler = exceptionHandler;
     this.message = message;
     this.conversion = conversion;
@@ -33,17 +33,17 @@ public class InputService<T> {
 
   public static class Builder<T> {
 
-    private InputExtractor extractor;
+    private InputReader reader;
     private InputExceptionHandler exceptionHandler;
     private String message;
     private Function<String, T> conversion;
     private Consumer<T> validation;
     private T defaultValue;
 
-    public Builder(InputExtractor extractor, 
+    public Builder(InputReader reader, 
       InputExceptionHandler exceptionHandler) 
     {
-      this.extractor = extractor;
+      this.reader = reader;
       this.exceptionHandler = exceptionHandler;
       message = "";
       conversion = x -> { return (T) x; };
@@ -89,14 +89,14 @@ public class InputService<T> {
     
     public InputService<T> build() {
       return new InputService<T>(
-        extractor, exceptionHandler, message,
+        reader, exceptionHandler, message,
         conversion, validation, defaultValue);
     }
   }
 
   public T getInput() {
     return exceptionHandler.handle(() -> {
-      String input = extractor.extract(message);
+      String input = reader.read(message);
       T returnValue = defaultValue != null && input.isEmpty()
                       ? defaultValue 
                       : conversion.apply(input);

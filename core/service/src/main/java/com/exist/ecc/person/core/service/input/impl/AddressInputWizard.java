@@ -7,15 +7,15 @@ import org.apache.commons.beanutils.BeanUtils;
 import com.exist.ecc.person.core.model.Address;
 
 import com.exist.ecc.person.core.service.input.InputService;
-import com.exist.ecc.person.core.service.input.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.validation.Validations;
 
 public class AddressInputWizard extends AbstractInputWizard<Address> {
 
-  public AddressInputWizard(InputExtractor extractor, 
+  public AddressInputWizard(InputReader reader, 
     InputExceptionHandler exceptionHandler) {
-    super(extractor, exceptionHandler);
+    super(reader, exceptionHandler);
   }
 
   public void initializeData(Map<String, PropertyData> data) {
@@ -24,7 +24,7 @@ public class AddressInputWizard extends AbstractInputWizard<Address> {
 
     for (String stringProperty : stringProperties) {
       data.put(stringProperty, new PropertyData(
-        new InputService.Builder<String>(getExtractor(), getExceptionHandler())
+        new InputService.Builder<String>(getReader(), getExceptionHandler())
         .message(stringProperty)
         .validation(Validations.get(Address.class, stringProperty))));
     }

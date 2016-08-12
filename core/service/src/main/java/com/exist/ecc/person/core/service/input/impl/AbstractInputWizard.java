@@ -7,14 +7,14 @@ import java.util.function.BiFunction;
 import org.apache.commons.beanutils.BeanUtils;
 
 import com.exist.ecc.person.core.service.input.InputService;
-import com.exist.ecc.person.core.service.input.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.api.InputWizard;
 
 public abstract class AbstractInputWizard<T> implements InputWizard<T> {
   
   private Map<String, PropertyData> data;
-  private InputExtractor extractor;
+  private InputReader reader;
   private InputExceptionHandler exceptionHandler;
 
   public static class PropertyData {
@@ -53,22 +53,22 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
     }
   }
 
-  public AbstractInputWizard(InputExtractor extractor, 
+  public AbstractInputWizard(InputReader reader, 
     InputExceptionHandler exceptionHandler)
   {
     data = new LinkedHashMap();
-    setExtractor(extractor);
+    setReader(reader);
     setExceptionHandler(exceptionHandler);
     
     initializeData(data);
   }
 
-  public InputExtractor getExtractor() {
-    return extractor;
+  public InputReader getReader() {
+    return reader;
   }
 
-  public void setExtractor(InputExtractor newExtractor) {
-    extractor = newExtractor;
+  public void setReader(InputReader newReader) {
+    reader = newReader;
   }
 
   public InputExceptionHandler getExceptionHandler() {

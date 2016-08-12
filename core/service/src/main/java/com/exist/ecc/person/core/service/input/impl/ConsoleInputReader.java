@@ -2,13 +2,13 @@ package com.exist.ecc.person.core.service.input.impl;
 
 import java.util.Scanner;
 
-import com.exist.ecc.person.core.service.input.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.api.InputReader;
 
-public class ConsoleInputExtractor implements InputExtractor {
+public class ConsoleInputReader implements InputReader {
 
   private Scanner scanner;
 
-  public ConsoleInputExtractor(Scanner scanner) {
+  public ConsoleInputReader(Scanner scanner) {
     setScanner(scanner);
   }
 
@@ -16,8 +16,8 @@ public class ConsoleInputExtractor implements InputExtractor {
     this.scanner = scanner;
   }
 
-  public String extract(String promptMsg) {
-    System.out.print(promptMsg);
+  public String read(String message) {
+    System.out.print(message);
 
     return scanner.nextLine();
   }

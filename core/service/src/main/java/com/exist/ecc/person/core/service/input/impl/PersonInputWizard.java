@@ -15,7 +15,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import com.exist.ecc.person.core.model.Person;
 
 import com.exist.ecc.person.core.service.input.InputService;
-import com.exist.ecc.person.core.service.input.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.validation.Validations;
 
@@ -23,9 +23,9 @@ public class PersonInputWizard extends AbstractInputWizard<Person> {
 
   private DateFormat dateFormat;
 
-  public PersonInputWizard(InputExtractor extractor, 
+  public PersonInputWizard(InputReader reader, 
     InputExceptionHandler exceptionHandler) {
-    super(extractor, exceptionHandler);
+    super(reader, exceptionHandler);
     dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
   }
 
@@ -37,7 +37,7 @@ public class PersonInputWizard extends AbstractInputWizard<Person> {
     for (String dateProperty : dateProperties) {
       data.put(dateProperty, new PropertyData(
         new InputService
-        .Builder<Date>(getExtractor(), getExceptionHandler())
+        .Builder<Date>(getReader(), getExceptionHandler())
         .message(dateProperty)
         .conversion(s -> { 
           try {
@@ -52,7 +52,7 @@ public class PersonInputWizard extends AbstractInputWizard<Person> {
     for (String booleanProperty : booleanProperties) {
       data.put(booleanProperty, new PropertyData(
         new InputService
-        .Builder<Boolean>(getExtractor(), getExceptionHandler())
+        .Builder<Boolean>(getReader(), getExceptionHandler())
         .message(booleanProperty)
         .conversion(b -> {
           return Boolean.valueOf(b) 
@@ -65,7 +65,7 @@ public class PersonInputWizard extends AbstractInputWizard<Person> {
     for (String bigDecimalProperty : bigDecimalProperties) {
       data.put(bigDecimalProperty, new PropertyData(
         new InputService
-        .Builder<BigDecimal>(getExtractor(), getExceptionHandler())
+        .Builder<BigDecimal>(getReader(), getExceptionHandler())
         .message(bigDecimalProperty)
         .conversion(s -> { return new BigDecimal(s); })
         .validation(Validations.get(Person.class, bigDecimalProperty))));

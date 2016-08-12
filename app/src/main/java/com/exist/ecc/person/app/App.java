@@ -30,9 +30,9 @@ import com.exist.ecc.person.core.model.Role;
 
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
-import com.exist.ecc.person.core.service.input.api.InputExtractor;
+import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.impl.AddressInputWizard;
-import com.exist.ecc.person.core.service.input.impl.ConsoleInputExtractor;
+import com.exist.ecc.person.core.service.input.impl.ConsoleInputReader;
 import com.exist.ecc.person.core.service.input.impl.NameInputWizard;
 import com.exist.ecc.person.core.service.input.impl.PersonInputWizard;
 import com.exist.ecc.person.core.service.input.impl.RepeatExtractionExceptionHandler;
@@ -50,12 +50,12 @@ import com.exist.ecc.person.util.StringUtil;
 public class App {
   private static boolean exit;
   private static Scanner scanner;
-  private static InputExtractor extractor;
+  private static InputReader reader;
   private static InputExceptionHandler handler;
 
   static {
     scanner = new Scanner(System.in);
-    extractor = new ConsoleInputExtractor(scanner);
+    reader = new ConsoleInputReader(scanner);
     handler = new RepeatExtractionExceptionHandler();
   }
 
@@ -98,7 +98,7 @@ public class App {
           .toString();
 
     int choice = 
-      new InputService.Builder<Integer>(extractor, handler)
+      new InputService.Builder<Integer>(reader, handler)
           .message(menuPrompt)
           .conversion(Integer::parseInt)
           .validation(validation)
@@ -222,7 +222,7 @@ public class App {
                         .append(entityClass)
                         .append(" ID: ");
 
-    long id = new InputService.Builder<Long>(extractor, handler)
+    long id = new InputService.Builder<Long>(reader, handler)
               .message(msg.toString())
               .conversion(Long::parseLong)
               .build().getInput();
@@ -242,7 +242,7 @@ public class App {
           .toString();
 
     String choice = 
-      new InputService.Builder<String>(extractor, handler)
+      new InputService.Builder<String>(reader, handler)
           .message(confirmMsg)
           .build().getInput();
 
@@ -253,10 +253,10 @@ public class App {
     Address address) 
   {
     PersonInputWizard personWizard = 
-      new PersonInputWizard(extractor, handler);
-    NameInputWizard nameWizard = new NameInputWizard(extractor, handler);
+      new PersonInputWizard(reader, handler);
+    NameInputWizard nameWizard = new NameInputWizard(reader, handler);
     AddressInputWizard addressWizard = 
-      new AddressInputWizard(extractor, handler);
+      new AddressInputWizard(reader, handler);
 
     BiFunction<String, Object, String> defaultFormat = (s, o) -> {
       return o == null
@@ -304,7 +304,7 @@ public class App {
   }
 
   private static void setRoleFields(Role role) {    
-    RoleInputWizard roleWizard = new RoleInputWizard(extractor, handler);
+    RoleInputWizard roleWizard = new RoleInputWizard(reader, handler);
     
     roleWizard.setDefaultFormat((s, o) -> {
       return o == null
