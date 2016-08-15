@@ -345,6 +345,39 @@ public class App {
     }, personDao, contactDao);
   }
 
+  private static void deleteContact() {
+    final PersonDao personDao = new PersonHibernateDao();
+    final ContactDao contactDao = new ContactHibernateDao();
+
+    long personId = getId("person");
+
+    Transactions.conduct(() -> { 
+      final Person person = personDao.get(personId);
+      final Collection<Contact> contacts = person.getContacts();
+      final Contact contact;
+      long contactId;
+      OutputWriter writer = new ConsoleWriter();
+      OutputFormatter<Person> personFormatter = new BasicPersonFormatter();
+      OutputFormatter<Contact> contactFormatter = new ContactFormatter();
+
+      if (contacts.isEmpty()) {
+        writer.write(personFormatter.format(person) + " has no contacts");
+      } else {
+        writer.write(personFormatter.format(person) + "'s contacts:");
+        contacts.forEach(c -> writer.write(contactFormatter.format(c)));
+
+        contactId = getId("contact");
+        contact = contactDao.get(contactId);
+
+        if (getDeleteConfirmation("contact", contact.getInfo())) {
+          person.getContacts().remove(contact);
+          personDao.save(person);
+          contactDao.delete(contact);
+        }
+      }
+    }, personDao, contactDao);
+  }
+
   private static void addRole() {
     final RoleDao roleDao = new RoleHibernateDao();
     final Role role = new Role();
