@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +46,7 @@ import com.exist.ecc.person.core.service.input.impl.RepeatReadHandler;
 import com.exist.ecc.person.core.service.input.impl.RoleWizard;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 import com.exist.ecc.person.core.service.output.api.OutputWriter;
+import com.exist.ecc.person.core.service.output.impl.BasicPersonFormatter;
 import com.exist.ecc.person.core.service.output.impl.ConsoleWriter;
 import com.exist.ecc.person.core.service.output.impl.PersonFormatter;
 import com.exist.ecc.person.core.service.output.impl.RoleFormatter;
@@ -71,7 +73,7 @@ public class App {
     String[] options = {
       "createPerson", "updatePerson", "deletePerson", "listPerson",
       "addRole", "updateRole", "deleteRole", "listRole",
-      "addPersonRole",
+      "addPersonRole", "deletePersonRole",
       "exit"
     };
 
@@ -321,6 +323,37 @@ public class App {
       
       person.getRoles().add(role);
       personDao.save(person);
+    }, personDao, roleDao);
+  }
+
+  private static void deletePersonRole() {
+    final PersonDao personDao = new PersonHibernateDao();
+    final RoleDao roleDao = new RoleHibernateDao();
+    
+    long personId = getId("person");
+
+    Transactions.conduct(() -> {
+      final Person person = personDao.get(personId);
+      final Collection<Role> roles = person.getRoles();
+      final Role role;
+      long roleId;
+      OutputWriter writer = new ConsoleWriter();
+      OutputFormatter<Person> personFormatter = new BasicPersonFormatter();
+      OutputFormatter<Role> roleFormatter = new RoleFormatter();
+
+      if (roles.isEmpty()) {
+        writer.write(personFormatter.format(person) + " has no roles");
+      } else {
+        writer.write(personFormatter.format(person) + "'s roles:");
+        roles.forEach(r -> writer.write(roleFormatter.format(r)));
+
+        roleId = getId("role");
+        role = roleDao.get(roleId);
+
+        roles.remove(role);
+        personDao.save(person);
+      }
+
     }, personDao, roleDao);
   }
 
