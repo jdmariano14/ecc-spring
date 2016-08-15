@@ -2,7 +2,7 @@ package com.exist.ecc.person.core.service.output.api;
 
 import java.util.Collection;
 
-public interface CollectionOutputFormatter<T> 
+public interface CollectionFormatter<T> 
   extends OutputFormatter<Collection<T>> 
 {
 

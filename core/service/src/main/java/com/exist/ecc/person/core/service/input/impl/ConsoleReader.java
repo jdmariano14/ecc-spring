@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 import com.exist.ecc.person.core.service.input.api.InputReader;
 
-public class ConsoleInputReader implements InputReader {
+public class ConsoleReader implements InputReader {
 
   private Scanner scanner;
 
-  public ConsoleInputReader(Scanner scanner) {
+  public ConsoleReader(Scanner scanner) {
     setScanner(scanner);
   }
 

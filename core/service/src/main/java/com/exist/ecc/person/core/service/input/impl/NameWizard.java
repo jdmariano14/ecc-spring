@@ -13,10 +13,9 @@ import com.exist.ecc.person.core.service.input.impl.RepeatReadHandler;
 import com.exist.ecc.person.core.service.input.impl.ReturnNullHandler;
 import com.exist.ecc.person.core.service.validation.Validations;
 
-public class NameInputWizard extends AbstractInputWizard<Name> {
+public class NameWizard extends AbstractWizard<Name> {
 
-  public NameInputWizard(InputReader reader, 
-    InputExceptionHandler handler) {
+  public NameWizard(InputReader reader, InputExceptionHandler handler) {
     super(reader, handler);
   }
 

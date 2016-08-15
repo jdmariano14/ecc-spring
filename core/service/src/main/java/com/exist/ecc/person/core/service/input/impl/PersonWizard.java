@@ -20,12 +20,11 @@ import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.impl.ReturnNullHandler;
 import com.exist.ecc.person.core.service.validation.Validations;
 
-public class PersonInputWizard extends AbstractInputWizard<Person> {
+public class PersonWizard extends AbstractWizard<Person> {
 
   private DateFormat dateFormat;
 
-  public PersonInputWizard(InputReader reader, 
-    InputExceptionHandler handler) {
+  public PersonWizard(InputReader reader, InputExceptionHandler handler) {
     super(reader, handler);
     dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
   }

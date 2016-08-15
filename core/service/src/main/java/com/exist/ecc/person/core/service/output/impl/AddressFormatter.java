@@ -6,7 +6,7 @@ import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 
 import com.exist.ecc.person.util.StringUtil;
 
-public class AddressOutputFormatter implements OutputFormatter<Address> {
+public class AddressFormatter implements OutputFormatter<Address> {
 
   public String format(Address address) {
     String addressString = 

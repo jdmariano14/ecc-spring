@@ -12,10 +12,9 @@ import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.impl.RepeatReadHandler;
 import com.exist.ecc.person.core.service.validation.Validations;
 
-public class RoleInputWizard extends AbstractInputWizard<Role> {
+public class RoleWizard extends AbstractWizard<Role> {
 
-  public RoleInputWizard(InputReader reader, 
-    InputExceptionHandler handler) {
+  public RoleWizard(InputReader reader, InputExceptionHandler handler) {
     super(reader, handler);
   }
 

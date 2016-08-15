@@ -13,17 +13,17 @@ import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Role;
 
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
-import com.exist.ecc.person.core.service.output.api.CollectionOutputFormatter;
+import com.exist.ecc.person.core.service.output.api.CollectionFormatter;
 
 import com.exist.ecc.person.util.StringUtil;
 
-public class PersonOutputFormatter implements OutputFormatter<Person> {
+public class PersonFormatter implements OutputFormatter<Person> {
 
   public String format(Person person) {
-    OutputFormatter<Name> nameFormatter = new NameOutputFormatter();
-    OutputFormatter<Address> addressFormatter = new AddressOutputFormatter();
-    CollectionOutputFormatter<Role> rolesFormatter =
-      new CommaCollectionFormatter<Role>(new RoleOutputFormatter());
+    OutputFormatter<Name> nameFormatter = new NameFormatter();
+    OutputFormatter<Address> addressFormatter = new AddressFormatter();
+    CollectionFormatter<Role> rolesFormatter =
+      new CollectionFormatterImpl<Role>(new RoleFormatter());
     
     String nameString = nameFormatter.format(person.getName());
     String addressString = addressFormatter.format(person.getAddress());

@@ -12,7 +12,7 @@ import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.api.InputWizard;
 
-public abstract class AbstractInputWizard<T> implements InputWizard<T> {
+public abstract class AbstractWizard<T> implements InputWizard<T> {
   
   private Map<String, PropertyData> data;
   private InputReader reader;
@@ -58,7 +58,7 @@ public abstract class AbstractInputWizard<T> implements InputWizard<T> {
     }
   }
 
-  public AbstractInputWizard(InputReader reader, 
+  public AbstractWizard(InputReader reader, 
     InputExceptionHandler handler)
   {
     data = new LinkedHashMap();

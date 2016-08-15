@@ -4,17 +4,26 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
-import com.exist.ecc.person.core.service.output.api.CollectionOutputFormatter;
+import com.exist.ecc.person.core.service.output.api.CollectionFormatter;
 
-public abstract class AbstractCollectionOutputFormatter<T> 
-  implements CollectionOutputFormatter<T>
-{
+public class CollectionFormatterImpl<T> implements CollectionFormatter<T> {
+
+  public static final String DEFAULT_DELIMITER = " ";
+
+  private String delimiter;
   private OutputFormatter<T> elementFormatter;
 
-  public AbstractCollectionOutputFormatter(
-    OutputFormatter<T> elementFormatter) 
-  {
+  public CollectionFormatterImpl(OutputFormatter<T> elementFormatter) {
     setElementFormatter(elementFormatter);
+    setDelimiter(DEFAULT_DELIMITER);
+  }
+
+  public String getDelimiter() {
+    return delimiter;
+  }
+
+  public void setDelimiter(String delimiter) {
+    this.delimiter = delimiter;
   }
 
   public OutputFormatter<T> getElementFormatter() {
@@ -33,13 +42,11 @@ public abstract class AbstractCollectionOutputFormatter<T>
       collectionString.append(elementFormatter.format(iter.next()));
 
       if (iter.hasNext()) {
-        collectionString.append(delimiter()); 
+        collectionString.append(delimiter); 
       }
     }
 
     return collectionString.toString();
   }
-
-  public abstract String delimiter();
-
+  
 }

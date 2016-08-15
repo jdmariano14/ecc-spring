@@ -12,10 +12,9 @@ import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.impl.ReturnNullHandler;
 import com.exist.ecc.person.core.service.validation.Validations;
 
-public class AddressInputWizard extends AbstractInputWizard<Address> {
+public class AddressWizard extends AbstractWizard<Address> {
 
-  public AddressInputWizard(InputReader reader, 
-    InputExceptionHandler handler) {
+  public AddressWizard(InputReader reader, InputExceptionHandler handler) {
     super(reader, handler);
   }
 

@@ -6,7 +6,7 @@ import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 
 import com.exist.ecc.person.util.StringUtil;
 
-public class NameOutputFormatter implements OutputFormatter<Name> {
+public class NameFormatter implements OutputFormatter<Name> {
 
   public String format(Name name) {
     String nameString = 

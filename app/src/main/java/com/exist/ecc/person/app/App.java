@@ -37,16 +37,16 @@ import com.exist.ecc.person.core.service.db.Transactions;
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.api.InputReader;
-import com.exist.ecc.person.core.service.input.impl.AddressInputWizard;
-import com.exist.ecc.person.core.service.input.impl.ConsoleInputReader;
-import com.exist.ecc.person.core.service.input.impl.NameInputWizard;
-import com.exist.ecc.person.core.service.input.impl.PersonInputWizard;
+import com.exist.ecc.person.core.service.input.impl.AddressWizard;
+import com.exist.ecc.person.core.service.input.impl.ConsoleReader;
+import com.exist.ecc.person.core.service.input.impl.NameWizard;
+import com.exist.ecc.person.core.service.input.impl.PersonWizard;
 import com.exist.ecc.person.core.service.input.impl.RepeatReadHandler;
-import com.exist.ecc.person.core.service.input.impl.RoleInputWizard;
+import com.exist.ecc.person.core.service.input.impl.RoleWizard;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 import com.exist.ecc.person.core.service.output.api.OutputWriter;
-import com.exist.ecc.person.core.service.output.impl.ConsoleOutputWriter;
-import com.exist.ecc.person.core.service.output.impl.PersonOutputFormatter;
+import com.exist.ecc.person.core.service.output.impl.ConsoleWriter;
+import com.exist.ecc.person.core.service.output.impl.PersonFormatter;
 import com.exist.ecc.person.core.service.validation.Validations;
 
 import com.exist.ecc.person.util.MenuUtil;
@@ -61,7 +61,7 @@ public class App {
 
   static {
     scanner = new Scanner(System.in);
-    reader = new ConsoleInputReader(scanner);
+    reader = new ConsoleReader(scanner);
     handler = new RepeatReadHandler();
   }
 
@@ -217,8 +217,8 @@ public class App {
     System.out.println();
 
     Transactions.conduct(() -> { 
-      OutputWriter writer = new ConsoleOutputWriter();
-      OutputFormatter formatter = new PersonOutputFormatter();
+      OutputWriter writer = new ConsoleWriter();
+      OutputFormatter<Person> formatter = new PersonFormatter();
 
       List<Person> results = personDao.getAll();
 
@@ -239,8 +239,8 @@ public class App {
     System.out.println();
 
     Transactions.conduct(() -> { 
-      OutputWriter writer = new ConsoleOutputWriter();
-      OutputFormatter formatter = new PersonOutputFormatter();
+      OutputWriter writer = new ConsoleWriter();
+      OutputFormatter<Person> formatter = new PersonFormatter();
       UnaryOperator<Criteria> query = 
         desc ? c -> c.addOrder(Order.desc(property))
              : c -> c.addOrder(Order.asc(property));
@@ -355,11 +355,9 @@ public class App {
   private static void setPersonFields(Person person, Name name,
     Address address) 
   {
-    PersonInputWizard personWizard = 
-      new PersonInputWizard(reader, handler);
-    NameInputWizard nameWizard = new NameInputWizard(reader, handler);
-    AddressInputWizard addressWizard = 
-      new AddressInputWizard(reader, handler);
+    PersonWizard personWizard = new PersonWizard(reader, handler);
+    NameWizard nameWizard = new NameWizard(reader, handler);
+    AddressWizard addressWizard = new AddressWizard(reader, handler);
 
     BiFunction<String, Object, String> defaultFormat = (s, o) -> {
       return o == null
@@ -415,13 +413,15 @@ public class App {
   }
 
   private static void setRoleFields(Role role) {    
-    RoleInputWizard roleWizard = new RoleInputWizard(reader, handler);
+    RoleWizard roleWizard = new RoleWizard(reader, handler);
 
-    roleWizard.setDefaultFormat((s, o) -> {
+    BiFunction<String, Object, String> defaultFormat = (s, o) -> {
       return o == null
              ? String.format("%s: ", defaultTransform(s))
              : String.format("%s (%s): ", defaultTransform(s), o);
-    });
+    };
+
+    roleWizard.setDefaultFormat(defaultFormat);
     roleWizard.setProperties(role);
   }
 
