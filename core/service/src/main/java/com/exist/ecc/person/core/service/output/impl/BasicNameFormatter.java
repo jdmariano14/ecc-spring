@@ -11,7 +11,7 @@ public class BasicNameFormatter implements OutputFormatter<Name> {
   public String format(Name name) {
     String nameString = 
       new StringBuilder()
-      .append(StringUtil.formatUnlessBlank("%s ", name.getTitle()))
+      .append(StringUtil.formatUnlessBlank("%s ", name.getFirstName()))
       .append(StringUtil.formatUnlessBlank("%s", name.getLastName()))
       .toString();
 
