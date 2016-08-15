@@ -73,6 +73,7 @@ public class App {
     String[] options = {
       "createPerson", "updatePerson", "deletePerson", "listPerson",
       "addRole", "updateRole", "deleteRole", "listRole",
+      "addContact", "updateContact", "deleteContact",
       "addPersonRole", "deletePersonRole",
       "exit"
     };
