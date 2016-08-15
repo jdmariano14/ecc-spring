@@ -441,8 +441,10 @@ public class App {
         roleId = getId("role");
         role = roleDao.get(roleId);
 
-        roles.remove(role);
-        personDao.save(person);
+        if (getDeleteConfirmation("person role", role.getName())) {
+          roles.remove(role);
+          personDao.save(person);
+        }
       }
     }, personDao, roleDao);
   }
