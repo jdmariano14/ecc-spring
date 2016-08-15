@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.exist.ecc.person.core.model.Address;
+import com.exist.ecc.person.core.model.Contact;
 import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Role;
@@ -22,15 +23,18 @@ public class PersonFormatter implements OutputFormatter<Person> {
   public String format(Person person) {
     OutputFormatter<Name> nameFormatter = new NameFormatter();
     OutputFormatter<Address> addressFormatter = new AddressFormatter();
-    CollectionFormatter<Role> rolesFormatter =
+    CollectionFormatterImpl<Role> rolesFormatter =
       new CollectionFormatterImpl<Role>(new ComposedRoleFormatter());
+    CollectionFormatterImpl<Contact> contactsFormatter =
+      new CollectionFormatterImpl<Contact>(new ComposedContactFormatter());
     
     String nameString = nameFormatter.format(person.getName());
     String addressString = addressFormatter.format(person.getAddress());
     String employedString = person.isEmployed() ? "Yes" : "No";
-    String rolesString = rolesFormatter.format(person.getRoles());
     String birthDateString;
     String dateHiredString;
+    String contactsString;
+    String rolesString;
 
     DateFormat dateFormat =
       new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -47,6 +51,12 @@ public class PersonFormatter implements OutputFormatter<Person> {
       dateHiredString = "";
     }
 
+    contactsFormatter.setDelimiter(System.lineSeparator());
+    contactsString = contactsFormatter.format(person.getContacts());
+
+    rolesFormatter.setDelimiter(", ");
+    rolesString = rolesFormatter.format(person.getRoles());
+
     String personString = 
       new StringBuilder()
       .append(StringUtil.formatUnlessBlank("[%d] ", person.getPersonId()))
@@ -61,6 +71,9 @@ public class PersonFormatter implements OutputFormatter<Person> {
         indent() + "GWA:  %s" + lineBreak(), person.getGwa()))
       .append(StringUtil.formatUnlessBlank(
         indent() + "Employed:  %s" + lineBreak(), employedString))
+      .append(StringUtil.formatUnlessBlank(
+        lineBreak() + indent() + "Contacts:" + lineBreak() + "%s",
+        contactsString))
       .append(StringUtil.formatUnlessBlank(
         lineBreak() + indent() + "Roles:  %s" + lineBreak(), rolesString))
       .toString();
