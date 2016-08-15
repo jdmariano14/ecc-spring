@@ -5,10 +5,6 @@ import javax.persistence.DiscriminatorValue;
 
 @Entity
 @DiscriminatorValue("EMAIL")
-public class Email extends ContactDetail {
-
-  protected boolean isValidDetail(String detail) {
-    throw new UnsupportedOperationException();
-  }
+public class Email extends Contact {
 
 }
