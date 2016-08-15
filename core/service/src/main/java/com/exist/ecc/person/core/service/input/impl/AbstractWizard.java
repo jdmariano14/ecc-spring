@@ -14,7 +14,7 @@ import com.exist.ecc.person.core.service.input.api.InputWizard;
 
 public abstract class AbstractWizard<T> implements InputWizard<T> {
   
-  private Map<String, PropertyData> data;
+  private final Map<String, PropertyData> data;
   private InputReader reader;
   private InputExceptionHandler handler;
 
@@ -58,14 +58,16 @@ public abstract class AbstractWizard<T> implements InputWizard<T> {
     }
   }
 
-  public AbstractWizard(InputReader reader, 
-    InputExceptionHandler handler)
-  {
+  public AbstractWizard(InputReader reader, InputExceptionHandler handler) {
     data = new LinkedHashMap();
     setReader(reader);
     setDefaultHandler(handler);
     
     initializeData(data);
+  }
+
+  public Map<String, PropertyData> getData() {
+    return data;
   }
 
   public InputReader getReader() {

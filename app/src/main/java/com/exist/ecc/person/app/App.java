@@ -24,12 +24,18 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 
+import com.exist.ecc.person.core.dao.api.ContactDao;
 import com.exist.ecc.person.core.dao.api.PersonDao;
 import com.exist.ecc.person.core.dao.api.RoleDao;
+import com.exist.ecc.person.core.dao.impl.ContactHibernateDao;
 import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
 import com.exist.ecc.person.core.dao.impl.RoleHibernateDao;
 
 import com.exist.ecc.person.core.model.Address;
+import com.exist.ecc.person.core.model.Contact;
+import com.exist.ecc.person.core.model.Email;
+import com.exist.ecc.person.core.model.Landline;
+import com.exist.ecc.person.core.model.Mobile;
 import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Role;
@@ -40,6 +46,7 @@ import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.impl.AddressWizard;
 import com.exist.ecc.person.core.service.input.impl.ConsoleReader;
+import com.exist.ecc.person.core.service.input.impl.ContactWizard;
 import com.exist.ecc.person.core.service.input.impl.NameWizard;
 import com.exist.ecc.person.core.service.input.impl.PersonWizard;
 import com.exist.ecc.person.core.service.input.impl.RepeatReadHandler;
@@ -255,6 +262,55 @@ public class App {
     }, personDao);
   }
 
+  private static void addContact() {
+    final PersonDao personDao = new PersonHibernateDao();
+    final ContactDao contactDao = new ContactHibernateDao();
+    final Contact contact;
+
+    String[] contactTypes = { "Landline", "Mobile", "Email" };
+
+    long personId = getId("person");
+    
+    String contactTypeMessage = 
+      new StringBuilder(System.lineSeparator())
+          .append("Contact type:")
+          .append(System.lineSeparator())
+          .append(MenuUtil.getMenu(contactTypes, StringUtil::capitalize))
+          .append(System.lineSeparator())
+          .toString();
+
+    int contactType = 
+      new InputService.Builder<Integer>(reader, handler)
+          .message(contactTypeMessage)
+          .conversion(Integer::parseInt)
+          .validation(optionValidation(contactTypes.length))
+          .build().getInput();
+
+    switch (contactTypes[contactType - 1]) {
+      case "Landline":
+        contact = new Landline();
+        break;
+      case "Email":
+        contact = new Email();
+        break;
+      default:
+        contact = new Mobile();
+    }
+
+    Transactions.conduct(() -> { 
+      final Person person = personDao.get(personId);
+
+      System.out.println();
+      setContactFields(contact);
+
+      contact.setPerson(person);
+      person.getContacts().add(contact);
+
+      personDao.save(person);
+      contactDao.save(contact);
+    }, personDao, contactDao);
+  }
+
   private static void addRole() {
     final RoleDao roleDao = new RoleHibernateDao();
     final Role role = new Role();
@@ -461,6 +517,22 @@ public class App {
 
     roleWizard.setDefaultFormat(defaultFormat);
     roleWizard.setProperties(role);
+  }
+
+  private static void setContactFields(Contact contact) {
+    ContactWizard contactWizard =
+      new ContactWizard(contact.getClass(), reader, handler);
+    
+    BiFunction<String, Object, String> infoFormat = (s, o) -> {
+      String contactType = contact.getClass().getSimpleName();
+
+      return o == null
+             ? String.format("%s: ", contactType)
+             : String.format("%s (%s): ", contactType, o);
+    };
+
+    contactWizard.setFormat("info", infoFormat);
+    contactWizard.setProperties(contact);
   }
 
   private static Consumer<Integer> optionValidation(int bound) {
