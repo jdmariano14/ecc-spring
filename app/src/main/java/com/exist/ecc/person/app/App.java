@@ -55,6 +55,7 @@ import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.BasicPersonFormatter;
 import com.exist.ecc.person.core.service.output.impl.ConsoleWriter;
+import com.exist.ecc.person.core.service.output.impl.ContactFormatter;
 import com.exist.ecc.person.core.service.output.impl.PersonFormatter;
 import com.exist.ecc.person.core.service.output.impl.RoleFormatter;
 import com.exist.ecc.person.core.service.validation.Validations;
@@ -306,8 +307,41 @@ public class App {
       contact.setPerson(person);
       person.getContacts().add(contact);
 
-      personDao.save(person);
       contactDao.save(contact);
+      personDao.save(person);
+    }, personDao, contactDao);
+  }
+
+  private static void updateContact() {
+    final PersonDao personDao = new PersonHibernateDao();
+    final ContactDao contactDao = new ContactHibernateDao();
+
+    long personId = getId("person");
+
+    Transactions.conduct(() -> { 
+      final Person person = personDao.get(personId);
+      final Collection<Contact> contacts = person.getContacts();
+      final Contact contact;
+      long contactId;
+      OutputWriter writer = new ConsoleWriter();
+      OutputFormatter<Person> personFormatter = new BasicPersonFormatter();
+      OutputFormatter<Contact> contactFormatter = new ContactFormatter();
+
+      if (contacts.isEmpty()) {
+        writer.write(personFormatter.format(person) + " has no contacts");
+      } else {
+        writer.write(personFormatter.format(person) + "'s contacts:");
+        contacts.forEach(c -> writer.write(contactFormatter.format(c)));
+
+        contactId = getId("contact");
+        contact = contactDao.get(contactId);
+
+        System.out.println();
+        setContactFields(contact);
+
+        contactDao.save(contact);
+        personDao.save(person);
+      }
     }, personDao, contactDao);
   }
 
@@ -410,7 +444,6 @@ public class App {
         roles.remove(role);
         personDao.save(person);
       }
-
     }, personDao, roleDao);
   }
 

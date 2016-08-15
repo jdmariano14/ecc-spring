@@ -15,7 +15,7 @@ import javax.persistence.JoinColumn;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "CONTACT_TYPE")
 @Table(name = "CONTACT")
-public abstract class Contact {
+public class Contact {
 
   @Id
   @GeneratedValue
