@@ -23,7 +23,7 @@ public class PersonFormatter implements OutputFormatter<Person> {
     OutputFormatter<Name> nameFormatter = new NameFormatter();
     OutputFormatter<Address> addressFormatter = new AddressFormatter();
     CollectionFormatter<Role> rolesFormatter =
-      new CollectionFormatterImpl<Role>(new RoleFormatter());
+      new CollectionFormatterImpl<Role>(new ComposedRoleFormatter());
     
     String nameString = nameFormatter.format(person.getName());
     String addressString = addressFormatter.format(person.getAddress());

@@ -47,6 +47,7 @@ import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.ConsoleWriter;
 import com.exist.ecc.person.core.service.output.impl.PersonFormatter;
+import com.exist.ecc.person.core.service.output.impl.RoleFormatter;
 import com.exist.ecc.person.core.service.validation.Validations;
 
 import com.exist.ecc.person.util.MenuUtil;
@@ -299,8 +300,11 @@ public class App {
     System.out.println();
 
     Transactions.conduct(() -> { 
+      OutputWriter writer = new ConsoleWriter();
+      OutputFormatter<Role> formatter = new RoleFormatter();
+
       roleDao.query(c -> c.addOrder(Order.asc("roleId")))
-             .forEach(System.out::println); 
+             .forEach(r -> writer.write(formatter.format(r)));
     }, roleDao);
   }
 
