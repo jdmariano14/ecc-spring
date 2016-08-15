@@ -12,6 +12,9 @@
 
     <mapping class="com.exist.ecc.person.core.model.Person"/>
     <mapping class="com.exist.ecc.person.core.model.Role"/>
-    <mapping class="com.exist.ecc.person.core.model.ContactDetail"/>
+    <mapping class="com.exist.ecc.person.core.model.Contact"/>
+    <mapping class="com.exist.ecc.person.core.model.Email"/>
+    <mapping class="com.exist.ecc.person.core.model.Landline"/>
+    <mapping class="com.exist.ecc.person.core.model.Mobile"/>
   </session-factory>
 </hibernate-configuration>
