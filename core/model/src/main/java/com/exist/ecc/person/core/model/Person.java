@@ -19,14 +19,8 @@ public class Person {
   private Date dateHired;
 
   private boolean employed;
-<<<<<<< Updated upstream
-
-  private Collection<ContactDetail> contactDetails;
-=======
   
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
   private Collection<Contact> contacts;
->>>>>>> Stashed changes
 
   private Collection<Role> roles;
 
