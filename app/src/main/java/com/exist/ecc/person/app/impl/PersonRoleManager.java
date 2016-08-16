@@ -65,6 +65,8 @@ public class PersonRoleManager extends AbstractEntityManager {
       long roleId;
       OutputFormatter<Person> personFormatter = new BasicPersonFormatter();
       OutputFormatter<Role> roleFormatter = new RoleFormatter();
+      
+      getWriter().write("");
 
       if (roles.isEmpty()) {
         getWriter().write(personFormatter.format(person) + " has no roles");
@@ -74,6 +76,8 @@ public class PersonRoleManager extends AbstractEntityManager {
 
         getWriter().write(personFormatter.format(person) + "'s roles:");
         roles.forEach(r -> getWriter().write(roleFormatter.format(r)));
+
+        getWriter().write("");
 
         roleId = getId("role");
         role = roleDao.get(roleId);

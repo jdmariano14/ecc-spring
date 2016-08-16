@@ -61,7 +61,12 @@ public abstract class AbstractEntityManager implements EntityManager {
   protected boolean getDeleteConfirmation(String entityClass,
     String entityString)
   {
-    String confirmMsg = 
+    String confirmMsg;
+    String choice;
+
+    writer.write("");
+
+    confirmMsg = 
       new StringBuilder("Confirm delete of ")
           .append(entityClass)
           .append(" '")
@@ -69,7 +74,7 @@ public abstract class AbstractEntityManager implements EntityManager {
           .append("' (y/n): ")
           .toString();
 
-    String choice = 
+    choice = 
       new InputService.Builder<String>(reader, handler)
           .message(confirmMsg)
           .build().getInput();

@@ -66,22 +66,22 @@ public class PersonFormatter implements OutputFormatter<Person> {
     String personString = 
       new StringBuilder()
       .append(StringUtil.formatUnlessBlank("[%d] ", person.getPersonId()))
-      .append(StringUtil.formatUnlessBlank("%s" + lineBreak(), nameString))
+      .append(StringUtil.formatUnlessBlank("%s", nameString))
       .append(StringUtil.formatUnlessBlank(
-        indent() + "Address:  %s" + lineBreak(), addressString))
+        onNewLine("Address:  %s"), addressString))
       .append(StringUtil.formatUnlessBlank(
-        indent() + "Birth date:  %s" + lineBreak(), birthDateString))
+        onNewLine("Birth date:  %s"), birthDateString))
       .append(StringUtil.formatUnlessBlank(
-        indent() + "Date hired:  %s" + lineBreak(), dateHiredString))
+        onNewLine("Date hired:  %s"), dateHiredString))
       .append(StringUtil.formatUnlessBlank(
-        indent() + "GWA:  %s" + lineBreak(), person.getGwa()))
+        onNewLine("GWA:  %s"), person.getGwa()))
       .append(StringUtil.formatUnlessBlank(
-        indent() + "Employed:  %s" + lineBreak(), employedString))
+        onNewLine("Employed:  %s"), employedString))
       .append(StringUtil.formatUnlessBlank(
-        lineBreak() + indent() + "Contacts:" + lineBreak() + "%s",
+        onNewLine("Contacts:" + StringUtil.lineBreaks(1) + "%s", 2),
         contactsString))
       .append(StringUtil.formatUnlessBlank(
-        lineBreak() + indent() + "Roles:  %s" + lineBreak(), rolesString))
+        onNewLine("Roles:  %s", 2), rolesString))
       .toString();
 
     return personString;
@@ -91,8 +91,16 @@ public class PersonFormatter implements OutputFormatter<Person> {
     return StringUtil.spaces(indentWidth);
   }
 
-  private String lineBreak() {
-    return System.lineSeparator();
+  private String onNewLine(String str) {
+    return onNewLine(str, 1);
+  }
+
+  private String onNewLine(String str, int lineBreaks) {
+    return new StringBuilder()
+           .append(StringUtil.lineBreaks(lineBreaks))
+           .append(indent())
+           .append(str)
+           .toString();
   }
 
 }

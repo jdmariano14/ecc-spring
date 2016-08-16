@@ -35,6 +35,16 @@ public class StringUtil {
     return sb.toString();
   }
 
+  public static String lineBreaks(int count) {
+    StringBuilder sb = new StringBuilder();
+
+    for (int i = 0; i < count; i++) {
+      sb.append(System.lineSeparator());
+    }
+
+    return sb.toString();
+  }
+
   public static String formatUnlessBlank(String format, Object... args) {
     for (Object arg : args) {
       if (arg == null || StringUtils.isBlank(arg.toString())) {

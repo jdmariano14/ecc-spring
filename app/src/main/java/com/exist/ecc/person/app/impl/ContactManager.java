@@ -111,16 +111,21 @@ public class ContactManager extends AbstractEntityManager {
       OutputFormatter<Person> personFormatter = new BasicPersonFormatter();
       OutputFormatter<Contact> contactFormatter = new ContactFormatter();
 
+      getWriter().write("");
+
       if (contacts.isEmpty()) {
         getWriter().write(personFormatter.format(person) + " has no contacts");
       } else {
         getWriter().write(personFormatter.format(person) + "'s contacts:");
         contacts.forEach(c -> getWriter().write(contactFormatter.format(c)));
 
+        getWriter().write("");
+
         contactId = getId("contact");
         contact = contactDao.get(contactId);
 
-        System.out.println();
+        getWriter().write("");
+
         setContactFields(contact);
 
         contactDao.save(contact);
@@ -143,14 +148,18 @@ public class ContactManager extends AbstractEntityManager {
       OutputFormatter<Person> personFormatter = new BasicPersonFormatter();
       OutputFormatter<Contact> contactFormatter = new ContactFormatter();
 
+      getWriter().write("");
+
       if (contacts.isEmpty()) {
         getWriter().write(personFormatter.format(person) + " has no contacts");
       } else {
-        OutputFormatter<Contact> formatter = new ComposedContactFormatter(0);
+        OutputFormatter<Contact> formatter = new ComposedContactFormatter(-2);
         String entityString;
 
         getWriter().write(personFormatter.format(person) + "'s contacts:");
         contacts.forEach(c -> getWriter().write(contactFormatter.format(c)));
+
+        getWriter().write("");
 
         contactId = getId("contact");
         contact = contactDao.get(contactId);
@@ -170,9 +179,8 @@ public class ContactManager extends AbstractEntityManager {
       }
     }, personDao, contactDao);
   }
-
+  
   private void setContactFields(Contact contact) {
-
     final String contactType = contact.getClass().getSimpleName();
 
     ContactWizard contactWizard =

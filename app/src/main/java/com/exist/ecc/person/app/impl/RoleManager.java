@@ -78,8 +78,6 @@ public class RoleManager extends AbstractEntityManager {
           
       entityString = formatter.format(role);
 
-      getWriter().write("");
-
       if (getDeleteConfirmation("role", entityString)) {
         roleDao.delete(role);
       }

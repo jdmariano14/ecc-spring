@@ -135,8 +135,6 @@ public class PersonManager extends AbstractEntityManager {
 
       entityString = formatter.format(person);
 
-      getWriter().write("");
-      
       if (getDeleteConfirmation("person", entityString)) {
         personDao.delete(person);
       }
