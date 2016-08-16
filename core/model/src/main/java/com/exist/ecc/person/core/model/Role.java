@@ -33,9 +33,5 @@ public class Role {
   public void setPersons(Collection<Person> newPersons) {
     persons = newPersons;
   }
-
-  @Override
-  public String toString() {
-    return String.format("[%d] %s", roleId, name);
-  }
+  
 }
