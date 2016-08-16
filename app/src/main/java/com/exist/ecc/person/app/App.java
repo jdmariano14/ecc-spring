@@ -24,12 +24,12 @@ import com.exist.ecc.person.util.StringUtil;
 
 public class App {
   private static String[] options = {
-      "createPerson", "updatePerson", "deletePerson", "listPerson",
-      "createRole", "updateRole", "deleteRole", "listRole",
-      "createContact", "updateContact", "deleteContact",
-      "createPersonRole", "deletePersonRole",
-      "exit"
-    };
+    "createPerson", "updatePerson", "deletePerson", "listPerson",
+    "createRole", "updateRole", "deleteRole", "listRole",
+    "createContact", "updateContact", "deleteContact",
+    "createPersonRole", "deletePersonRole",
+    "exit"
+  };
 
   private static boolean exit;
   private static Scanner scanner;
