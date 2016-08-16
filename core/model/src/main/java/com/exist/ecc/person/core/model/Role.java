@@ -30,7 +30,7 @@ public class Role {
     return persons;
   }
 
-  public void setRoles(Collection<Person> newPersons) {
+  public void setPersons(Collection<Person> newPersons) {
     persons = newPersons;
   }
 
