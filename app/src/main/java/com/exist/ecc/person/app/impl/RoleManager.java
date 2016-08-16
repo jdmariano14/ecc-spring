@@ -20,6 +20,7 @@ import com.exist.ecc.person.core.service.input.impl.RoleWizard;
 import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
+import com.exist.ecc.person.core.service.output.impl.ComposedRoleFormatter;
 import com.exist.ecc.person.core.service.output.impl.RoleFormatter;
 
 public class RoleManager extends AbstractEntityManager {
@@ -70,12 +71,16 @@ public class RoleManager extends AbstractEntityManager {
   public void delete() {
     long id = getId("role");
 
-    Transactions.conduct(() -> { 
+    Transactions.conduct(() -> {
+      String entityString;
       final Role role = roleDao.get(id);
+      OutputFormatter<Role> formatter = new ComposedRoleFormatter();
           
+      entityString = formatter.format(role);
+
       getWriter().write("");
 
-      if (getDeleteConfirmation("role", role.toString())) {
+      if (getDeleteConfirmation("role", entityString)) {
         roleDao.delete(role);
       }
     }, roleDao);

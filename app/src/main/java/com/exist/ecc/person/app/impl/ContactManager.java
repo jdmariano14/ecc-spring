@@ -27,6 +27,7 @@ import com.exist.ecc.person.core.service.input.impl.ContactWizard;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.BasicPersonFormatter;
+import com.exist.ecc.person.core.service.output.impl.ComposedContactFormatter;
 import com.exist.ecc.person.core.service.output.impl.ContactFormatter;
 
 import com.exist.ecc.person.util.MenuUtil;
@@ -145,13 +146,23 @@ public class ContactManager extends AbstractEntityManager {
       if (contacts.isEmpty()) {
         getWriter().write(personFormatter.format(person) + " has no contacts");
       } else {
+        OutputFormatter<Contact> formatter = new ComposedContactFormatter(0);
+        String entityString;
+
         getWriter().write(personFormatter.format(person) + "'s contacts:");
         contacts.forEach(c -> getWriter().write(contactFormatter.format(c)));
 
         contactId = getId("contact");
         contact = contactDao.get(contactId);
 
-        if (getDeleteConfirmation("contact", contact.getInfo())) {
+        entityString =
+          new StringBuilder()
+          .append(personFormatter.format(person))
+          .append(": ")
+          .append(formatter.format(contact))
+          .toString();
+
+        if (getDeleteConfirmation("contact", entityString)) {
           person.getContacts().remove(contact);
           personDao.save(person);
           contactDao.delete(contact);

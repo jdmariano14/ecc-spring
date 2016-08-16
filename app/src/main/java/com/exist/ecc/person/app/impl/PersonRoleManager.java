@@ -1,5 +1,4 @@
 package com.exist.ecc.person.app.impl;
-
 import java.util.Collection;
 
 import com.exist.ecc.person.app.AppUtil;
@@ -17,6 +16,7 @@ import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.BasicPersonFormatter;
+import com.exist.ecc.person.core.service.output.impl.ComposedRoleFormatter;
 import com.exist.ecc.person.core.service.output.impl.RoleFormatter;
 
 import com.exist.ecc.person.core.service.db.Transactions;
@@ -69,14 +69,24 @@ public class PersonRoleManager extends AbstractEntityManager {
       if (roles.isEmpty()) {
         getWriter().write(personFormatter.format(person) + " has no roles");
       } else {
+        OutputFormatter<Role> formatter = new ComposedRoleFormatter();
+        String entityString;
+
         getWriter().write(personFormatter.format(person) + "'s roles:");
         roles.forEach(r -> getWriter().write(roleFormatter.format(r)));
 
         roleId = getId("role");
         role = roleDao.get(roleId);
 
-        if (getDeleteConfirmation("person role", role.getName())) {
-          roles.remove(role);
+        entityString =
+          new StringBuilder()
+          .append(personFormatter.format(person))
+          .append(": ")
+          .append(formatter.format(role))
+          .toString();
+
+        if (getDeleteConfirmation("person role", entityString)) {
+          person.getRoles().remove(role);
           personDao.save(person);
         }
       }

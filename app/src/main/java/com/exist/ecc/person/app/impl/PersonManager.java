@@ -130,9 +130,14 @@ public class PersonManager extends AbstractEntityManager {
 
     Transactions.conduct(() -> { 
       final Person person = personDao.get(id);
-      
+      String entityString;
+      OutputFormatter<Person> formatter = new BasicPersonFormatter();
+
+      entityString = formatter.format(person);
+
       getWriter().write("");
-      if (getDeleteConfirmation("person", person.toString())) {
+      
+      if (getDeleteConfirmation("person", entityString)) {
         personDao.delete(person);
       }
     }, personDao);
