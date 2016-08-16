@@ -20,13 +20,16 @@ import com.exist.ecc.person.util.StringUtil;
 
 public class PersonFormatter implements OutputFormatter<Person> {
 
+  public static final int INDENT = 5;
+
   public String format(Person person) {
     OutputFormatter<Name> nameFormatter = new NameFormatter();
     OutputFormatter<Address> addressFormatter = new AddressFormatter();
     CollectionFormatterImpl<Role> rolesFormatter =
       new CollectionFormatterImpl<Role>(new ComposedRoleFormatter());
     CollectionFormatterImpl<Contact> contactsFormatter =
-      new CollectionFormatterImpl<Contact>(new ComposedContactFormatter());
+      new CollectionFormatterImpl<Contact>(
+        new ComposedContactFormatter(INDENT));
     
     String nameString = nameFormatter.format(person.getName());
     String addressString = addressFormatter.format(person.getAddress());
@@ -82,8 +85,9 @@ public class PersonFormatter implements OutputFormatter<Person> {
   }
 
   private String indent() {
-    return "     ";
+    return StringUtil.spaces(INDENT);
   }
+
   private String lineBreak() {
     return System.lineSeparator();
   }

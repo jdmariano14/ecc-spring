@@ -25,7 +25,7 @@ public class StringUtil {
     return sb.toString();
   }
 
-  public static String getSpaces(int count) {
+  public static String spaces(int count) {
     StringBuilder sb = new StringBuilder();
 
     for (int i = 0; i < count; i++) {
