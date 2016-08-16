@@ -14,9 +14,9 @@ public class Person {
 
   private Date birthDate;
 
-  private BigDecimal gwa;
-
   private Date dateHired;
+
+  private BigDecimal gwa;
 
   private boolean employed;
   
@@ -56,20 +56,20 @@ public class Person {
     birthDate = newBirthDate;
   }
 
-  public BigDecimal getGwa() {
-    return gwa;
-  }
-
-  public void setGwa(BigDecimal newGwa) {
-    gwa = newGwa;
-  }
-
   public Date getDateHired() {
     return dateHired;
   }
 
   public void setDateHired(Date newDateHired) {
     dateHired = newDateHired;
+  }
+
+  public BigDecimal getGwa() {
+    return gwa;
+  }
+
+  public void setGwa(BigDecimal newGwa) {
+    gwa = newGwa;
   }
 
   public boolean isEmployed() {
