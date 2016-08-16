@@ -20,8 +20,11 @@ import com.exist.ecc.person.core.model.Person;
 
 import com.exist.ecc.person.core.service.db.Transactions;
 import com.exist.ecc.person.core.service.input.InputService;
+import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
+import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.impl.ContactWizard;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
+import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.BasicPersonFormatter;
 import com.exist.ecc.person.core.service.output.impl.ContactFormatter;
 
@@ -35,8 +38,10 @@ public class ContactManager extends AbstractEntityManager {
   private final ContactDao contactDao;
   private final PersonDao personDao;
 
-  public ContactManager() {
-    super();
+  public ContactManager(InputReader reader, OutputWriter writer,
+    InputExceptionHandler handler)
+  {
+    super(reader, writer, handler);
     contactDao = new ContactHibernateDao();
     personDao = new PersonHibernateDao();
   }

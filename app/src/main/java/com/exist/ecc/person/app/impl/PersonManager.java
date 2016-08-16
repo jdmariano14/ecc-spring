@@ -31,10 +31,13 @@ import com.exist.ecc.person.core.model.Person;
 
 import com.exist.ecc.person.core.service.db.Transactions;
 import com.exist.ecc.person.core.service.input.InputService;
+import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
+import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.impl.AddressWizard;
 import com.exist.ecc.person.core.service.input.impl.NameWizard;
 import com.exist.ecc.person.core.service.input.impl.PersonWizard;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
+import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.BasicPersonFormatter;
 import com.exist.ecc.person.core.service.output.impl.PersonFormatter;
 
@@ -45,8 +48,10 @@ public class PersonManager extends AbstractEntityManager {
 
   private final PersonDao personDao;
 
-  public PersonManager() {
-    super();
+  public PersonManager(InputReader reader, OutputWriter writer,
+    InputExceptionHandler handler)
+  {
+    super(reader, writer, handler);
     personDao = new PersonHibernateDao();
   }
 

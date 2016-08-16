@@ -1,5 +1,8 @@
 package com.exist.ecc.person.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class StringUtil {
@@ -42,5 +45,15 @@ public class StringUtil {
     return String.format(format, args);
   }
 
+  public static int indexOfPattern(String str, String regex) {
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(str);
+
+    while(matcher.find()) {
+      return matcher.start();
+    }
+
+    return -1;
+  }
 
 }

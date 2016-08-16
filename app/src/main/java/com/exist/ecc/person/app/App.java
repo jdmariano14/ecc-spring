@@ -1,5 +1,7 @@
 package com.exist.ecc.person.app;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.exist.ecc.person.app.impl.AbstractEntityManager;
@@ -21,37 +23,7 @@ import com.exist.ecc.person.util.SessionUtil;
 import com.exist.ecc.person.util.StringUtil;
 
 public class App {
-  private static boolean exit;
-  private static Scanner scanner;
-  private static InputReader reader;
-  private static InputExceptionHandler handler;
-  private static OutputWriter writer;
-
-  private static PersonManager persons;
-  private static RoleManager roles;
-  private static ContactManager contacts;
-  private static PersonRoleManager personRoles;
-
-  static {
-    scanner = new Scanner(System.in);
-    reader = new ConsoleReader(scanner);
-    handler = new RepeatReadHandler();
-    writer = new ConsoleWriter();
-
-    persons = new PersonManager();
-    roles = new RoleManager();
-    contacts = new ContactManager();
-    personRoles = new PersonRoleManager();
-
-    assignIoClasses(persons);
-    assignIoClasses(roles);
-    assignIoClasses(contacts);
-    assignIoClasses(personRoles);
-  }
-
-  public static void main(String[] args) {
-
-    String[] options = {
+  private static String[] options = {
       "createPerson", "updatePerson", "deletePerson", "listPerson",
       "createRole", "updateRole", "deleteRole", "listRole",
       "createContact", "updateContact", "deleteContact",
@@ -59,6 +31,29 @@ public class App {
       "exit"
     };
 
+  private static boolean exit;
+  private static Scanner scanner;
+  private static InputReader reader;
+  private static InputExceptionHandler handler;
+  private static OutputWriter writer;
+  private static Map<String, AbstractEntityManager> entityManagers;
+
+  static {
+    scanner = new Scanner(System.in);
+    reader = new ConsoleReader(scanner);
+    writer = new ConsoleWriter();
+    handler = new RepeatReadHandler();
+    entityManagers = new HashMap();
+
+    entityManagers.put("Person", new PersonManager(reader, writer, handler));
+    entityManagers.put("Role", new RoleManager(reader, writer, handler));
+    entityManagers.put(
+      "Contact", new ContactManager(reader, writer, handler));
+    entityManagers.put(
+      "PersonRole", new PersonRoleManager(reader, writer, handler));
+  }
+
+  public static void main(String[] args) {
     try {
       while (!exit) {
         appLoop(options);
@@ -68,7 +63,6 @@ public class App {
     } finally {
       SessionUtil.getSessionFactory().close();
     }
-
   }
 
   private static void appLoop(String[] options) {
@@ -87,73 +81,23 @@ public class App {
           .validation(AppUtil.optionValidation(options.length))
           .build().getInput();
 
+    String action = options[choice - 1];
+
     try {
-      App.class.getDeclaredMethod(options[choice - 1]).invoke(App.class);
+      if (action.equals("exit")) {
+        exit = true;
+      } else {
+        String entityMethod = 
+          action.substring(0, StringUtil.indexOfPattern(action, "[A-Z]"));
+        String entityClass = 
+          action.substring(StringUtil.indexOfPattern(action, "[A-Z]"));
+
+        entityManagers.get(entityClass).getClass().getDeclaredMethod(entityMethod)
+                      .invoke(entityManagers.get(entityClass));
+      }
     } catch (Exception e) {
       throw new RuntimeException(e);
     } 
-  }
-
-  private static void exit() {
-    exit = true;
-  }
-
-  private static void createPerson() {
-    persons.create();
-  }
-
-  private static void updatePerson() {
-    persons.update();
-  }
-
-  private static void deletePerson() {
-    persons.delete();
-  }
-
-  private static void listPerson() {
-    persons.list();
-  }
-
-  private static void createRole() {
-    roles.create();
-  }
-
-  private static void updateRole() {
-    roles.update();
-  }
-
-  private static void deleteRole() {
-    roles.delete();
-  }
-
-  private static void listRole() {
-    roles.list();
-  }
-
-  private static void createContact() {
-    contacts.create();
-  }
-
-  private static void updateContact() {
-    contacts.update();
-  }
-
-  private static void deleteContact() {
-    contacts.delete();
-  }
-
-  private static void createPersonRole() {
-    personRoles.create();
-  }
-
-  private static void deletePersonRole() {
-    personRoles.delete();
-  }
-
-  private static void assignIoClasses(AbstractEntityManager manager) {
-    manager.setReader(reader);
-    manager.setHandler(handler);
-    manager.setWriter(writer);
   }
 
 }

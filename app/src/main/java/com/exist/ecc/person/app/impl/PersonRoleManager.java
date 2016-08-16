@@ -12,7 +12,10 @@ import com.exist.ecc.person.core.dao.impl.RoleHibernateDao;
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Role;
 
+import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
+import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
+import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.BasicPersonFormatter;
 import com.exist.ecc.person.core.service.output.impl.RoleFormatter;
 
@@ -23,8 +26,10 @@ public class PersonRoleManager extends AbstractEntityManager {
   private final PersonDao personDao;
   private final RoleDao roleDao;
 
-  public PersonRoleManager() {
-    super();
+  public PersonRoleManager(InputReader reader, OutputWriter writer,
+    InputExceptionHandler handler)
+  {
+    super(reader, writer, handler);
     personDao = new PersonHibernateDao();
     roleDao = new RoleHibernateDao();
   }

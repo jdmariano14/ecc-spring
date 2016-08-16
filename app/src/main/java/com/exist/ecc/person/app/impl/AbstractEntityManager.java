@@ -13,6 +13,14 @@ public abstract class AbstractEntityManager implements EntityManager {
   private OutputWriter writer;
   private InputExceptionHandler handler;
 
+  public AbstractEntityManager(InputReader reader, OutputWriter writer,
+    InputExceptionHandler handler)
+  {
+    setReader(reader);
+    setWriter(writer);
+    setHandler(handler);
+  }
+
   public InputReader getReader() {
     return reader;
   }
