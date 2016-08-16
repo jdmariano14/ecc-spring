@@ -23,13 +23,6 @@ import com.exist.ecc.person.util.SessionUtil;
 import com.exist.ecc.person.util.StringUtil;
 
 public class App {
-  private static String[] options = {
-    "createPerson", "updatePerson", "deletePerson", "listPerson",
-    "createRole", "updateRole", "deleteRole", "listRole",
-    "createContact", "updateContact", "deleteContact",
-    "createPersonRole", "deletePersonRole",
-    "exit"
-  };
 
   private static boolean exit;
   private static Scanner scanner;
@@ -37,6 +30,14 @@ public class App {
   private static InputExceptionHandler handler;
   private static OutputWriter writer;
   private static Map<String, AbstractEntityManager> entityManagers;
+
+  private static String[] options = {
+    "createPerson", "updatePerson", "deletePerson", "listPerson",
+    "createRole", "updateRole", "deleteRole", "listRole",
+    "createContact", "updateContact", "deleteContact",
+    "createPersonRole", "deletePersonRole",
+    "exit"
+  };
 
   static {
     scanner = new Scanner(System.in);
@@ -92,12 +93,13 @@ public class App {
         String entityClass = 
           action.substring(StringUtil.indexOfPattern(action, "[A-Z]"));
 
-        entityManagers.get(entityClass).getClass().getDeclaredMethod(entityMethod)
+        entityManagers.get(entityClass).getClass()
+                      .getDeclaredMethod(entityMethod)
                       .invoke(entityManagers.get(entityClass));
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } 
+    }
   }
 
 }
