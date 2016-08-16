@@ -2,6 +2,7 @@ package com.exist.ecc.person.app.impl;
 
 import java.util.Collection;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.hibernate.criterion.Order;
 
@@ -159,19 +160,20 @@ public class ContactManager extends AbstractEntityManager {
     }, personDao, contactDao);
   }
 
-  private void setContactFields(Contact contact) {    
+  private void setContactFields(Contact contact) {
+
+    final String contactType = contact.getClass().getSimpleName();
+
     ContactWizard contactWizard =
       new ContactWizard(contact.getClass(), getReader(), getHandler());
-    
-    BiFunction<String, Object, String> infoFormat = (s, o) -> {
-      String contactType = contact.getClass().getSimpleName();
 
-      return o == null
-             ? String.format("%s: ", contactType)
-             : String.format("%s (%s): ", contactType, o);
-    };
+    Function<String, String> infoBlankFormat = 
+      s -> String.format("%s: ", contactType);
 
-    contactWizard.setFormat("info", infoFormat);
+    BiFunction<String, Object, String> infoFilledFormat = 
+      (s, o) -> String.format("%s (%s): ", contactType, o);
+
+    contactWizard.setFormat("info", infoBlankFormat, infoFilledFormat);
     contactWizard.setProperties(contact);
   }
 

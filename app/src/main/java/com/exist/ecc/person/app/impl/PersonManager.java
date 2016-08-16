@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
@@ -187,60 +188,62 @@ public class PersonManager extends AbstractEntityManager {
   private void setPersonFields(Person person, Name name,
     Address address) 
   {
+    final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
     PersonWizard personWizard = new PersonWizard(getReader(), getHandler());
     NameWizard nameWizard = new NameWizard(getReader(), getHandler());
     AddressWizard addressWizard = new AddressWizard(getReader(), getHandler());
 
-    BiFunction<String, Object, String> defaultFormat = (s, o) -> {
-      return o == null
-             ? String.format("%s: ", AppUtil.defaultTransform(s))
-             : String.format("%s (%s): ", AppUtil.defaultTransform(s), o);
-    };
+    Function<String, String> defaultBlankFormat = 
+      s -> String.format("%s: ", AppUtil.defaultTransform(s));
 
-    BiFunction<String, Object, String> nestedFormat = (s, o) -> {
-      return o == null
-             ? String.format("  %s: ", AppUtil.defaultTransform(s))
-             : String.format("  %s (%s): ", AppUtil.defaultTransform(s), o);
-    };
+    BiFunction<String, Object, String> defaultFilledFormat = 
+      (s, o) -> String.format("%s (%s): ", AppUtil.defaultTransform(s), o);
 
-    BiFunction<String, Object, String> nestedRequiredFormat = (s, o) -> {
-      return o == null
-             ? String.format("  %s*: ", AppUtil.defaultTransform(s))
-             : String.format(  "%s (%s)*: ", AppUtil.defaultTransform(s), o);
-    };
+    Function<String, String> nestedBlankFormat = 
+      s -> String.format("  %s: ", AppUtil.defaultTransform(s));
 
-    BiFunction<String, Object, String> dateFormat = (s, o) -> {
-      DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    BiFunction<String, Object, String> nestedFilledFormat = 
+      (s, o) -> String.format("  %s (%s): ", AppUtil.defaultTransform(s), o);
 
-      return o == null
-             ? String.format("%s (yyyy-mm-dd): ", AppUtil.defaultTransform(s))
-             : String.format("%s (%s): ", AppUtil.defaultTransform(s), df.format(o));
-    };
+    Function<String, String> nestedRequiredBlankFormat = 
+      s -> String.format("  %s*: ", AppUtil.defaultTransform(s));
 
-    BiFunction<String, Object, String> booleanFormat = (s, o) -> {
-      String o2 = (Boolean) o ? "y" : "n";
+    BiFunction<String, Object, String> nestedRequiredFilledFormat = 
+      (s, o) -> String.format("  %s (%s)*: ", AppUtil.defaultTransform(s), o);
 
-      return o == null
-             ? String.format("%s (y/n): ", AppUtil.defaultTransform(s))
-             : String.format("%s (%s) (y/n): ", AppUtil.defaultTransform(s), o2);
-    };
+    Function<String, String> dateBlankFormat =
+      s -> String.format("%s (yyyy-mm-dd): ", AppUtil.defaultTransform(s));
+
+    BiFunction<String, Object, String> dateFilledFormat = 
+      (s, o) -> String.format("%s (%s): ", 
+        AppUtil.defaultTransform(s), df.format(o));
+
+    Function<String, String> boolBlankFormat =
+      s -> String.format("%s (y/n): ", AppUtil.defaultTransform(s));
+    
+    BiFunction<String, Object, String> boolFilledFormat = 
+      (s, o) -> String.format("%s (%s) (y/n): ", 
+        AppUtil.defaultTransform(s), (Boolean) o ? "y" : "n");
 
     getWriter().write("Name: ");
-    nameWizard.setDefaultFormat(nestedFormat);
-    nameWizard.setFormat("lastName", nestedRequiredFormat);
-    nameWizard.setFormat("firstName", nestedRequiredFormat);
+    nameWizard.setDefaultFormat(nestedBlankFormat, nestedFilledFormat);
+    nameWizard.setFormat(
+      "lastName", nestedRequiredBlankFormat, nestedRequiredFilledFormat);
+    nameWizard.setFormat(
+      "firstName", nestedRequiredBlankFormat, nestedRequiredFilledFormat);
     nameWizard.setProperties(name);
     person.setName(name);
 
     getWriter().write("Address: ");
-    addressWizard.setDefaultFormat(nestedFormat);
+    addressWizard.setDefaultFormat(nestedBlankFormat, nestedFilledFormat);
     addressWizard.setProperties(address);
     person.setAddress(address);
 
-    personWizard.setDefaultFormat(defaultFormat);
-    personWizard.setFormat("birthDate", dateFormat);
-    personWizard.setFormat("dateHired", dateFormat);
-    personWizard.setFormat("employed", booleanFormat);
+    personWizard.setDefaultFormat(defaultBlankFormat, defaultFilledFormat);
+    personWizard.setFormat("birthDate", dateBlankFormat, dateFilledFormat);
+    personWizard.setFormat("dateHired", dateBlankFormat, dateFilledFormat);
+    personWizard.setFormat("employed", boolBlankFormat, boolFilledFormat);
     personWizard.setProperties(person);
   }
 

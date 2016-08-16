@@ -92,10 +92,11 @@ public class App {
           action.substring(0, StringUtil.indexOfPattern(action, "[A-Z]"));
         String entityClass = 
           action.substring(StringUtil.indexOfPattern(action, "[A-Z]"));
+        AbstractEntityManager entityManager = 
+          entityManagers.get(entityClass);
 
-        entityManagers.get(entityClass).getClass()
-                      .getDeclaredMethod(entityMethod)
-                      .invoke(entityManagers.get(entityClass));
+        entityManager.getClass().getDeclaredMethod(entityMethod)
+                     .invoke(entityManager);
       }
     } catch (Exception e) {
       throw new RuntimeException(e);

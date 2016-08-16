@@ -3,6 +3,7 @@ package com.exist.ecc.person.core.service.input.impl;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -24,21 +25,21 @@ public abstract class AbstractWizard<T> implements InputWizard<T> {
 
   public static class PropertyData {
     private InputService.Builder builder;
-    private BiFunction<String, Object, String> format;
+    private Function<String, String> blankFormat;
+    private BiFunction<String, Object, String> filledFormat;
 
     public PropertyData(InputService.Builder builder,
-      BiFunction<String, Object, String> format) 
+      Function<String, String> blankFormat,
+      BiFunction<String, Object, String> filledFormat) 
     {
       setBuilder(builder);
-      setFormat(format);
+      setBlankFormat(blankFormat);
+      setFilledFormat(filledFormat);
     }
 
     public PropertyData(InputService.Builder builder) {
-      this(builder, (s, o) -> {
-        return o == null
-               ? String.format("%s: ", s)
-               : String.format("%s (%s): ", s, o);
-      });
+      this(builder, s -> String.format("%s: ", s),
+        (s, o) -> String.format("%s (%s): ", s, o));
     }
 
     public InputService.Builder getBuilder() {
@@ -49,12 +50,20 @@ public abstract class AbstractWizard<T> implements InputWizard<T> {
       builder = newBuilder;
     }
 
-    public BiFunction<String, Object, String> getFormat() {
-      return format;
+    public Function<String, String> getBlankFormat() {
+      return blankFormat;
     }
 
-    public void setFormat(BiFunction<String, Object, String> newFormat) {
-      format = newFormat;
+    public void setBlankFormat(Function<String, String> newFormat) {
+      blankFormat = newFormat;
+    }
+
+    public BiFunction<String, Object, String> getFilledFormat() {
+      return filledFormat;
+    }
+
+    public void setFilledFormat(BiFunction<String, Object, String> newFormat) {
+      filledFormat = newFormat;
     }
   }
 
@@ -86,15 +95,20 @@ public abstract class AbstractWizard<T> implements InputWizard<T> {
     handler = newHandler;
   }
 
-  public void setFormat(String propertyName, 
-    BiFunction<String, Object, String> format) 
+  public void setFormat(String propertyName,
+    Function<String, String> blankFormat,
+    BiFunction<String, Object, String> filledFormat)
   {
-    data.get(propertyName).setFormat(format);
+    data.get(propertyName).setBlankFormat(blankFormat);
+    data.get(propertyName).setFilledFormat(filledFormat);
   }
 
-  public void setDefaultFormat(BiFunction<String, Object, String> format) {
+  public void setDefaultFormat(Function<String, String> blankFormat,
+    BiFunction<String, Object, String> filledFormat)
+  {
     for (PropertyData propertyData : data.values()) {
-      propertyData.setFormat(format);
+      propertyData.setBlankFormat(blankFormat);
+      propertyData.setFilledFormat(filledFormat);
     }
   }
 
@@ -141,10 +155,15 @@ public abstract class AbstractWizard<T> implements InputWizard<T> {
 
   private void processMessages() {
     for (PropertyData propertyData : data.values()) {
-      propertyData.getBuilder().message(
-        propertyData.getFormat().apply(
-          propertyData.getBuilder().getMessage(),
-          propertyData.getBuilder().getDefaultValue()));
+      InputService.Builder builder = propertyData.getBuilder();
+
+      if (builder.getDefaultValue() == null) {
+        builder.message(propertyData.getBlankFormat().apply(
+          builder.getMessage()));
+      } else {
+        builder.message(propertyData.getFilledFormat().apply(
+          builder.getMessage(), builder.getDefaultValue()));
+      }
     }
   }
 

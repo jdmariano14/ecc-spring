@@ -1,6 +1,7 @@
 package com.exist.ecc.person.app.impl;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.hibernate.criterion.Order;
 
@@ -83,13 +84,13 @@ public class RoleManager extends AbstractEntityManager {
   private void setRoleFields(Role role) {    
     RoleWizard roleWizard = new RoleWizard(getReader(), getHandler());
 
-    BiFunction<String, Object, String> defaultFormat = (s, o) -> {
-      return o == null
-             ? String.format("%s: ", AppUtil.defaultTransform(s))
-             : String.format("%s (%s): ", AppUtil.defaultTransform(s), o);
-    };
+    Function<String, String> defaultBlankFormat = 
+      s -> String.format("%s: ", AppUtil.defaultTransform(s));
 
-    roleWizard.setDefaultFormat(defaultFormat);
+    BiFunction<String, Object, String> defaultFilledFormat = 
+      (s, o) -> String.format("%s (%s): ", AppUtil.defaultTransform(s), o);
+
+    roleWizard.setDefaultFormat(defaultBlankFormat, defaultFilledFormat);
     roleWizard.setProperties(role);
   }
 
