@@ -2,9 +2,9 @@ package com.exist.ecc.person.core.model;
 
 public class Name {
 
-  private String firstName;
-
   private String lastName;
+
+  private String firstName;
 
   private String middleName;
 
@@ -12,20 +12,20 @@ public class Name {
 
   private String title;
 
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public void setFirstName(String newFirstName) {
-    firstName = newFirstName;
-  }
-
   public String getLastName() {
     return lastName;
   }
 
   public void setLastName(String newLastName) {
     lastName = newLastName;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String newFirstName) {
+    firstName = newFirstName;
   }
 
   public String getMiddleName() {
