@@ -29,10 +29,15 @@ public class Transactions {
 
       transaction.commit();
     } catch (Exception e) {
-      transaction.rollback();
-      System.out.println(e.getMessage());
+      if (transaction != null) {
+        transaction.rollback();
+      }
+
+      e.printStackTrace();
     } finally {
-      session.close();
+      if (session != null) {
+        session.close();
+      }
     }
   }
 
