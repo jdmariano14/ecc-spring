@@ -7,8 +7,7 @@ import org.hibernate.criterion.Order;
 
 import com.exist.ecc.person.app.AppUtil;
 
-import com.exist.ecc.person.core.dao.api.RoleDao;
-import com.exist.ecc.person.core.dao.impl.RoleHibernateDao;
+import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 
 import com.exist.ecc.person.core.model.Role;
 
@@ -25,13 +24,13 @@ import com.exist.ecc.person.core.service.output.impl.RoleFormatter;
 
 public class RoleManager extends AbstractEntityManager {
 
-  private final RoleDao roleDao;
+  private final RoleCriteriaDao roleDao;
 
   public RoleManager(InputReader reader, OutputWriter writer,
     InputExceptionHandler handler)
   {
     super(reader, writer, handler);
-    roleDao = new RoleHibernateDao();
+    roleDao = new RoleCriteriaDao();
   }
 
   public void create() {

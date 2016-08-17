@@ -10,21 +10,24 @@ import java.text.SimpleDateFormat;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import com.exist.ecc.person.app.AppUtil;
 
-import com.exist.ecc.person.core.dao.api.PersonDao;
-import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
+import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
+import com.exist.ecc.person.core.dao.impl.PersonHqlDao;
 
 import com.exist.ecc.person.core.model.Address;
 import com.exist.ecc.person.core.model.Name;
@@ -37,6 +40,7 @@ import com.exist.ecc.person.core.service.input.api.InputReader;
 import com.exist.ecc.person.core.service.input.impl.AddressWizard;
 import com.exist.ecc.person.core.service.input.impl.NameWizard;
 import com.exist.ecc.person.core.service.input.impl.PersonWizard;
+import com.exist.ecc.person.core.service.input.impl.ReturnNullHandler;
 import com.exist.ecc.person.core.service.output.api.OutputFormatter;
 import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.BasicPersonFormatter;
@@ -47,13 +51,16 @@ import com.exist.ecc.person.util.StringUtil;
 
 public class PersonManager extends AbstractEntityManager {
 
-  private final PersonDao personDao;
+  public static final DateFormat DATE_FORMAT 
+    = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+  private final PersonCriteriaDao personDao;
 
   public PersonManager(InputReader reader, OutputWriter writer,
     InputExceptionHandler handler)
   {
     super(reader, writer, handler);
-    personDao = new PersonHibernateDao();
+    personDao = new PersonCriteriaDao();
   }
 
   public void create() {
@@ -142,16 +149,143 @@ public class PersonManager extends AbstractEntityManager {
   }
   
   private void listByLastName(Boolean desc) {
-    listByProperty("name.lastName", desc);
+    getWriter().write("");
+
+    String min = 
+      new InputService.Builder<String>(getReader(), getHandler())
+      .message("Min value (e.g. 'abc'): ")
+      .build().getInput();
+
+    String max = 
+      new InputService.Builder<String>(getReader(), getHandler())
+      .message("Max value (e.g. 'xyz'): ")
+      .build().getInput();
+
+    String like =
+      new InputService.Builder<String>(getReader(), getHandler())
+      .message("Like format (e.g. '%ine'): ")
+      .build().getInput();
+
+    getWriter().write("");
+    getWriter().write("NOTICE: Using Criteria for sorting & filtering.");
+    getWriter().write("");
+
+    Transactions.conduct(() -> { 
+      OutputFormatter<Person> formatter = new PersonFormatter();
+      UnaryOperator<Criteria> query = c -> {
+        if (!min.isEmpty()) {
+          c.add(Restrictions.ge("name.lastName", min));
+        }
+
+        if (!max.isEmpty()) {
+          c.add(Restrictions.le("name.lastName", max));
+        }
+
+        if (!like.isEmpty()) {
+          c.add(Restrictions.like("name.lastName", like));
+        }
+
+        c.addOrder(desc ? Order.desc("name.lastName")
+                        : Order.asc("name.lastName"));
+
+        return c;
+      };
+
+      personDao.query(query).forEach(p -> {
+        getWriter().write(formatter.format(p));
+      }); 
+    }, personDao);
   }
 
   private void listByDateHired(Boolean desc) {
-    listByProperty("dateHired", desc);
+    final PersonHqlDao personHqlDao = new PersonHqlDao();
+
+    Function<String, Date> conversion = s -> { 
+      try {
+        return DATE_FORMAT.parse(s);
+      } catch(ParseException e) {
+        throw new RuntimeException(e);
+      }
+    };
+
+    Date min = 
+      new InputService.Builder<Date>(getReader(), new ReturnNullHandler())
+      .message("Min (earliest) value (yyyy-mm-dd): ")
+      .conversion(conversion)
+      .build().getInput();
+
+    Date max = 
+      new InputService.Builder<Date>(getReader(), new ReturnNullHandler())
+      .message("Max (latest) value: ")
+      .conversion(conversion)
+      .build().getInput();
+
+    getWriter().write("");
+    getWriter().write("NOTICE: Using HQL for sorting & filtering.");
+    getWriter().write("");
+
+    StringBuilder hql = new StringBuilder();
+
+    if (!(min == null && max == null)) {
+      hql.append("WHERE date_hired");
+
+      if (min != null) {
+        hql.append(" >= '")
+           .append(DATE_FORMAT.format(min))
+           .append("'");
+
+        if (max != null) {
+          hql.append(" AND date_hired ");
+        }
+      } 
+
+      if (max != null) {
+        hql.append(" <= '")
+           .append(DATE_FORMAT.format(max))
+           .append("'");
+      }
+
+      hql.append(" ");
+    }
+
+    hql.append("ORDER BY date_hired ");
+
+    if (desc) {
+      hql.append("desc");
+    } else {
+      hql.append("asc");
+    }
+
+    Transactions.conduct(() -> { 
+      OutputFormatter<Person> formatter = new PersonFormatter();
+
+      List<Person> results = personHqlDao.query(hql.toString());
+
+      results.forEach(p -> {
+        getWriter().write(formatter.format(p));
+      }); 
+    }, personHqlDao);
   }
 
   private void listByGwa(Boolean desc) {
-    final PersonDao personDao = new PersonHibernateDao();
+    getWriter().write("");
 
+    BigDecimal min = 
+      new InputService.Builder<BigDecimal>(getReader(), getHandler())
+      .message("Min value (e.g. 1.00): ")
+      .conversion(s -> new BigDecimal(s))
+      .defaultValue(new BigDecimal("1.00"))
+      .build().getInput();
+
+    BigDecimal max = 
+      new InputService.Builder<BigDecimal>(getReader(), getHandler())
+      .message("Max value (e.g. 5.00): ")
+      .conversion(s -> new BigDecimal(s))
+      .defaultValue(new BigDecimal("5.00"))
+      .build().getInput();
+
+    getWriter().write("");
+    getWriter().write("NOTICE: Using Java streams for sorting & filtering.");
     getWriter().write("");
 
     Transactions.conduct(() -> { 
@@ -159,29 +293,16 @@ public class PersonManager extends AbstractEntityManager {
 
       List<Person> results = personDao.getAll();
 
-      Collections.sort(results, (p1, p2) -> {
-        return desc ? p2.getGwa().compareTo(p1.getGwa())
-                    : p1.getGwa().compareTo(p2.getGwa());
-      });
+      Predicate<Person> filter = 
+        p -> p.getGwa().compareTo(min) >= 0 && p.getGwa().compareTo(max) <= 0;
 
-      results.forEach(p -> {
-        getWriter().write(formatter.format(p));
-      }); 
-    }, personDao);
-  }
+      Comparator<Person> sort = 
+        (p1, p2) -> p1.getGwa().compareTo(p2.getGwa());
 
-  private void listByProperty(String property, boolean desc) {
-    final PersonDao personDao = new PersonHibernateDao();
-
-    getWriter().write("");
-
-    Transactions.conduct(() -> { 
-      OutputFormatter<Person> formatter = new PersonFormatter();
-      UnaryOperator<Criteria> query = 
-        desc ? c -> c.addOrder(Order.desc(property))
-             : c -> c.addOrder(Order.asc(property));
-
-      personDao.query(query).forEach(p -> {
+      results.stream()
+      .filter(filter)
+      .sorted(desc ? sort.reversed() : sort)
+      .forEach(p -> {
         getWriter().write(formatter.format(p));
       }); 
     }, personDao);
@@ -191,8 +312,6 @@ public class PersonManager extends AbstractEntityManager {
   private void setPersonFields(Person person, Name name,
     Address address) 
   {
-    final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
     PersonWizard personWizard = new PersonWizard(getReader(), getHandler());
     NameWizard nameWizard = new NameWizard(getReader(), getHandler());
     AddressWizard addressWizard = new AddressWizard(getReader(), getHandler());
@@ -220,7 +339,7 @@ public class PersonManager extends AbstractEntityManager {
 
     BiFunction<String, Object, String> dateFilledFormat = 
       (s, o) -> String.format("%s (%s): ", 
-        AppUtil.defaultTransform(s), df.format(o));
+        AppUtil.defaultTransform(s), DATE_FORMAT.format(o));
 
     Function<String, String> boolBlankFormat =
       s -> String.format("%s (y/n): ", AppUtil.defaultTransform(s));

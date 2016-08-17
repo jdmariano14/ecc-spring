@@ -1,77 +1,80 @@
 package com.exist.ecc.person.core.dao.impl;
 
 import java.io.Serializable;
+
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 import java.util.List;
 import java.util.function.UnaryOperator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
 
-import com.exist.ecc.person.util.SessionUtil;
 import com.exist.ecc.person.core.dao.api.Dao;
 
-public class AbstractDao<T, I extends Serializable> implements Dao<T, I> {
+import com.exist.ecc.person.util.SessionUtil;
+
+public abstract class AbstractDao<T, I extends Serializable> 
+  implements Dao<T, I> 
+{
 
   private Class<T> persistentClass;
   private Session session;
   
   public AbstractDao() {
-    this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    persistentClass = determinePersistentClass();
+  }
+  
+  @Override
+  public Session getSession() {
+    if (session == null) {
+      session = SessionUtil.getSessionFactory().getCurrentSession();
+    }
+    return session;
   }
 
-  public AbstractDao(Session session) {
-    this();
-    setSession(session);
-  }
-  
-  public void setSession(Session session) {
-    this.session = session;
-  }
-  
-  protected Session getSession() {
-    if (this.session == null) {
-      this.session = SessionUtil.getSessionFactory().getCurrentSession();
-    }
-    return this.session;
+  @Override
+  public void setSession(Session newSession) {
+    session = newSession;
   }
   
   public Class<T> getPersistentClass() {
     return persistentClass;
   }
-  
-  @Override
-  public T get(I id) {
-    return (T) getSession().load(this.getPersistentClass(), id);
-  }
 
   @Override
-  public List<T> query(UnaryOperator<Criteria> crit) {
-    Criteria criteria = this.getSession().createCriteria(this.getPersistentClass());
-    
-    return (List<T>) crit.apply(criteria).list(); 
+  public T get(I id) {
+    return (T) getSession().load(getPersistentClass(), id);
   }
   
   @Override
-  public T save(T entity) {
-    this.getSession().saveOrUpdate(entity);
-    return entity;
+  public void save(T entity) {
+    getSession().saveOrUpdate(entity);
   }
 
   @Override
   public void delete(T entity) {
-    this.getSession().delete(entity);
+    getSession().delete(entity);
   }
-
+  
   @Override
   public void flush() {
-    this.getSession().flush();
+    getSession().flush();
   }
 
   @Override
   public void clear() {
-    this.getSession().clear();
+    getSession().clear();
+  }
+
+  private Class<T> determinePersistentClass() {
+    ParameterizedType parametrizedType =
+      (ParameterizedType) getClass().getGenericSuperclass();
+
+    Type type = parametrizedType.getActualTypeArguments()[0];
+
+    return (Class<T>) type;
   }
 
 }

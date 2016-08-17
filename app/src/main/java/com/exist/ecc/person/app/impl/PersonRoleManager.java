@@ -3,10 +3,8 @@ import java.util.Collection;
 
 import com.exist.ecc.person.app.AppUtil;
 
-import com.exist.ecc.person.core.dao.api.PersonDao;
-import com.exist.ecc.person.core.dao.api.RoleDao;
-import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
-import com.exist.ecc.person.core.dao.impl.RoleHibernateDao;
+import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
+import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Role;
@@ -23,15 +21,15 @@ import com.exist.ecc.person.core.service.db.Transactions;
 
 public class PersonRoleManager extends AbstractEntityManager {
 
-  private final PersonDao personDao;
-  private final RoleDao roleDao;
+  private final PersonCriteriaDao personDao;
+  private final RoleCriteriaDao roleDao;
 
   public PersonRoleManager(InputReader reader, OutputWriter writer,
     InputExceptionHandler handler)
   {
     super(reader, writer, handler);
-    personDao = new PersonHibernateDao();
-    roleDao = new RoleHibernateDao();
+    personDao = new PersonCriteriaDao();
+    roleDao = new RoleCriteriaDao();
   }
 
   public void create() {

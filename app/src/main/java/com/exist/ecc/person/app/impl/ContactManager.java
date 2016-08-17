@@ -8,10 +8,8 @@ import org.hibernate.criterion.Order;
 
 import com.exist.ecc.person.app.AppUtil;
 
-import com.exist.ecc.person.core.dao.api.ContactDao;
-import com.exist.ecc.person.core.dao.api.PersonDao;
-import com.exist.ecc.person.core.dao.impl.ContactHibernateDao;
-import com.exist.ecc.person.core.dao.impl.PersonHibernateDao;
+import com.exist.ecc.person.core.dao.impl.ContactCriteriaDao;
+import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
 
 import com.exist.ecc.person.core.model.Contact;
 import com.exist.ecc.person.core.model.Email;
@@ -37,15 +35,15 @@ public class ContactManager extends AbstractEntityManager {
 
   public final String[] CONTACT_TYPES = { "Landline", "Mobile", "Email" };
 
-  private final ContactDao contactDao;
-  private final PersonDao personDao;
+  private final ContactCriteriaDao contactDao;
+  private final PersonCriteriaDao personDao;
 
   public ContactManager(InputReader reader, OutputWriter writer,
     InputExceptionHandler handler)
   {
     super(reader, writer, handler);
-    contactDao = new ContactHibernateDao();
-    personDao = new PersonHibernateDao();
+    contactDao = new ContactCriteriaDao();
+    personDao = new PersonCriteriaDao();
   }
 
   public void create() {
@@ -98,9 +96,6 @@ public class ContactManager extends AbstractEntityManager {
   }
 
   public void update() {
-    final PersonDao personDao = new PersonHibernateDao();
-    final ContactDao contactDao = new ContactHibernateDao();
-
     long personId = getId("person");
 
     Transactions.conduct(() -> { 
@@ -135,9 +130,6 @@ public class ContactManager extends AbstractEntityManager {
   }
 
   public void delete() {
-    final PersonDao personDao = new PersonHibernateDao();
-    final ContactDao contactDao = new ContactHibernateDao();
-
     long personId = getId("person");
 
     Transactions.conduct(() -> { 
