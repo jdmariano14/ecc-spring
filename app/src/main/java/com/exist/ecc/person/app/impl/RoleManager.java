@@ -46,7 +46,8 @@ public class RoleManager extends AbstractEntityManager {
 
       setRoleFields(role);
 
-      Transactions.conduct(() -> roleDao.save(role), session, roleDao);
+      Transactions.conduct(session, roleDao, () -> 
+        roleDao.save(role));
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
@@ -61,9 +62,8 @@ public class RoleManager extends AbstractEntityManager {
     try {
       OutputFormatter<Role> formatter = new RoleFormatter();
 
-      Collection<Role> roles = Transactions.get(
-        () -> roleDao.query(c -> c.addOrder(Order.asc("roleId"))), 
-        session, roleDao);
+      Collection<Role> roles = Transactions.get(session, roleDao, () -> 
+        roleDao.query(c -> c.addOrder(Order.asc("roleId"))));
 
       getWriter().write("");
 
@@ -82,14 +82,15 @@ public class RoleManager extends AbstractEntityManager {
     try {
       long id = getId("role");
 
-      final Role role = Transactions.get(
-        () -> roleDao.get(id), session, roleDao);
+      final Role role = Transactions.get(session, roleDao, () ->
+        roleDao.get(id));
 
       getWriter().write("");
 
       setRoleFields(role);
 
-      Transactions.conduct(() -> roleDao.save(role), session, roleDao);
+      Transactions.conduct(session, roleDao, () -> 
+        roleDao.save(role));
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
@@ -105,13 +106,14 @@ public class RoleManager extends AbstractEntityManager {
       long id = getId("role");
       String entityString;
 
-      final Role role = Transactions.get(
-        () -> roleDao.get(id), session, roleDao);
+      final Role role = Transactions.get(session, roleDao, () ->
+        roleDao.get(id));
 
       entityString = formatter.format(role);
 
       if (getDeleteConfirmation("role", entityString)) {
-        Transactions.conduct(() -> roleDao.delete(role), session, roleDao);
+        Transactions.conduct(session, roleDao, () -> 
+          roleDao.delete(role));
       }
 
     } catch (Exception e) {
@@ -133,5 +135,4 @@ public class RoleManager extends AbstractEntityManager {
     roleWizard.setDefaultFormat(defaultBlankFormat, defaultFilledFormat);
     roleWizard.setProperties(role);
   }
-
 }

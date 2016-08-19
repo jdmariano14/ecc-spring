@@ -82,8 +82,8 @@ public class ContactManager extends AbstractEntityManager {
           contact = new Mobile();
       }
 
-      final Person person =
-        Transactions.get(() -> personDao.get(personId), session, personDao);
+      final Person person = Transactions.get(session, personDao, () -> 
+        personDao.get(personId));
 
       System.out.println();
       setContactFields(contact);
@@ -91,10 +91,12 @@ public class ContactManager extends AbstractEntityManager {
       contact.setPerson(person);
       person.getContacts().add(contact);
 
-      Transactions.conduct(
-        () -> contactDao.save(contact), session, contactDao);
+      Transactions.conduct(session, contactDao, () -> 
+        contactDao.save(contact));
 
-      Transactions.conduct(() -> personDao.save(person), session, personDao);
+      Transactions.conduct(session, personDao, () -> 
+        personDao.save(person));
+
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
@@ -115,15 +117,16 @@ public class ContactManager extends AbstractEntityManager {
       OutputFormatter<Contact> contactFormatter = new ContactFormatter();
       long personId = getId("person");
 
-      final Person person =
-        Transactions.get(() -> personDao.get(personId), session, personDao);
+      final Person person = Transactions.get(session, personDao, () -> 
+        personDao.get(personId));
 
       final Collection<Contact> contacts = person.getContacts();
       
       getWriter().write("");
 
       if (contacts.isEmpty()) {
-        getWriter().write(personFormatter.format(person) + " has no contacts");
+        getWriter().write(
+          personFormatter.format(person) + " has no contacts");
       } else {
         getWriter().write(personFormatter.format(person) + "'s contacts:");
         contacts.forEach(c -> getWriter().write(contactFormatter.format(c)));
@@ -132,19 +135,18 @@ public class ContactManager extends AbstractEntityManager {
 
         long contactId = getId("contact");
 
-        final Contact contact = Transactions.get(
-            () -> contactDao.get(contactId), 
-            session, contactDao);
+        final Contact contact = Transactions.get(session, contactDao, () ->
+          contactDao.get(contactId));
 
         getWriter().write("");
 
         setContactFields(contact);
         
-        Transactions.conduct(
-          () -> contactDao.save(contact), session, contactDao);
+        Transactions.conduct(session, contactDao, () ->
+          contactDao.save(contact));
 
-        Transactions.conduct(
-          () -> personDao.save(person), session, personDao);
+        Transactions.conduct(session, personDao, () ->
+          personDao.save(person));
       }
 
     } catch (Exception e) {
@@ -163,8 +165,8 @@ public class ContactManager extends AbstractEntityManager {
       long personId = getId("person");
       long contactId;
       
-      final Person person =
-        Transactions.get(() -> personDao.get(personId), session, personDao);
+      final Person person = Transactions.get(session, personDao, () ->
+        personDao.get(personId));
 
       final Collection<Contact> contacts = person.getContacts();
 
@@ -183,9 +185,8 @@ public class ContactManager extends AbstractEntityManager {
 
         contactId = getId("contact");
 
-        final Contact contact = Transactions.get(
-            () -> contactDao.get(contactId), 
-            session, contactDao);
+        final Contact contact = Transactions.get(session, contactDao, () ->
+          contactDao.get(contactId));
 
         entityString =
           new StringBuilder()
@@ -197,11 +198,11 @@ public class ContactManager extends AbstractEntityManager {
         if (getDeleteConfirmation("contact", entityString)) {
           person.getContacts().remove(contact);
 
-          Transactions.conduct(
-            () -> personDao.save(person), session, personDao);
+          Transactions.conduct(session, personDao, () -> 
+            personDao.save(person));
 
-          Transactions.conduct(
-            () -> contactDao.delete(contact), session, contactDao);
+          Transactions.conduct(session, contactDao, () -> 
+            contactDao.delete(contact));
         }
       }
     } catch (Exception e) {

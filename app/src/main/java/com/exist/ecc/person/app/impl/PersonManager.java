@@ -76,7 +76,8 @@ public class PersonManager extends AbstractEntityManager {
       getWriter().write("");
       setPersonFields(person, name, address);
 
-      Transactions.conduct(() -> personDao.save(person), session, personDao);
+      Transactions.conduct(session, personDao, () -> 
+        personDao.save(person));
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
@@ -131,8 +132,8 @@ public class PersonManager extends AbstractEntityManager {
     try {
       long id = getId("person");
 
-      final Person person =
-        Transactions.get(() -> personDao.get(id), session, personDao);
+      final Person person = Transactions.get(session, personDao, () ->
+        personDao.get(id));
 
       Name name = person.getName();
       Address address = person.getAddress();
@@ -141,7 +142,8 @@ public class PersonManager extends AbstractEntityManager {
       getWriter().write("Enter '\\null' to clear a field");
       setPersonFields(person, name, address);
 
-      Transactions.conduct(() -> personDao.save(person), session, personDao);
+      Transactions.conduct(session, personDao, () ->
+        personDao.save(person));
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
@@ -155,16 +157,16 @@ public class PersonManager extends AbstractEntityManager {
     try {
       long id = getId("person");
 
-      final Person person =
-        Transactions.get(() -> personDao.get(id), session, personDao);
+      final Person person = Transactions.get(session, personDao, () ->
+        personDao.get(id));
       
       OutputFormatter<Person> formatter = new BasicPersonFormatter();
 
       String entityString = formatter.format(person);
 
       if (getDeleteConfirmation("person", entityString)) {
-        Transactions.conduct(
-          () -> personDao.delete(person), session, personDao);
+        Transactions.conduct(session, personDao, () -> 
+          personDao.delete(person));
       }
 
     } catch (Exception e) {
@@ -220,8 +222,8 @@ public class PersonManager extends AbstractEntityManager {
       getWriter().write("NOTICE: Using Criteria for sorting & filtering.");
       getWriter().write("");
 
-      Collection<Person> persons = Transactions.get(
-        () -> personDao.query(query), session, personDao);
+      Collection<Person> persons = Transactions.get(session, personDao, () ->
+        personDao.query(query));
 
       persons.forEach(p -> {
         getWriter().write(formatter.format(p));
@@ -298,8 +300,8 @@ public class PersonManager extends AbstractEntityManager {
         hql.append("asc");
       }
 
-      Collection<Person> persons = Transactions.get(
-        () -> personHqlDao.query(hql.toString()), session, personDao);
+      Collection<Person> persons = Transactions.get(session, personHqlDao,
+        () -> personHqlDao.query(hql.toString()));
 
       persons.forEach(p -> {
         getWriter().write(formatter.format(p));
@@ -338,9 +340,8 @@ public class PersonManager extends AbstractEntityManager {
       getWriter().write("NOTICE: Using Java streams for sorting & filtering.");
       getWriter().write("");
 
-      Collection<Person> persons = Transactions.get(
-        () -> personDao.getAll(), session, personDao);
-
+      Collection<Person> persons = Transactions.get(session, personDao, () ->
+        personDao.getAll());
 
       Predicate<Person> filter = 
         p -> p.getGwa().compareTo(min) >= 0 && p.getGwa().compareTo(max) <= 0;

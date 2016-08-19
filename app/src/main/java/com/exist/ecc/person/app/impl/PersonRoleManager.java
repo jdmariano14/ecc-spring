@@ -43,15 +43,16 @@ public class PersonRoleManager extends AbstractEntityManager {
     Session session = Sessions.getSession();
 
     try {
-      final Person person =
-        Transactions.get(() -> personDao.get(personId), session, personDao);
+      final Person person = Transactions.get(session, personDao, () ->
+          personDao.get(personId));
 
-      final Role role =
-        Transactions.get(() -> roleDao.get(roleId), session, roleDao);
+      final Role role = Transactions.get(session, roleDao, () -> 
+          roleDao.get(roleId));
 
       person.getRoles().add(role);
 
-      Transactions.conduct(() -> personDao.save(person), session, personDao);
+      Transactions.conduct(session, personDao, () -> 
+        personDao.save(person));
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
@@ -78,8 +79,8 @@ public class PersonRoleManager extends AbstractEntityManager {
       long personId = getId("person");
       long roleId;
 
-      final Person person =
-        Transactions.get(() -> personDao.get(personId), session, personDao);
+      final Person person = Transactions.get(session, personDao, () ->
+        personDao.get(personId));
 
       roles = person.getRoles();
 
@@ -98,8 +99,8 @@ public class PersonRoleManager extends AbstractEntityManager {
 
         roleId = getId("role");
         
-        final Role role =
-          Transactions.get(() -> roleDao.get(roleId), session, roleDao);
+        final Role role = Transactions.get(session, roleDao, () ->
+          roleDao.get(roleId));
 
         entityString =
           new StringBuilder()
@@ -111,8 +112,8 @@ public class PersonRoleManager extends AbstractEntityManager {
         if (getDeleteConfirmation("person role", entityString)) {
           person.getRoles().remove(role);
 
-          Transactions.conduct(
-            () -> personDao.save(person), session, personDao);
+          Transactions.conduct(session, personDao, () ->
+            personDao.save(person));
         }
       }
     } catch (Exception e) {

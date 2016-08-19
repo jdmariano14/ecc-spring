@@ -10,22 +10,14 @@ import com.exist.ecc.person.core.dao.api.Dao;
 
 public class Transactions {
   
-  public static void conduct(Runnable action, Session session, Dao... daos) {
+  public static void conduct(Session session, Dao dao, Runnable action) {
     Transaction transaction = null;
 
     try {
-      for (Dao dao : daos) {
-        dao.setSession(session);  
-      }
-      
+      dao.setSession(session);
       transaction = session.beginTransaction();
-      
       action.run();
-
-      for (Dao dao : daos) {
-        dao.flush();
-      }
-
+      dao.flush();
       transaction.commit();
     } catch (Exception e) {
       if (transaction != null) {
@@ -36,23 +28,15 @@ public class Transactions {
     }
   }
 
-  public static <T> T get(Supplier<T> getter, Session session, Dao... daos) {
+  public static <T> T get(Session session, Dao dao, Supplier<T> getter) {
     Transaction transaction = null;
     T result = null;
 
     try {
-      for (Dao dao : daos) {
-        dao.setSession(session);  
-      }
-      
+      dao.setSession(session);
       transaction = session.beginTransaction();
-      
       result = getter.get();
-
-      for (Dao dao : daos) {
-        dao.flush();
-      }
-
+      dao.flush();
       transaction.commit();
     } catch (Exception e) {
       if (transaction != null) {
