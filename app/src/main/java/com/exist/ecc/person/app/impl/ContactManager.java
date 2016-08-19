@@ -4,10 +4,13 @@ import java.util.Collection;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 
 import com.exist.ecc.person.app.AppUtil;
 
+import com.exist.ecc.person.core.dao.Sessions;
+import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.impl.ContactCriteriaDao;
 import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
 
@@ -17,7 +20,6 @@ import com.exist.ecc.person.core.model.Landline;
 import com.exist.ecc.person.core.model.Mobile;
 import com.exist.ecc.person.core.model.Person;
 
-import com.exist.ecc.person.core.service.db.Transactions;
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.api.InputReader;
@@ -47,38 +49,41 @@ public class ContactManager extends AbstractEntityManager {
   }
 
   public void create() {
-    final Contact contact;
+    Session session = Sessions.getSession();
 
-    long personId = getId("person");
-    
-    String contactTypeMessage = 
-      new StringBuilder(System.lineSeparator())
-          .append("Contact type:")
-          .append(System.lineSeparator())
-          .append(MenuUtil.getMenu(CONTACT_TYPES, StringUtil::capitalize))
-          .append(System.lineSeparator())
-          .toString();
+    try {
+      final Contact contact;
 
-    int contactType = 
-      new InputService.Builder<Integer>(getReader(), getHandler())
-          .message(contactTypeMessage)
-          .conversion(Integer::parseInt)
-          .validation(AppUtil.optionValidation(CONTACT_TYPES.length))
-          .build().getInput();
+      long personId = getId("person");
+      
+      String contactTypeMessage = 
+        new StringBuilder(System.lineSeparator())
+            .append("Contact type:")
+            .append(System.lineSeparator())
+            .append(MenuUtil.getMenu(CONTACT_TYPES, StringUtil::capitalize))
+            .append(System.lineSeparator())
+            .toString();
 
-    switch (CONTACT_TYPES[contactType - 1]) {
-      case "Landline":
-        contact = new Landline();
-        break;
-      case "Email":
-        contact = new Email();
-        break;
-      default:
-        contact = new Mobile();
-    }
+      int contactType = 
+        new InputService.Builder<Integer>(getReader(), getHandler())
+            .message(contactTypeMessage)
+            .conversion(Integer::parseInt)
+            .validation(AppUtil.optionValidation(CONTACT_TYPES.length))
+            .build().getInput();
 
-    Transactions.conduct(() -> { 
-      final Person person = personDao.get(personId);
+      switch (CONTACT_TYPES[contactType - 1]) {
+        case "Landline":
+          contact = new Landline();
+          break;
+        case "Email":
+          contact = new Email();
+          break;
+        default:
+          contact = new Mobile();
+      }
+
+      final Person person =
+        Transactions.get(() -> personDao.get(personId), session, personDao);
 
       System.out.println();
       setContactFields(contact);
@@ -86,9 +91,16 @@ public class ContactManager extends AbstractEntityManager {
       contact.setPerson(person);
       person.getContacts().add(contact);
 
-      contactDao.save(contact);
-      personDao.save(person);
-    }, personDao, contactDao);
+      Transactions.conduct(
+        () -> contactDao.save(contact), session, contactDao);
+
+      Transactions.conduct(() -> personDao.save(person), session, personDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
+
   }
 
   public void list() {
@@ -96,16 +108,18 @@ public class ContactManager extends AbstractEntityManager {
   }
 
   public void update() {
-    long personId = getId("person");
+    Session session = Sessions.getSession();
 
-    Transactions.conduct(() -> { 
-      final Person person = personDao.get(personId);
-      final Collection<Contact> contacts = person.getContacts();
-      final Contact contact;
-      long contactId;
+    try {
       OutputFormatter<Person> personFormatter = new BasicPersonFormatter();
       OutputFormatter<Contact> contactFormatter = new ContactFormatter();
+      long personId = getId("person");
 
+      final Person person =
+        Transactions.get(() -> personDao.get(personId), session, personDao);
+
+      final Collection<Contact> contacts = person.getContacts();
+      
       getWriter().write("");
 
       if (contacts.isEmpty()) {
@@ -116,29 +130,43 @@ public class ContactManager extends AbstractEntityManager {
 
         getWriter().write("");
 
-        contactId = getId("contact");
-        contact = contactDao.get(contactId);
+        long contactId = getId("contact");
+
+        final Contact contact = Transactions.get(
+            () -> contactDao.get(contactId), 
+            session, contactDao);
 
         getWriter().write("");
 
         setContactFields(contact);
+        
+        Transactions.conduct(
+          () -> contactDao.save(contact), session, contactDao);
 
-        contactDao.save(contact);
-        personDao.save(person);
+        Transactions.conduct(
+          () -> personDao.save(person), session, personDao);
       }
-    }, personDao, contactDao);
+
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
   public void delete() {
-    long personId = getId("person");
+    Session session = Sessions.getSession();
 
-    Transactions.conduct(() -> { 
-      final Person person = personDao.get(personId);
-      final Collection<Contact> contacts = person.getContacts();
-      final Contact contact;
-      long contactId;
+    try {
       OutputFormatter<Person> personFormatter = new BasicPersonFormatter();
       OutputFormatter<Contact> contactFormatter = new ContactFormatter();
+      long personId = getId("person");
+      long contactId;
+      
+      final Person person =
+        Transactions.get(() -> personDao.get(personId), session, personDao);
+
+      final Collection<Contact> contacts = person.getContacts();
 
       getWriter().write("");
 
@@ -154,7 +182,10 @@ public class ContactManager extends AbstractEntityManager {
         getWriter().write("");
 
         contactId = getId("contact");
-        contact = contactDao.get(contactId);
+
+        final Contact contact = Transactions.get(
+            () -> contactDao.get(contactId), 
+            session, contactDao);
 
         entityString =
           new StringBuilder()
@@ -165,11 +196,19 @@ public class ContactManager extends AbstractEntityManager {
 
         if (getDeleteConfirmation("contact", entityString)) {
           person.getContacts().remove(contact);
-          personDao.save(person);
-          contactDao.delete(contact);
+
+          Transactions.conduct(
+            () -> personDao.save(person), session, personDao);
+
+          Transactions.conduct(
+            () -> contactDao.delete(contact), session, contactDao);
         }
       }
-    }, personDao, contactDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
   
   private void setContactFields(Contact contact) {

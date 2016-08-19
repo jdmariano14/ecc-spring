@@ -10,6 +10,8 @@ import com.exist.ecc.person.app.impl.PersonManager;
 import com.exist.ecc.person.app.impl.PersonRoleManager;
 import com.exist.ecc.person.app.impl.RoleManager;
 
+import com.exist.ecc.person.core.dao.Sessions;
+
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.api.InputReader;
@@ -19,7 +21,6 @@ import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.ConsoleWriter;
 
 import com.exist.ecc.person.util.MenuUtil;
-import com.exist.ecc.person.util.SessionUtil;
 import com.exist.ecc.person.util.StringUtil;
 
 public class App {
@@ -62,7 +63,7 @@ public class App {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      SessionUtil.getSessionFactory().close();
+      Sessions.getSessionFactory().close();
     }
   }
 

@@ -1,17 +1,20 @@
 package com.exist.ecc.person.app.impl;
 
+import java.util.Collection;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 
 import com.exist.ecc.person.app.AppUtil;
 
+import com.exist.ecc.person.core.dao.Sessions;
+import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 
 import com.exist.ecc.person.core.model.Role;
 
-import com.exist.ecc.person.core.service.db.Transactions;
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.api.InputReader;
@@ -34,53 +37,88 @@ public class RoleManager extends AbstractEntityManager {
   }
 
   public void create() {
-    final Role role = new Role();
-        
-    getWriter().write("");
-    setRoleFields(role);
+    Session session = Sessions.getSession();
 
-    Transactions.conduct(() -> { 
-      roleDao.save(role);
-    }, roleDao);
+    try {
+      Role role = new Role();
+
+      getWriter().write("");
+
+      setRoleFields(role);
+
+      Transactions.conduct(() -> roleDao.save(role), session, roleDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
   public void list() {
-    getWriter().write("");
 
-    Transactions.conduct(() -> { 
+    Session session = Sessions.getSession();
+
+    try {
       OutputFormatter<Role> formatter = new RoleFormatter();
 
-      roleDao.query(c -> c.addOrder(Order.asc("roleId")))
-             .forEach(r -> getWriter().write(formatter.format(r)));
-    }, roleDao);
+      Collection<Role> roles = Transactions.get(
+        () -> roleDao.query(c -> c.addOrder(Order.asc("roleId"))), 
+        session, roleDao);
+
+      getWriter().write("");
+
+      roles.forEach(r -> getWriter().write(formatter.format(r)));
+
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
   public void update() {
-    long id = getId("role");
+    Session session = Sessions.getSession();
 
-    Transactions.conduct(() -> {
-      final Role role = roleDao.get(id);
-          
+    try {
+      long id = getId("role");
+
+      final Role role = Transactions.get(
+        () -> roleDao.get(id), session, roleDao);
+
       getWriter().write("");
+
       setRoleFields(role);
-      roleDao.save(role);
-    }, roleDao);
+
+      Transactions.conduct(() -> roleDao.save(role), session, roleDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
   public void delete() {
-    long id = getId("role");
+    Session session = Sessions.getSession();
 
-    Transactions.conduct(() -> {
-      String entityString;
-      final Role role = roleDao.get(id);
+    try {
       OutputFormatter<Role> formatter = new ComposedRoleFormatter();
-          
+      long id = getId("role");
+      String entityString;
+
+      final Role role = Transactions.get(
+        () -> roleDao.get(id), session, roleDao);
+
       entityString = formatter.format(role);
 
       if (getDeleteConfirmation("role", entityString)) {
-        roleDao.delete(role);
+        Transactions.conduct(() -> roleDao.delete(role), session, roleDao);
       }
-    }, roleDao);
+
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
   private void setRoleFields(Role role) {    

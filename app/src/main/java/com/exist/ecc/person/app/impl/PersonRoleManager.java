@@ -1,8 +1,13 @@
 package com.exist.ecc.person.app.impl;
+
 import java.util.Collection;
+
+import org.hibernate.Session;
 
 import com.exist.ecc.person.app.AppUtil;
 
+import com.exist.ecc.person.core.dao.Sessions;
+import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
 import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 
@@ -16,8 +21,6 @@ import com.exist.ecc.person.core.service.output.api.OutputWriter;
 import com.exist.ecc.person.core.service.output.impl.BasicPersonFormatter;
 import com.exist.ecc.person.core.service.output.impl.ComposedRoleFormatter;
 import com.exist.ecc.person.core.service.output.impl.RoleFormatter;
-
-import com.exist.ecc.person.core.service.db.Transactions;
 
 public class PersonRoleManager extends AbstractEntityManager {
 
@@ -33,16 +36,27 @@ public class PersonRoleManager extends AbstractEntityManager {
   }
 
   public void create() {
+
     long personId = getId("person");
     long roleId = getId("role");
 
-    Transactions.conduct(() -> { 
-      final Person person = personDao.get(personId);
-      final Role role = roleDao.get(roleId);
-      
+    Session session = Sessions.getSession();
+
+    try {
+      final Person person =
+        Transactions.get(() -> personDao.get(personId), session, personDao);
+
+      final Role role =
+        Transactions.get(() -> roleDao.get(roleId), session, roleDao);
+
       person.getRoles().add(role);
-      personDao.save(person);
-    }, personDao, roleDao);
+
+      Transactions.conduct(() -> personDao.save(person), session, personDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
   public void list() {
@@ -54,16 +68,21 @@ public class PersonRoleManager extends AbstractEntityManager {
   }
 
   public void delete() {
-    long personId = getId("person");
+    final Collection<Role> roles;
 
-    Transactions.conduct(() -> {
-      final Person person = personDao.get(personId);
-      final Collection<Role> roles = person.getRoles();
-      final Role role;
-      long roleId;
+    Session session = Sessions.getSession();
+
+    try {
       OutputFormatter<Person> personFormatter = new BasicPersonFormatter();
       OutputFormatter<Role> roleFormatter = new RoleFormatter();
-      
+      long personId = getId("person");
+      long roleId;
+
+      final Person person =
+        Transactions.get(() -> personDao.get(personId), session, personDao);
+
+      roles = person.getRoles();
+
       getWriter().write("");
 
       if (roles.isEmpty()) {
@@ -78,7 +97,9 @@ public class PersonRoleManager extends AbstractEntityManager {
         getWriter().write("");
 
         roleId = getId("role");
-        role = roleDao.get(roleId);
+        
+        final Role role =
+          Transactions.get(() -> roleDao.get(roleId), session, roleDao);
 
         entityString =
           new StringBuilder()
@@ -89,10 +110,16 @@ public class PersonRoleManager extends AbstractEntityManager {
 
         if (getDeleteConfirmation("person role", entityString)) {
           person.getRoles().remove(role);
-          personDao.save(person);
+
+          Transactions.conduct(
+            () -> personDao.save(person), session, personDao);
         }
       }
-    }, personDao, roleDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
 }

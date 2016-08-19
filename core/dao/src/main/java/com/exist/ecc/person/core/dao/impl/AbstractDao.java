@@ -11,9 +11,9 @@ import java.util.function.UnaryOperator;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 
+import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dao.api.Dao;
 
-import com.exist.ecc.person.util.SessionUtil;
 
 public abstract class AbstractDao<T, I extends Serializable> 
   implements Dao<T, I> 
@@ -29,7 +29,7 @@ public abstract class AbstractDao<T, I extends Serializable>
   @Override
   public Session getSession() {
     if (session == null) {
-      session = SessionUtil.getSessionFactory().getCurrentSession();
+      session = Sessions.getSessionFactory().getCurrentSession();
     }
     return session;
   }

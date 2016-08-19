@@ -21,11 +21,14 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.exist.ecc.person.app.AppUtil;
 
+import com.exist.ecc.person.core.dao.Sessions;
+import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
 import com.exist.ecc.person.core.dao.impl.PersonHqlDao;
 
@@ -33,7 +36,6 @@ import com.exist.ecc.person.core.model.Address;
 import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Person;
 
-import com.exist.ecc.person.core.service.db.Transactions;
 import com.exist.ecc.person.core.service.input.InputService;
 import com.exist.ecc.person.core.service.input.api.InputExceptionHandler;
 import com.exist.ecc.person.core.service.input.api.InputReader;
@@ -64,16 +66,22 @@ public class PersonManager extends AbstractEntityManager {
   }
 
   public void create() {
-    final Person person = new Person();
-    final Name name = new Name();
-    final Address address = new Address();
-    
-    getWriter().write("");
-    setPersonFields(person, name, address);
+    Session session = Sessions.getSession();
 
-    Transactions.conduct(() -> { 
-      personDao.save(person);
-    }, personDao);
+    try {
+      final Person person = new Person();
+      final Name name = new Name();
+      final Address address = new Address();
+
+      getWriter().write("");
+      setPersonFields(person, name, address);
+
+      Transactions.conduct(() -> personDao.save(person), session, personDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
   public void list() {
@@ -118,60 +126,77 @@ public class PersonManager extends AbstractEntityManager {
   }
 
   public void update() {
-    long id = getId("person");
+    Session session = Sessions.getSession();
 
-    Transactions.conduct(() -> {
-      final Person person = personDao.get(id);
-      final Name name = person.getName();
-      final Address address = person.getAddress();
+    try {
+      long id = getId("person");
+
+      final Person person =
+        Transactions.get(() -> personDao.get(id), session, personDao);
+
+      Name name = person.getName();
+      Address address = person.getAddress();
 
       getWriter().write("");
       getWriter().write("Enter '\\null' to clear a field");
       setPersonFields(person, name, address);
-      personDao.save(person);
-    }, personDao);
+
+      Transactions.conduct(() -> personDao.save(person), session, personDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
   public void delete() {
-    long id = getId("person");
+    Session session = Sessions.getSession();
 
-    Transactions.conduct(() -> { 
-      final Person person = personDao.get(id);
-      String entityString;
+    try {
+      long id = getId("person");
+
+      final Person person =
+        Transactions.get(() -> personDao.get(id), session, personDao);
+      
       OutputFormatter<Person> formatter = new BasicPersonFormatter();
 
-      entityString = formatter.format(person);
+      String entityString = formatter.format(person);
 
       if (getDeleteConfirmation("person", entityString)) {
-        personDao.delete(person);
+        Transactions.conduct(
+          () -> personDao.delete(person), session, personDao);
       }
-    }, personDao);
+
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
   
   private void listByLastName(Boolean desc) {
-    getWriter().write("");
+    Session session = Sessions.getSession();
 
-    String min = 
-      new InputService.Builder<String>(getReader(), getHandler())
-      .message("Min value (e.g. 'abc'): ")
-      .build().getInput();
-
-    String max = 
-      new InputService.Builder<String>(getReader(), getHandler())
-      .message("Max value (e.g. 'xyz'): ")
-      .build().getInput();
-
-    String like =
-      new InputService.Builder<String>(getReader(), getHandler())
-      .message("Like format (e.g. '%ine'): ")
-      .build().getInput();
-
-    getWriter().write("");
-    getWriter().write("NOTICE: Using Criteria for sorting & filtering.");
-    getWriter().write("");
-
-    Transactions.conduct(() -> { 
+    try {
       OutputFormatter<Person> formatter = new PersonFormatter();
+
+      getWriter().write("");
+
+      String min = 
+        new InputService.Builder<String>(getReader(), getHandler())
+        .message("Min value (e.g. 'abc'): ")
+        .build().getInput();
+
+      String max = 
+        new InputService.Builder<String>(getReader(), getHandler())
+        .message("Max value (e.g. 'xyz'): ")
+        .build().getInput();
+
+      String like =
+        new InputService.Builder<String>(getReader(), getHandler())
+        .message("Like format (e.g. '%ine'): ")
+        .build().getInput();
+
       UnaryOperator<Criteria> query = c -> {
         if (!min.isEmpty()) {
           c.add(Restrictions.ge("name.lastName", min));
@@ -191,107 +216,131 @@ public class PersonManager extends AbstractEntityManager {
         return c;
       };
 
-      personDao.query(query).forEach(p -> {
+      getWriter().write("");
+      getWriter().write("NOTICE: Using Criteria for sorting & filtering.");
+      getWriter().write("");
+
+      Collection<Person> persons = Transactions.get(
+        () -> personDao.query(query), session, personDao);
+
+      persons.forEach(p -> {
         getWriter().write(formatter.format(p));
       }); 
-    }, personDao);
+
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
   private void listByDateHired(Boolean desc) {
     final PersonHqlDao personHqlDao = new PersonHqlDao();
 
-    Function<String, Date> conversion = s -> { 
-      try {
-        return DATE_FORMAT.parse(s);
-      } catch(ParseException e) {
-        throw new RuntimeException(e);
-      }
-    };
+    Session session = Sessions.getSession();
 
-    Date min = 
-      new InputService.Builder<Date>(getReader(), new ReturnNullHandler())
-      .message("Min (earliest) value (yyyy-mm-dd): ")
-      .conversion(conversion)
-      .build().getInput();
-
-    Date max = 
-      new InputService.Builder<Date>(getReader(), new ReturnNullHandler())
-      .message("Max (latest) value: ")
-      .conversion(conversion)
-      .build().getInput();
-
-    getWriter().write("");
-    getWriter().write("NOTICE: Using HQL for sorting & filtering.");
-    getWriter().write("");
-
-    StringBuilder hql = new StringBuilder();
-
-    if (!(min == null && max == null)) {
-      hql.append("WHERE date_hired");
-
-      if (min != null) {
-        hql.append(" >= '")
-           .append(DATE_FORMAT.format(min))
-           .append("'");
-
-        if (max != null) {
-          hql.append(" AND date_hired ");
-        }
-      } 
-
-      if (max != null) {
-        hql.append(" <= '")
-           .append(DATE_FORMAT.format(max))
-           .append("'");
-      }
-
-      hql.append(" ");
-    }
-
-    hql.append("ORDER BY date_hired ");
-
-    if (desc) {
-      hql.append("desc");
-    } else {
-      hql.append("asc");
-    }
-
-    Transactions.conduct(() -> { 
+    try {
       OutputFormatter<Person> formatter = new PersonFormatter();
 
-      List<Person> results = personHqlDao.query(hql.toString());
+      Function<String, Date> conversion = s -> { 
+        try {
+          return DATE_FORMAT.parse(s);
+        } catch(ParseException e) {
+          throw new RuntimeException(e);
+        }
+      };
 
-      results.forEach(p -> {
+      Date min = 
+        new InputService.Builder<Date>(getReader(), new ReturnNullHandler())
+        .message("Min (earliest) value (yyyy-mm-dd): ")
+        .conversion(conversion)
+        .build().getInput();
+
+      Date max = 
+        new InputService.Builder<Date>(getReader(), new ReturnNullHandler())
+        .message("Max (latest) value: ")
+        .conversion(conversion)
+        .build().getInput();
+
+      getWriter().write("");
+      getWriter().write("NOTICE: Using HQL for sorting & filtering.");
+      getWriter().write("");
+
+      StringBuilder hql = new StringBuilder();
+
+      if (!(min == null && max == null)) {
+        hql.append("WHERE date_hired");
+
+        if (min != null) {
+          hql.append(" >= '")
+             .append(DATE_FORMAT.format(min))
+             .append("'");
+
+          if (max != null) {
+            hql.append(" AND date_hired ");
+          }
+        } 
+
+        if (max != null) {
+          hql.append(" <= '")
+             .append(DATE_FORMAT.format(max))
+             .append("'");
+        }
+
+        hql.append(" ");
+      }
+
+      hql.append("ORDER BY date_hired ");
+
+      if (desc) {
+        hql.append("desc");
+      } else {
+        hql.append("asc");
+      }
+
+      Collection<Person> persons = Transactions.get(
+        () -> personHqlDao.query(hql.toString()), session, personDao);
+
+      persons.forEach(p -> {
         getWriter().write(formatter.format(p));
       }); 
-    }, personHqlDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
+
   }
 
   private void listByGwa(Boolean desc) {
-    getWriter().write("");
+    Session session = Sessions.getSession();
 
-    BigDecimal min = 
-      new InputService.Builder<BigDecimal>(getReader(), getHandler())
-      .message("Min value (e.g. 1.00): ")
-      .conversion(s -> new BigDecimal(s))
-      .defaultValue(new BigDecimal("1.00"))
-      .build().getInput();
-
-    BigDecimal max = 
-      new InputService.Builder<BigDecimal>(getReader(), getHandler())
-      .message("Max value (e.g. 5.00): ")
-      .conversion(s -> new BigDecimal(s))
-      .defaultValue(new BigDecimal("5.00"))
-      .build().getInput();
-
-    getWriter().write("");
-    getWriter().write("NOTICE: Using Java streams for sorting & filtering.");
-    getWriter().write("");
-
-    Transactions.conduct(() -> { 
+    try {
       OutputFormatter<Person> formatter = new PersonFormatter();
 
-      List<Person> results = personDao.getAll();
+      getWriter().write("");
+
+      BigDecimal min = 
+        new InputService.Builder<BigDecimal>(getReader(), getHandler())
+        .message("Min value (e.g. 1.00): ")
+        .conversion(s -> new BigDecimal(s))
+        .defaultValue(new BigDecimal("1.00"))
+        .build().getInput();
+
+      BigDecimal max = 
+        new InputService.Builder<BigDecimal>(getReader(), getHandler())
+        .message("Max value (e.g. 5.00): ")
+        .conversion(s -> new BigDecimal(s))
+        .defaultValue(new BigDecimal("5.00"))
+        .build().getInput();
+
+      getWriter().write("");
+      getWriter().write("NOTICE: Using Java streams for sorting & filtering.");
+      getWriter().write("");
+
+      Collection<Person> persons = Transactions.get(
+        () -> personDao.getAll(), session, personDao);
+
 
       Predicate<Person> filter = 
         p -> p.getGwa().compareTo(min) >= 0 && p.getGwa().compareTo(max) <= 0;
@@ -299,13 +348,17 @@ public class PersonManager extends AbstractEntityManager {
       Comparator<Person> sort = 
         (p1, p2) -> p1.getGwa().compareTo(p2.getGwa());
 
-      results.stream()
+      persons.stream()
       .filter(filter)
       .sorted(desc ? sort.reversed() : sort)
       .forEach(p -> {
         getWriter().write(formatter.format(p));
       }); 
-    }, personDao);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      session.close();
+    }
   }
 
 
