@@ -11,6 +11,8 @@
   <url>http://maven.apache.org</url>
 
   <properties>
+    <jettyVersion>9.4.0.M1</jettyVersion>
+    <hibernateValidatorVersion>5.2.4.Final</hibernateValidatorVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -24,6 +26,22 @@
   <dependencyManagement>  
     <dependencies>
       <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>${jettyVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-servlet</artifactId>
+        <version>${jettyVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-webapp</artifactId>
+        <version>${jettyVersion}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>[4.3.11.Final,5.0.0.Beta1)</version>
@@ -36,12 +54,12 @@
       <dependency>
        <groupId>org.hibernate</groupId>
        <artifactId>hibernate-validator</artifactId>
-       <version>[5.2.4.Final,]</version>
+       <version>${hibernateValidatorVersion}</version>
       </dependency>
       <dependency>
        <groupId>org.hibernate</groupId>
        <artifactId>hibernate-validator-cdi</artifactId>
-       <version>[5.2.4.Final,]</version>
+       <version>${hibernateValidatorVersion}</version>
       </dependency>      
 
       <dependency>
@@ -130,29 +148,16 @@
             <target>1.8</target>
           </configuration>
         </plugin>
-        
+
+        <plugin>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>${jettyVersion}</version>
+        </plugin>
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>create-executable-jar</id>
-              <phase>package</phase>
-              <goals>
-                <goal>single</goal>
-              </goals>
-              <configuration>
-                <archive>
-                  <manifest>
-                    <mainClass>com.exist.ecc.person.app.App</mainClass>
-                  </manifest>
-                </archive>
-                <descriptorRefs>
-                  <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-              </configuration>
-            </execution>
-          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
