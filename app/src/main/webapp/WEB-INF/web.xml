@@ -10,6 +10,10 @@
     <servlet-class>com.exist.ecc.person.app.PersonServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>Roles</servlet-name>
+    <servlet-class>com.exist.ecc.person.app.RoleServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>Hello</servlet-name>
     <servlet-class>com.exist.ecc.person.app.HelloServlet</servlet-class>
   </servlet>
@@ -22,6 +26,11 @@
   <servlet-mapping>
     <servlet-name>Persons</servlet-name>
     <url-pattern>/persons/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Roles</servlet-name>
+    <url-pattern>/roles/*</url-pattern>
   </servlet-mapping>
 </web-app>
 
