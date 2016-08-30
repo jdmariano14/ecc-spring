@@ -1,14 +1,15 @@
+
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.exist.ecc</groupId>
-    <artifactId>ecc-hibernate-core</artifactId>
+    <artifactId>ecc-servlet-core</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>com.exist.ecc</groupId>
-  <artifactId>ecc-hibernate-core-dao</artifactId>
+  <artifactId>ecc-servlet-core-dao</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>dao</name>
   <url>http://maven.apache.org</url>
@@ -18,15 +19,15 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-hibernate-core-model</artifactId>
+      <artifactId>ecc-servlet-core-model</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-hibernate-infra-persistence</artifactId>
+      <artifactId>ecc-servlet-infra-persistence</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-hibernate-util</artifactId>
+      <artifactId>ecc-servlet-util</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
