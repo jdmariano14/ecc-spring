@@ -25,6 +25,8 @@ import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
 
+import com.exist.ecc.person.core.model.Name;
+import com.exist.ecc.person.core.model.Address;
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.wrapper.PersonWrapper;  
 
@@ -52,6 +54,37 @@ public class PersonController extends AppController {
       res.sendRedirect("/");
     } finally {
       dbSession.close();
+    }
+  }
+
+
+  public void _new(HttpServletRequest req, HttpServletResponse res) 
+    throws ServletException, IOException
+  {
+    Person person = getBlankPerson();
+    req.setAttribute("person", person);
+    req.getRequestDispatcher("/WEB-INF/views/persons/form.jsp")
+       .forward(req, res);
+  }
+
+  public void create(HttpServletRequest req, HttpServletResponse res) 
+    throws IOException
+  {
+    Session dbSession = Sessions.getSession();
+
+    final Person person = getBlankPerson();
+    setPersonFields(req, person);
+  
+    try {
+      Transactions.conduct(dbSession, personDao, () ->
+        personDao.save(person));
+      FlashUtil.setNotice(req, "Person created");
+    } catch (Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+    } finally {
+      dbSession.close();
+      res.sendRedirect("/persons");
     }
   }
 
@@ -133,6 +166,17 @@ public class PersonController extends AppController {
       }
     }
 
+  }
+
+  private Person getBlankPerson() {
+    Person person = new Person();
+    Name name = new Name();
+    Address address = new Address();
+
+    person.setName(name);
+    person.setAddress(address);
+
+    return person;
   }
 
   private void setPersonFields(HttpServletRequest req, Person person) {

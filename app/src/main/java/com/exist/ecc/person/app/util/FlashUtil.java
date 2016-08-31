@@ -8,19 +8,19 @@ import javax.servlet.http.HttpSession;
 
   public static void clear(HttpServletRequest req) {
     HttpSession httpSession = req.getSession();
-    httpSession.setAttribute("_notice", null);
-    httpSession.setAttribute("_error", null);
+    httpSession.setAttribute("_notice", "");
+    httpSession.setAttribute("_error", "");
   }
 
   public static void setNotice(HttpServletRequest req, String notice) {
     HttpSession httpSession = req.getSession();
     httpSession.setAttribute("_notice", notice);
-    httpSession.setAttribute("_error", null);
+    httpSession.setAttribute("_error", "");
   }
 
   public static void setError(HttpServletRequest req, String error) {
     HttpSession httpSession = req.getSession();
-    httpSession.setAttribute("_notice", null);
+    httpSession.setAttribute("_notice", "");
     httpSession.setAttribute("_error", error);
   }
   
