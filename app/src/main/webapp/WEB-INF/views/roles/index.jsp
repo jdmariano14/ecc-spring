@@ -20,10 +20,4 @@
 </c:forEach>
 </table>
 
-<form name="role" action="/roles/1" method="post">
-  <label for="name">Name:</label>
-  <input type="text" name="name"><br>
-  <input type="submit" value="Update">
-</form>
-
 <p><a href="/roles/new">New Role</a></p>
