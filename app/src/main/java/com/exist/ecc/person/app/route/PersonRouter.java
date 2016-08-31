@@ -10,9 +10,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.exist.ecc.person.app.controller.PersonController;
+
 import com.exist.ecc.person.app.util.FlashUtil;
  
-public class PersonRouter extends HttpServlet {
+public class PersonRouter extends AppRouter {
+
+  private final PersonController personController = new PersonController();
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -44,7 +48,7 @@ public class PersonRouter extends HttpServlet {
 
     for (String action : personRoutes.keySet()) {
       if (uri.matches(personRoutes.get(action))) {
-        res.getWriter().println("<h1>PersonController#" + action + "</h1>");
+        invoke(personController, action, req, res);
         return;
       }
     }

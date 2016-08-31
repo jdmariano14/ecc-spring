@@ -47,5 +47,10 @@
       <groupId>postgresql</groupId>
       <artifactId>postgresql</artifactId>
     </dependency>
+    
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>ecc-servlet-util</artifactId>
+    </dependency>
   </dependencies>
 </project>
