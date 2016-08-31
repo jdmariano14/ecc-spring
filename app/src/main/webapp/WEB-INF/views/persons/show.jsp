@@ -6,7 +6,7 @@
 <p><strong>Address:</strong> <c:out value="${person.address.fullAddress}"/></p>
 <p><strong>Birth date:</strong> <c:out value="${person.birthDate}"/></p>
 <p><strong>Date hired:</strong> <c:out value="${person.dateHired}"/></p>
-<p><strong>Employed:</strong> <c:out value="${person.employed}"/></p>
+<p><strong>Employed:</strong> <c:out value="${person.employed ? 'Yes' : 'No'}"/></p>
 <p><strong>GWA:</strong> <c:out value="${person.gwa}"/></p>
 
 <p>

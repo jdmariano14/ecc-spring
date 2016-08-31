@@ -165,7 +165,6 @@ public class PersonController extends AppController {
         res.sendRedirect("/persons");
       }
     }
-
   }
 
   private Person getBlankPerson() {
