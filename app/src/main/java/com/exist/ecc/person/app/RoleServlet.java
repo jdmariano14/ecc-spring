@@ -16,7 +16,6 @@ import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 
 import com.exist.ecc.person.core.model.Role;
-import com.exist.ecc.person.core.model.Name;
  
 public class RoleServlet extends AppServlet {
 
