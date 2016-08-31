@@ -2,6 +2,8 @@ package com.exist.ecc.person.core.model.wrapper;
 
 import java.math.BigDecimal;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,6 +16,17 @@ public class PersonWrapper {
 
   public PersonWrapper(Person person) {
     this.person = person;
+  }
+
+  public static List<PersonWrapper> wrapCollection(
+    Collection<Person> collection) 
+  {
+    List<PersonWrapper> persons = 
+      collection.stream()
+                .map(p -> new PersonWrapper(p))
+                .collect(Collectors.toList());
+
+    return persons;
   }
 
   public long getPersonId() {

@@ -24,6 +24,29 @@ public class PersonController extends AppController {
 
   private final PersonCriteriaDao personDao = new PersonCriteriaDao();
 
+  public void index(HttpServletRequest req, HttpServletResponse res) 
+    throws IOException
+  {
+    Session dbSession = Sessions.getSession();
+
+    try {
+      List<Person> persons = Transactions.get(dbSession, personDao, () ->
+        personDao.getAll());
+
+      List<PersonWrapper> personWrappers = 
+        PersonWrapper.wrapCollection(persons);
+
+      req.setAttribute("persons", personWrappers);
+      req.getRequestDispatcher("/WEB-INF/views/persons/index.jsp")
+         .forward(req, res);
+    } catch (Exception e) {
+      FlashUtil.setError(req, e.getMessage());
+      res.sendRedirect("/");
+    } finally {
+      dbSession.close();
+    }
+  }
+
   public void show(HttpServletRequest req, HttpServletResponse res) 
     throws ServletException, IOException
   {

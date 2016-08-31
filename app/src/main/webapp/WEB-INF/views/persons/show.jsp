@@ -13,9 +13,11 @@
   <a href="/persons/${person.personId}/edit">Edit</a>
   |
   <a href="/persons/${person.personId}/delete">Delete</a>
+  |
+  <a href="/persons">Back</a>
 </p>
 
-<h2>Contacts</h2>
+<h2>Contact info</h2>
 <ul>
 <c:forEach items="${person.contacts}" var="contact">
   <li>
@@ -32,7 +34,7 @@
 <h2>Roles</h2>
 <ul>
 <c:forEach items="${person.roles}" var="role">
-  <li><c:out value="${role.name}"/> (<a href="/persons/${person.personId}/roles/${role.roleId}/delete">delete</a>)</li>
+  <li><c:out value="${role.name}"/> (<a href="/persons/${person.personId}/roles/${role.roleId}/delete">revoke</a>)</li>
 </c:forEach>
 </ul>
-<p><a href="/persons/${person.personId}/roles/new">Add role</p>
+<p><a href="/persons/${person.personId}/roles/new">Grant role</p>

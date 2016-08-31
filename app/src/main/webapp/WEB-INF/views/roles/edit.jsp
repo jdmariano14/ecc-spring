@@ -4,5 +4,5 @@
 <form name="role" action="/roles/${role.roleId}" method="post">
   <label for="name">Name:</label>
   <input type="text" name="role[name]" value="${role.name}"><br>
-  <input type="submit" value="Create">
+  <input type="submit" value="Update">
 </form>

@@ -22,4 +22,4 @@
 </tbody>
 </table>
 
-<p><a href="/roles/new">New Role</a></p>
+<p><a href="/roles/new">Add role</a></p>
