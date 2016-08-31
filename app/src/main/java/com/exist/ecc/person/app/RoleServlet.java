@@ -34,7 +34,7 @@ public class RoleServlet extends AppServlet {
       } else if (uri.matches("\\A/roles/new/?\\z")) {
         roleNew(req, res);
       } else if (uri.matches("\\A/roles/[0-9]+/edit/?\\z")) {
-        throw new UnsupportedOperationException("edit");
+        roleEdit(req, res);
       } else if (uri.matches("\\A/roles/[0-9]+/delete/?\\z")) {
         roleDelete(req, res);
       } else {
@@ -57,7 +57,7 @@ public class RoleServlet extends AppServlet {
       if (uri.matches("\\A/roles/?\\z")) {
         roleCreate(req, res);
       } else if (uri.matches("\\A/roles/[0-9]+/?\\z")) {
-        throw new UnsupportedOperationException("update");
+        roleUpdate(req, res);
       } else {
         throw new RuntimeException(
           String.format("No Role action matches URI '%s'", uri));
@@ -114,6 +114,56 @@ public class RoleServlet extends AppServlet {
     }
   }
 
+  private void roleEdit(HttpServletRequest req, HttpServletResponse res) 
+    throws ServletException, IOException
+  {
+    final long roleId = getRoleId(req.getRequestURI());
+
+    if (roleId > 0) {
+      Session dbSession = Sessions.getSession();
+
+      try {
+        final Role role = Transactions.get(dbSession, roleDao, () ->
+          roleDao.get(roleId));
+
+        req.setAttribute("role", role);
+        req.getRequestDispatcher("/WEB-INF/views/roles/edit.jsp")
+           .forward(req, res);     
+      } catch (Exception e) {
+        e.printStackTrace();
+        setFlashError(req, e.getMessage());
+        res.sendRedirect("/roles");
+      } finally {
+        dbSession.close();
+      }
+    }
+  }
+
+  private void roleUpdate(HttpServletRequest req, HttpServletResponse res) 
+    throws IOException
+  {
+    final long roleId = getRoleId(req.getRequestURI());
+
+    if (roleId > 0) {
+      Session dbSession = Sessions.getSession();
+    
+      try {
+        final Role role = Transactions.get(dbSession, roleDao, () ->
+          roleDao.get(roleId));
+        
+        role.setName(req.getParameter("role[name]"));
+        Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role));
+        setFlashNotice(req, "Role updated");
+      } catch (Exception e) {
+        setFlashError(req, e.getMessage());
+      } finally {
+        dbSession.close();
+        res.sendRedirect("/roles");
+      }
+    }
+
+  }
+
   private void roleDelete(HttpServletRequest req, HttpServletResponse res) 
     throws IOException
   {
@@ -134,21 +184,19 @@ public class RoleServlet extends AppServlet {
         dbSession.close();
         res.sendRedirect("/roles");
       }
-
-      
     }
   }
 
-  private long getRoleId(String uri) {
-    long roleId = -1;
+  protected long getRoleId(String uri) {
+    long id = -1;
     
     try {
-      roleId = Long.parseLong(uri.replaceAll("[^0-9]", ""));
+      id = Long.parseLong(uri.replaceAll("[^0-9]", ""));
     } catch (NumberFormatException e) {
 
     }
 
-    return roleId;
+    return id;
   }
   
 }

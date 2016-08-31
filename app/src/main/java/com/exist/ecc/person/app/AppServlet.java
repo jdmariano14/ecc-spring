@@ -6,18 +6,6 @@ import javax.servlet.http.HttpSession;
 
  public class AppServlet extends HttpServlet {
 
-  protected long getId(String uri) {
-    long id = -1;
-    
-    try {
-      id = Long.parseLong(uri.replaceAll("[^0-9]", ""));
-    } catch (NumberFormatException e) {
-
-    }
-
-    return id;
-  }
-
   protected void clearFlash(HttpServletRequest req) {
     HttpSession httpSession = req.getSession();
     httpSession.setAttribute("_notice", null);
