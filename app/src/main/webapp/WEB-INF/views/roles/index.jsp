@@ -3,6 +3,7 @@
 <%@ page import="java.util.List"%>
 
 <p><c:out value="${_notice}"/></p>
+<p><c:out value="${_error}"/></p>
 
 <table>
 <thead>
@@ -18,12 +19,6 @@
   </tr>
 </c:forEach>
 </table>
-
-<form name="role" action="/roles" method="post">
-  <label for="name">Name:</label>
-  <input type="text" name="name"><br>
-  <input type="submit" value="Create">
-</form>
 
 <form name="role" action="/roles/1" method="post">
   <label for="name">Name:</label>

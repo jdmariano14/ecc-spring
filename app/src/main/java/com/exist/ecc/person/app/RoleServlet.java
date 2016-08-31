@@ -18,7 +18,7 @@ import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 import com.exist.ecc.person.core.model.Role;
 import com.exist.ecc.person.core.model.Name;
  
-public class RoleServlet extends HttpServlet {
+public class RoleServlet extends AppServlet {
 
   private final RoleCriteriaDao roleDao = new RoleCriteriaDao();
 
@@ -30,20 +30,20 @@ public class RoleServlet extends HttpServlet {
 
     try {
       if (uri.matches("\\A/roles/?\\z")) {
-        index(req, res);
+        roleIndex(req, res);
       } else if (uri.matches("\\A/roles/new/?\\z")) {
-        throw new UnsupportedOperationException("new");
+        roleNew(req, res);
       } else if (uri.matches("\\A/roles/[0-9]+/edit/?\\z")) {
         throw new UnsupportedOperationException("edit");
       } else if (uri.matches("\\A/roles/[0-9]+/delete/?\\z")) {
-        delete(req, res);
+        roleDelete(req, res);
       } else {
         throw new RuntimeException(
           String.format("No Role action matches URI '%s'", uri));
       }
-
     } catch (RuntimeException e) {
-      error(req, res, e.getMessage());
+      setFlashError(req, e.getMessage());
+      res.sendRedirect("/");
     }
   }
 
@@ -55,20 +55,22 @@ public class RoleServlet extends HttpServlet {
 
     try {
       if (uri.matches("\\A/roles/?\\z")) {
-        throw new UnsupportedOperationException("create");
+        roleCreate(req, res);
       } else if (uri.matches("\\A/roles/[0-9]+/?\\z")) {
         throw new UnsupportedOperationException("update");
       } else {
         throw new RuntimeException(
           String.format("No Role action matches URI '%s'", uri));
       }
-
     } catch (RuntimeException e) {
-      error(req, res, e.getMessage());
+      setFlashError(req, e.getMessage());
+      res.sendRedirect("/");
     }
   }
 
-  private void index(HttpServletRequest req, HttpServletResponse res) {
+  private void roleIndex(HttpServletRequest req, HttpServletResponse res) 
+    throws IOException
+  {
     Session dbSession = Sessions.getSession();
 
     try {
@@ -79,17 +81,45 @@ public class RoleServlet extends HttpServlet {
       req.getRequestDispatcher("/WEB-INF/views/roles/index.jsp")
          .forward(req, res);
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      setFlashError(req, e.getMessage());
+      res.sendRedirect("/");
     } finally {
       dbSession.close();
     }
   }
 
-  private void delete(HttpServletRequest req, HttpServletResponse res) {
+  private void roleNew(HttpServletRequest req, HttpServletResponse res) 
+    throws ServletException, IOException
+  {
+    req.getRequestDispatcher("/WEB-INF/views/roles/new.jsp")
+       .forward(req, res);
+  }
+
+  private void roleCreate(HttpServletRequest req, HttpServletResponse res) 
+    throws IOException
+  {
+    Session dbSession = Sessions.getSession();
+
+    final Role role = new Role();
+    role.setName(req.getParameter("role[name]"));
+  
+    try {
+      Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role));
+      setFlashNotice(req, "Role created");
+    } catch (Exception e) {
+      setFlashError(req, e.getMessage());
+    } finally {
+      dbSession.close();
+      res.sendRedirect("/roles");
+    }
+  }
+
+  private void roleDelete(HttpServletRequest req, HttpServletResponse res) 
+    throws IOException
+  {
     final long roleId = getRoleId(req.getRequestURI());
 
     if (roleId > 0) {
-      HttpSession httpSession = req.getSession();
       Session dbSession = Sessions.getSession();
 
       try {
@@ -97,24 +127,16 @@ public class RoleServlet extends HttpServlet {
           roleDao.delete(roleDao.get(roleId));
         });
 
-        httpSession.setAttribute("_notice", "Role succesfully deleted");
-        res.sendRedirect("/roles");
+        setFlashNotice(req, "Role deleted");
       } catch (Exception e) {
-        throw new RuntimeException(e);
+        setFlashError(req, e.getMessage());
       } finally {
         dbSession.close();
+        res.sendRedirect("/roles");
       }
-    }
-  }
 
-  private void error(HttpServletRequest req, 
-                     HttpServletResponse res,
-                     String errMsg)
-    throws ServletException, IOException
-  {
-    req.setAttribute("errMsg", errMsg);
-    req.getRequestDispatcher("/WEB-INF/views/roles/error.jsp")
-       .forward(req, res);
+      
+    }
   }
 
   private long getRoleId(String uri) {
