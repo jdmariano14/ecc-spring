@@ -77,14 +77,42 @@ public class PersonRouter extends AppRouter {
     throws ServletException, IOException
   {
     String uri = req.getRequestURI();
+    
+    HashMap<String, String> personRoutes = new HashMap();
+    HashMap<String, String> contactRoutes = new HashMap();
+    HashMap<String, String> personRoleRoutes = new HashMap();
 
-    String createPersonPattern = "\\A/persons/?\\z";
-    String updatePersonPattern = "\\A/persons/[0-9]+/?\\z";
+    personRoutes.put("create", "\\A/persons/?\\z");
+    personRoutes.put("update", "\\A/persons/[0-9]+/?\\z");
 
-    String createContactPattern = "\\A/persons/[0-9]+/contacts/?\\z";
-    String updateContactPattern = "\\A/persons/[0-9]+/contacts/[0-9]+/?\\z";
+    contactRoutes.put("create", "\\A/persons/[0-9]+/contacts/?\\z");
+    contactRoutes.put("update", "\\A/persons/[0-9]+/contacts/[0-9]+/?\\z");
 
-    String createPersonRolePattern = "\\A/persons/[0-9]+/roles/?\\z";
+    personRoleRoutes.put("create", "\\A/persons/[0-9]+/roles/?\\z");
+
+    for (String action : personRoutes.keySet()) {
+      if (uri.matches(personRoutes.get(action))) {
+        invoke(personController, action, req, res);
+        return;
+      }
+    }
+
+    for (String action : contactRoutes.keySet()) {
+      if (uri.matches(contactRoutes.get(action))) {
+        res.getWriter().println("<h1>ContactController#" + action + "</h1>");
+        return;
+      }
+    }
+
+    for (String action : personRoleRoutes.keySet()) {
+      if (uri.matches(personRoleRoutes.get(action))) {
+        res.getWriter().println("<h1>PersonRoleController#" + action + "</h1>");
+        return;
+      }
+    }
+     
+    String errMsg = String.format("No action matches GET '%s'", uri);
+    FlashUtil.setError(req, errMsg);
+    res.sendRedirect("/");
   }
-  
 }

@@ -74,6 +74,85 @@ public class PersonController extends AppController {
     }
   }
 
+  public void edit(HttpServletRequest req, HttpServletResponse res) 
+    throws ServletException, IOException
+  {
+    long personId = getPersonId(req.getRequestURI());
+
+    if (personId > 0) {
+      Session dbSession = Sessions.getSession();
+
+      try {
+        final Person person = Transactions.get(dbSession, personDao, () ->
+          personDao.get(personId));
+
+        req.setAttribute("person", person);
+        req.getRequestDispatcher("/WEB-INF/views/persons/form.jsp")
+           .forward(req, res);
+      } catch (Exception e) {
+        e.printStackTrace();
+        FlashUtil.setError(req, e.getMessage());
+        res.sendRedirect("/persons");
+      } finally {
+        dbSession.close();
+      }
+    }
+  }
+
+  public void update(HttpServletRequest req, HttpServletResponse res) 
+    throws IOException
+  {
+    long personId = getPersonId(req.getRequestURI());
+
+    if (personId > 0) {
+      Session dbSession = Sessions.getSession();
+    
+      try {
+        final Person person = Transactions.get(dbSession, personDao, () ->
+          personDao.get(personId));
+
+        setPersonFields(req, person);
+
+        Transactions.conduct(dbSession, personDao, () ->
+          personDao.save(person));
+        FlashUtil.setNotice(req, "Person updated");
+      } catch (Exception e) {
+        FlashUtil.setError(req, e.getMessage());
+      } finally {
+        dbSession.close();
+        res.sendRedirect("/persons");
+      }
+    }
+
+  }
+
+  private void setPersonFields(HttpServletRequest req, Person person) {
+    person.getName().setFirstName(
+      req.getParameter("person[name[first_name]]"));
+    person.getName().setMiddleName(
+      req.getParameter("person[name[middle_name]]"));
+    person.getName().setLastName(
+      req.getParameter("person[name[last_name]]"));
+    person.getName().setTitle(
+      req.getParameter("person[name[title]]"));
+    person.getName().setSuffix(
+      req.getParameter("person[name[suffix]]"));
+
+    person.getAddress().setStreetAddress(
+      req.getParameter("person[address[street_address]]"));
+    person.getAddress().setBarangay(
+      req.getParameter("person[address[barangay]]"));
+    person.getAddress().setMunicipality(
+      req.getParameter("person[address[municipality]]"));
+    person.getAddress().setZipCode(
+      req.getParameter("person[address[zip_code]]"));
+
+    System.out.println(req.getParameter("person[birth_date]"));
+    System.out.println(req.getParameter("person[date_hired]"));
+    System.out.println(req.getParameter("person[gwa]"));
+    System.out.println(req.getParameter("person[employed]"));
+  }
+
   protected long getPersonId(String uri) {
     long id = -1;
     
