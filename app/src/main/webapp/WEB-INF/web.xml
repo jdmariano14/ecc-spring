@@ -7,27 +7,17 @@
 
   <servlet>
     <servlet-name>Persons</servlet-name>
-    <servlet-class>com.exist.ecc.person.app.PersonServlet</servlet-class>
+    <servlet-class>com.exist.ecc.person.app.route.PersonRouter</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>Roles</servlet-name>
-    <servlet-class>com.exist.ecc.person.app.RoleServlet</servlet-class>
+    <servlet-class>com.exist.ecc.person.app.route.RoleRouter</servlet-class>
   </servlet>
-  <servlet>
-    <servlet-name>Hello</servlet-name>
-    <servlet-class>com.exist.ecc.person.app.HelloServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>Hello</servlet-name>
-    <url-pattern>/hello/*</url-pattern>
-  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>Persons</servlet-name>
     <url-pattern>/persons/*</url-pattern>
   </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>Roles</servlet-name>
     <url-pattern>/roles/*</url-pattern>

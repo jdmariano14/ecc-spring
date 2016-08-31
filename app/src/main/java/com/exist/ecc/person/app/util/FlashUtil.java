@@ -1,24 +1,24 @@
-package com.exist.ecc.person.app;
+package com.exist.ecc.person.app.util;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
- public class AppServlet extends HttpServlet {
+ public class FlashUtil {
 
-  protected void clearFlash(HttpServletRequest req) {
+  public static void clear(HttpServletRequest req) {
     HttpSession httpSession = req.getSession();
     httpSession.setAttribute("_notice", null);
     httpSession.setAttribute("_error", null);
   }
 
-  protected void setFlashNotice(HttpServletRequest req, String notice) {
+  public static void setNotice(HttpServletRequest req, String notice) {
     HttpSession httpSession = req.getSession();
     httpSession.setAttribute("_notice", notice);
     httpSession.setAttribute("_error", null);
   }
 
-  protected void setFlashError(HttpServletRequest req, String error) {
+  public static void setError(HttpServletRequest req, String error) {
     HttpSession httpSession = req.getSession();
     httpSession.setAttribute("_notice", null);
     httpSession.setAttribute("_error", error);
