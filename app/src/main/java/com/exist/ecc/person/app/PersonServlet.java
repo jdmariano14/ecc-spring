@@ -65,7 +65,8 @@ public class PersonServlet extends HttpServlet {
 
   private long getPersonId(String requestUri) {
     long personId = -1;
-    String personIdString = requestUri.replaceAll("/*persons/*", "");
+    String personIdString = requestUri.replaceAll("/*persons/*", "")
+                                      .replaceAll("(/.*)", "");
 
     if (personIdString.isEmpty()) {
       personId = -1;
