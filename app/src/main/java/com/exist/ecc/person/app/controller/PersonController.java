@@ -167,6 +167,29 @@ public class PersonController extends AppController {
     }
   }
 
+  public void delete(HttpServletRequest req, HttpServletResponse res) 
+    throws IOException
+  {
+    long personId = getPersonId(req.getRequestURI());
+
+    if (personId > 0) {
+      Session dbSession = Sessions.getSession();
+
+      try {
+        Transactions.conduct(dbSession, personDao, () -> {
+          personDao.delete(personDao.get(personId));
+        });
+
+        FlashUtil.setNotice(req, "Person deleted");
+      } catch (Exception e) {
+        FlashUtil.setError(req, e.getMessage());
+      } finally {
+        dbSession.close();
+        res.sendRedirect("/persons");
+      }
+    }
+  }
+
   private Person getBlankPerson() {
     Person person = new Person();
     Name name = new Name();
