@@ -28,21 +28,22 @@ public class RoleServlet extends AppServlet {
   {
     String uri = req.getRequestURI();
 
-    try {
-      if (uri.matches("\\A/roles/?\\z")) {
-        roleIndex(req, res);
-      } else if (uri.matches("\\A/roles/new/?\\z")) {
-        roleNew(req, res);
-      } else if (uri.matches("\\A/roles/[0-9]+/edit/?\\z")) {
-        roleEdit(req, res);
-      } else if (uri.matches("\\A/roles/[0-9]+/delete/?\\z")) {
-        roleDelete(req, res);
-      } else {
-        throw new RuntimeException(
-          String.format("No Role action matches URI '%s'", uri));
-      }
-    } catch (RuntimeException e) {
-      setFlashError(req, e.getMessage());
+    String indexPattern = "\\A/roles/?\\z";
+    String newPattern = "\\A/roles/new/?\\z";
+    String editPattern = "\\A/roles/[0-9]+/edit/?\\z";
+    String deletePattern = "\\A/roles/[0-9]+/delete/?\\z";
+
+    if (uri.matches(indexPattern)) {
+      roleIndex(req, res);
+    } else if (uri.matches(newPattern)) {
+      roleNew(req, res);
+    } else if (uri.matches(editPattern)) {
+      roleEdit(req, res);
+    } else if (uri.matches(deletePattern)) {
+      roleDelete(req, res);
+    } else {
+      String errMsg = String.format("No Role action matches GET '%s'", uri);
+      setFlashError(req, errMsg);
       res.sendRedirect("/");
     }
   }
@@ -53,17 +54,16 @@ public class RoleServlet extends AppServlet {
   {
     String uri = req.getRequestURI();
 
-    try {
-      if (uri.matches("\\A/roles/?\\z")) {
-        roleCreate(req, res);
-      } else if (uri.matches("\\A/roles/[0-9]+/?\\z")) {
-        roleUpdate(req, res);
-      } else {
-        throw new RuntimeException(
-          String.format("No Role action matches URI '%s'", uri));
-      }
-    } catch (RuntimeException e) {
-      setFlashError(req, e.getMessage());
+    String createPattern = "\\A/roles/?\\z";
+    String updatePattern = "\\A/roles/[0-9]+/?\\z";
+
+    if (uri.matches(createPattern)) {
+      roleCreate(req, res);
+    } else if (uri.matches(updatePattern)) {
+      roleUpdate(req, res);
+    } else {
+      String errMsg = String.format("No Role action matches POST '%s'", uri);
+      setFlashError(req, errMsg);
       res.sendRedirect("/");
     }
   }
@@ -150,7 +150,7 @@ public class RoleServlet extends AppServlet {
       try {
         final Role role = Transactions.get(dbSession, roleDao, () ->
           roleDao.get(roleId));
-        
+
         role.setName(req.getParameter("role[name]"));
         Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role));
         setFlashNotice(req, "Role updated");
