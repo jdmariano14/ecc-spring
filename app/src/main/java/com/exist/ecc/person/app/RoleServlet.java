@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class RoleServlet extends HttpServlet {
       } else if (uri.matches("\\A/roles/[0-9]+/edit/?\\z")) {
         throw new UnsupportedOperationException("edit");
       } else if (uri.matches("\\A/roles/[0-9]+/delete/?\\z")) {
-        throw new UnsupportedOperationException("delete");
+        delete(req, res);
       } else {
         throw new RuntimeException(
           String.format("No Role action matches URI '%s'", uri));
@@ -88,12 +89,16 @@ public class RoleServlet extends HttpServlet {
     final long roleId = getRoleId(req.getRequestURI());
 
     if (roleId > 0) {
+      HttpSession httpSession = req.getSession();
       Session dbSession = Sessions.getSession();
 
       try {
         Transactions.conduct(dbSession, roleDao, () -> {
           roleDao.delete(roleDao.get(roleId));
         });
+
+        httpSession.setAttribute("_notice", "Role succesfully deleted");
+        res.sendRedirect("/roles");
       } catch (Exception e) {
         throw new RuntimeException(e);
       } finally {
