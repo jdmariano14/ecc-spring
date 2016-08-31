@@ -69,6 +69,7 @@ public class PersonController extends AppController {
 
         PersonWrapper personWrapper = new PersonWrapper(person);
 
+        FlashUtil.clear(req);
         req.setAttribute("person", personWrapper);
         req.getRequestDispatcher("/WEB-INF/views/persons/show.jsp")
            .forward(req, res);
