@@ -2,7 +2,15 @@ package com.exist.ecc.person.app.controller;
 
 import java.io.IOException;
 
+import java.math.BigDecimal;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -63,7 +71,7 @@ public class PersonController extends AppController {
 
         req.setAttribute("person", personWrapper);
         req.getRequestDispatcher("/WEB-INF/views/persons/show.jsp")
-           .forward(req, res);     
+           .forward(req, res);
       } catch (Exception e) {
         e.printStackTrace();
         FlashUtil.setError(req, e.getMessage());
@@ -127,6 +135,28 @@ public class PersonController extends AppController {
   }
 
   private void setPersonFields(HttpServletRequest req, Person person) {
+    Date birthDate = null;
+    Date dateHired = null;
+    BigDecimal gwa = null;
+    boolean employed = false;
+
+    DateFormat dateFormat =
+      new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+    try {
+      birthDate = dateFormat.parse(
+        req.getParameter("person[birth_date]"));
+      dateHired = dateFormat.parse(
+        req.getParameter("person[date_hired]"));
+      gwa = new BigDecimal(req.getParameter("person[gwa]"));
+      employed = req.getParameter("person[employed]").equals("true");
+    } catch (ParseException
+             | NumberFormatException
+             | NullPointerException e) 
+    {
+
+    }
+
     person.getName().setFirstName(
       req.getParameter("person[name[first_name]]"));
     person.getName().setMiddleName(
@@ -147,10 +177,10 @@ public class PersonController extends AppController {
     person.getAddress().setZipCode(
       req.getParameter("person[address[zip_code]]"));
 
-    System.out.println(req.getParameter("person[birth_date]"));
-    System.out.println(req.getParameter("person[date_hired]"));
-    System.out.println(req.getParameter("person[gwa]"));
-    System.out.println(req.getParameter("person[employed]"));
+    person.setBirthDate(birthDate);
+    person.setDateHired(dateHired);
+    person.setGwa(gwa);
+    person.setEmployed(employed);
   }
 
   protected long getPersonId(String uri) {
