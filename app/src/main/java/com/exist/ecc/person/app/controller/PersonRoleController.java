@@ -114,7 +114,7 @@ public class PersonRoleController extends AppController {
     }
   }
 
-  protected long getPersonId(String uri) {
+  private long getPersonId(String uri) {
     long id = -1;
     
     try {
@@ -129,7 +129,7 @@ public class PersonRoleController extends AppController {
     return id;
   }
 
-  protected long getRoleId(String uri) {
+  private long getRoleId(String uri) {
     long id = -1;
     
     try {

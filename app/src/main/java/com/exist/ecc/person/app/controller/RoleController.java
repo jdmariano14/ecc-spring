@@ -55,11 +55,13 @@ public class RoleController extends AppController {
   {
     Session dbSession = Sessions.getSession();
 
-    final Role role = new Role();
-    role.setName(req.getParameter("role[name]"));
-  
     try {
+      Role role = new Role();
+
+      setRoleFields(req, role);
+
       Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role));
+
       FlashUtil.setNotice(req, "Role created");
     } catch (Exception e) {
       FlashUtil.setError(req, e.getMessage());
@@ -72,77 +74,73 @@ public class RoleController extends AppController {
   public void edit(HttpServletRequest req, HttpServletResponse res) 
     throws ServletException, IOException
   {
-    final long roleId = getRoleId(req.getRequestURI());
+    Session dbSession = Sessions.getSession();
+    long roleId = getRoleId(req.getRequestURI());
 
-    if (roleId > 0) {
-      Session dbSession = Sessions.getSession();
+    try {
+      Role role = Transactions.get(dbSession, roleDao, () ->
+        roleDao.get(roleId));
 
-      try {
-        final Role role = Transactions.get(dbSession, roleDao, () ->
-          roleDao.get(roleId));
-
-        req.setAttribute("role", role);
-        req.getRequestDispatcher("/WEB-INF/views/roles/form.jsp")
-           .forward(req, res);     
-      } catch (Exception e) {
-        e.printStackTrace();
-        FlashUtil.setError(req, e.getMessage());
-        res.sendRedirect("/roles");
-      } finally {
-        dbSession.close();
-      }
+      req.setAttribute("role", role);
+      req.getRequestDispatcher("/WEB-INF/views/roles/form.jsp")
+         .forward(req, res);     
+    } catch (Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+      res.sendRedirect("/roles");
+    } finally {
+      dbSession.close();
     }
   }
 
   public void update(HttpServletRequest req, HttpServletResponse res) 
     throws IOException
   {
-    final long roleId = getRoleId(req.getRequestURI());
+    Session dbSession = Sessions.getSession();
+    long roleId = getRoleId(req.getRequestURI());
+  
+    try {
+      Role role = Transactions.get(dbSession, roleDao, () ->
+        roleDao.get(roleId));
 
-    if (roleId > 0) {
-      Session dbSession = Sessions.getSession();
-    
-      try {
-        final Role role = Transactions.get(dbSession, roleDao, () ->
-          roleDao.get(roleId));
+      setRoleFields(req, role);
 
-        role.setName(req.getParameter("role[name]"));
-        Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role));
-        FlashUtil.setNotice(req, "Role updated");
-      } catch (Exception e) {
-        FlashUtil.setError(req, e.getMessage());
-      } finally {
-        dbSession.close();
-        res.sendRedirect("/roles");
-      }
+      Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role));
+
+      FlashUtil.setNotice(req, "Role updated");
+    } catch (Exception e) {
+      FlashUtil.setError(req, e.getMessage());
+    } finally {
+      dbSession.close();
+      res.sendRedirect("/roles");
     }
-
   }
 
   public void delete(HttpServletRequest req, HttpServletResponse res) 
     throws IOException
   {
-    final long roleId = getRoleId(req.getRequestURI());
+    Session dbSession = Sessions.getSession();
+    long roleId = getRoleId(req.getRequestURI());
 
-    if (roleId > 0) {
-      Session dbSession = Sessions.getSession();
+    try {
+      Transactions.conduct(dbSession, roleDao, () -> {
+        roleDao.delete(roleDao.get(roleId));
+      });
 
-      try {
-        Transactions.conduct(dbSession, roleDao, () -> {
-          roleDao.delete(roleDao.get(roleId));
-        });
-
-        FlashUtil.setNotice(req, "Role deleted");
-      } catch (Exception e) {
-        FlashUtil.setError(req, e.getMessage());
-      } finally {
-        dbSession.close();
-        res.sendRedirect("/roles");
-      }
+      FlashUtil.setNotice(req, "Role deleted");
+    } catch (Exception e) {
+      FlashUtil.setError(req, e.getMessage());
+    } finally {
+      dbSession.close();
+      res.sendRedirect("/roles");
     }
   }
 
-  protected long getRoleId(String uri) {
+  private void setRoleFields(HttpServletRequest req, Role role) {
+    role.setName(req.getParameter("role[name]"));
+  }
+
+  private long getRoleId(String uri) {
     long id = -1;
     
     try {

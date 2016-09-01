@@ -61,23 +61,32 @@ public class PersonController extends AppController {
   public void _new(HttpServletRequest req, HttpServletResponse res) 
     throws ServletException, IOException
   {
-    Person person = getBlankPerson();
-    req.setAttribute("person", person);
-    req.getRequestDispatcher("/WEB-INF/views/persons/form.jsp")
-       .forward(req, res);
+    try {
+      Person person = getNewPerson();
+
+      req.setAttribute("person", person);
+      req.getRequestDispatcher("/WEB-INF/views/persons/form.jsp")
+         .forward(req, res);
+    } catch(Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+      res.sendRedirect("/persons");
+    }
   }
 
   public void create(HttpServletRequest req, HttpServletResponse res) 
     throws IOException
   {
     Session dbSession = Sessions.getSession();
-
-    final Person person = getBlankPerson();
-    setPersonFields(req, person);
   
     try {
+      Person person = getNewPerson();
+
+      setPersonFields(req, person);
+
       Transactions.conduct(dbSession, personDao, () ->
         personDao.save(person));
+
       FlashUtil.setNotice(req, "Person created");
     } catch (Exception e) {
       e.printStackTrace();
@@ -91,106 +100,94 @@ public class PersonController extends AppController {
   public void show(HttpServletRequest req, HttpServletResponse res) 
     throws ServletException, IOException
   {
+    Session dbSession = Sessions.getSession();
     long personId = getPersonId(req.getRequestURI());
 
-    if (personId > 0) {
-      Session dbSession = Sessions.getSession();
+    try {
+      Person person = Transactions.get(dbSession, personDao, () ->
+        personDao.get(personId));
 
-      try {
-        final Person person = Transactions.get(dbSession, personDao, () ->
-          personDao.get(personId));
+      PersonWrapper personWrapper = new PersonWrapper(person);
 
-        PersonWrapper personWrapper = new PersonWrapper(person);
-
-        FlashUtil.clear(req);
-        req.setAttribute("person", personWrapper);
-        req.getRequestDispatcher("/WEB-INF/views/persons/show.jsp")
-           .forward(req, res);
-      } catch (Exception e) {
-        e.printStackTrace();
-        FlashUtil.setError(req, e.getMessage());
-        res.sendRedirect("/persons");
-      } finally {
-        dbSession.close();
-      }
+      FlashUtil.clear(req);
+      req.setAttribute("person", personWrapper);
+      req.getRequestDispatcher("/WEB-INF/views/persons/show.jsp")
+         .forward(req, res);
+    } catch (Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+      res.sendRedirect("/persons");
+    } finally {
+      dbSession.close();
     }
   }
 
   public void edit(HttpServletRequest req, HttpServletResponse res) 
     throws ServletException, IOException
   {
+    Session dbSession = Sessions.getSession();
     long personId = getPersonId(req.getRequestURI());
 
-    if (personId > 0) {
-      Session dbSession = Sessions.getSession();
+    try {
+      final Person person = Transactions.get(dbSession, personDao, () ->
+        personDao.get(personId));
 
-      try {
-        final Person person = Transactions.get(dbSession, personDao, () ->
-          personDao.get(personId));
-
-        req.setAttribute("person", person);
-        req.getRequestDispatcher("/WEB-INF/views/persons/form.jsp")
-           .forward(req, res);
-      } catch (Exception e) {
-        e.printStackTrace();
-        FlashUtil.setError(req, e.getMessage());
-        res.sendRedirect("/persons");
-      } finally {
-        dbSession.close();
-      }
+      req.setAttribute("person", person);
+      req.getRequestDispatcher("/WEB-INF/views/persons/form.jsp")
+         .forward(req, res);
+    } catch (Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+      res.sendRedirect("/persons");
+    } finally {
+      dbSession.close();
     }
   }
 
   public void update(HttpServletRequest req, HttpServletResponse res) 
     throws IOException
   {
+    Session dbSession = Sessions.getSession();
     long personId = getPersonId(req.getRequestURI());
 
-    if (personId > 0) {
-      Session dbSession = Sessions.getSession();
-    
-      try {
-        final Person person = Transactions.get(dbSession, personDao, () ->
-          personDao.get(personId));
+    try {
+      Person person = Transactions.get(dbSession, personDao, () ->
+        personDao.get(personId));
 
-        setPersonFields(req, person);
+      setPersonFields(req, person);
 
-        Transactions.conduct(dbSession, personDao, () ->
-          personDao.save(person));
-        FlashUtil.setNotice(req, "Person updated");
-      } catch (Exception e) {
-        FlashUtil.setError(req, e.getMessage());
-      } finally {
-        dbSession.close();
-        res.sendRedirect("/persons");
-      }
+      Transactions.conduct(dbSession, personDao, () ->
+        personDao.save(person));
+      FlashUtil.setNotice(req, "Person updated");
+    } catch (Exception e) {
+      FlashUtil.setError(req, e.getMessage());
+    } finally {
+      dbSession.close();
+      res.sendRedirect("/persons");
     }
   }
 
   public void delete(HttpServletRequest req, HttpServletResponse res) 
     throws IOException
   {
+    Session dbSession = Sessions.getSession();
     long personId = getPersonId(req.getRequestURI());
 
-    if (personId > 0) {
-      Session dbSession = Sessions.getSession();
+    try {
+      Transactions.conduct(dbSession, personDao, () -> {
+        personDao.delete(personDao.get(personId));
+      });
 
-      try {
-        Transactions.conduct(dbSession, personDao, () -> {
-          personDao.delete(personDao.get(personId));
-        });
-
-        FlashUtil.setNotice(req, "Person deleted");
-      } catch (Exception e) {
-        FlashUtil.setError(req, e.getMessage());
-      } finally {
-        dbSession.close();
-        res.sendRedirect("/persons");
-      }
-    }
+      FlashUtil.setNotice(req, "Person deleted");
+    } catch (Exception e) {
+      FlashUtil.setError(req, e.getMessage());
+    } finally {
+      dbSession.close();
+      res.sendRedirect("/persons");
+    }    
   }
 
-  private Person getBlankPerson() {
+  private Person getNewPerson() {
     Person person = new Person();
     Name name = new Name();
     Address address = new Address();
@@ -250,7 +247,7 @@ public class PersonController extends AppController {
     person.setEmployed(employed);
   }
 
-  protected long getPersonId(String uri) {
+  private long getPersonId(String uri) {
     long id = -1;
     
     try {

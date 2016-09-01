@@ -38,39 +38,6 @@ public class ContactController extends AppController {
   private final PersonDao personDao = new PersonCriteriaDao();
   private final ContactDao contactDao = new ContactCriteriaDao();
 
-  private Map<String, Contact> getContactTypes() {
-    Map<String, Contact> contactTypes = new LinkedHashMap();
-
-    List<Contact> contacts = new ArrayList(3);
-    contacts.add(new Email());
-    contacts.add(new Landline());
-    contacts.add(new Mobile());
-
-    for (Contact contact : contacts) {
-      contactTypes.put(contact.getClass().getSimpleName(), contact);
-    }
-
-    return contactTypes;
-  }
-
-  private Contact getNewContact(HttpServletRequest req) {
-    Contact contact = null;
-
-    try {
-      contact = contactTypes.get(req.getParameter("contact[type]"))
-                            .getClass()
-                            .newInstance();
-    } catch (IllegalAccessException | InstantiationException e) {
-
-    }
-
-    return contact;
-  }
-
-  private void setContactFields(HttpServletRequest req, Contact contact) {
-    contact.setInfo(req.getParameter("contact[info]"));
-  }
-
   public void _new(HttpServletRequest req, HttpServletResponse res) 
     throws ServletException, IOException
   {
@@ -215,7 +182,7 @@ public class ContactController extends AppController {
     }
   }
 
-  protected long getPersonId(String uri) {
+  private long getPersonId(String uri) {
     long id = -1;
     
     try {
@@ -230,7 +197,40 @@ public class ContactController extends AppController {
     return id;
   }
 
-  protected long getContactId(String uri) {
+  private void setContactFields(HttpServletRequest req, Contact contact) {
+    contact.setInfo(req.getParameter("contact[info]"));
+  }
+
+  private Contact getNewContact(HttpServletRequest req) {
+    Contact contact = null;
+
+    try {
+      contact = contactTypes.get(req.getParameter("contact[type]"))
+                            .getClass()
+                            .newInstance();
+    } catch (IllegalAccessException | InstantiationException e) {
+
+    }
+
+    return contact;
+  }
+
+  private Map<String, Contact> getContactTypes() {
+    Map<String, Contact> contactTypes = new LinkedHashMap();
+
+    List<Contact> contacts = new ArrayList(3);
+    contacts.add(new Email());
+    contacts.add(new Landline());
+    contacts.add(new Mobile());
+
+    for (Contact contact : contacts) {
+      contactTypes.put(contact.getClass().getSimpleName(), contact);
+    }
+
+    return contactTypes;
+  }
+
+  private long getContactId(String uri) {
     long id = -1;
     
     try {
