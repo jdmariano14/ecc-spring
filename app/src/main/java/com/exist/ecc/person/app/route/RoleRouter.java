@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.exist.ecc.person.app.controller.AppController;
 import com.exist.ecc.person.app.controller.RoleController;
 
 import com.exist.ecc.person.app.util.FlashUtil;
@@ -25,48 +26,30 @@ public class RoleRouter extends AppRouter {
   protected void doGet(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException
   {
-    String uri = req.getRequestURI();
+    Map<AppController, Map<String, String>> routes = new HashMap();
+    Map<String, String> roleRoutes = new HashMap();
 
-    HashMap<String, String> roleRoutes = new HashMap();
-
+    routes.put(roleController, roleRoutes);
     roleRoutes.put("index", "\\A/roles/?\\z");
     roleRoutes.put("_new", "\\A/roles/new/?\\z");
     roleRoutes.put("edit", "\\A/roles/[0-9]+/edit/?\\z");
     roleRoutes.put("delete", "\\A/roles/[0-9]+/delete/?\\z");
 
-    for (String action : roleRoutes.keySet()) {
-      if (uri.matches(roleRoutes.get(action))) {
-        invoke(roleController, action, req, res);
-        return;
-      }
-    }
-
-    String errMsg = String.format("No action matches GET '%s'", uri);
-    FlashUtil.setError(req, errMsg);
-    res.sendRedirect("/");
+    matchRoute(req, res, routes, "GET");
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException
   {
-    String uri = req.getRequestURI();
+    Map<AppController, Map<String, String>> routes = new HashMap();
+    Map<String, String> roleRoutes = new HashMap();
 
-    HashMap<String, String> roleRoutes = new HashMap();
-
+    routes.put(roleController, roleRoutes);
     roleRoutes.put("create", "\\A/roles/?\\z");
     roleRoutes.put("update", "\\A/roles/[0-9]+/?\\z");
 
-    for (String action : roleRoutes.keySet()) {
-      if (uri.matches(roleRoutes.get(action))) {
-        invoke(roleController, action, req, res);
-        return;
-      }
-    }
-
-    String errMsg = String.format("No action matches POST '%s'", uri);
-    FlashUtil.setError(req, errMsg);
-    res.sendRedirect("/");
+    matchRoute(req, res, routes, "GET");
   }
 
 }

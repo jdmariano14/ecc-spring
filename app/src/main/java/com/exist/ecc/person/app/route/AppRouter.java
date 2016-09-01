@@ -1,5 +1,9 @@
 package com.exist.ecc.person.app.route;
- 
+
+import java.io.IOException;
+
+import java.util.Map;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -14,7 +18,39 @@ import com.exist.ecc.person.app.util.FlashUtil;
  
 public class AppRouter extends HttpServlet {
 
-  protected void invoke(AppController controller, 
+  protected void matchRoute(HttpServletRequest req, 
+                            HttpServletResponse res,
+                            Map<AppController, 
+                                Map<String, String>> controllerRoutes,
+                            String httpVerb)
+    throws ServletException, IOException
+  {
+    String uri = req.getRequestURI();
+
+    try {
+      for (AppController controller : controllerRoutes.keySet()) {
+        Map<String, String> actionRoutes = controllerRoutes.get(controller);
+
+        for (String action : actionRoutes.keySet()) {
+          if (uri.matches(actionRoutes.get(action))) {
+            invoke(controller, action, req, res);
+            return;
+          }
+        }
+      }
+
+      String errMsg = String.format(
+        "No controller action matches route %s '%s'", httpVerb, uri);
+      
+      throw new RuntimeException(errMsg);
+
+    } catch (Exception e) {
+      FlashUtil.setError(req, e.getMessage());
+      res.sendRedirect("/");  
+    }
+  }
+
+  private void invoke(AppController controller, 
                         String actionStr,
                         HttpServletRequest req,
                         HttpServletResponse res) 

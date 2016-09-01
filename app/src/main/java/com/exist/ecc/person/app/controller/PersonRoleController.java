@@ -30,7 +30,6 @@ public class PersonRoleController extends AppController {
   private final PersonDao personDao = new PersonCriteriaDao();
   private final RoleDao roleDao = new RoleCriteriaDao();
 
-
   public void _new(HttpServletRequest req, HttpServletResponse res) 
     throws ServletException, IOException
   {

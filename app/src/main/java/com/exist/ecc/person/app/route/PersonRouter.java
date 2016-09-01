@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.exist.ecc.person.app.controller.AppController;
 import com.exist.ecc.person.app.controller.PersonController;
 import com.exist.ecc.person.app.controller.PersonRoleController;
 
@@ -25,18 +26,19 @@ public class PersonRouter extends AppRouter {
   protected void doGet(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException
   {
-    String uri = req.getRequestURI();
+    Map<AppController, Map<String, String>> routes = new HashMap();
+    Map<String, String> personRoutes = new HashMap();
+    Map<String, String> contactRoutes = new HashMap();
+    Map<String, String> personRoleRoutes = new HashMap();
 
-    HashMap<String, String> personRoutes = new HashMap();
-    HashMap<String, String> contactRoutes = new HashMap();
-    HashMap<String, String> personRoleRoutes = new HashMap();
-
+    routes.put(personController, personRoutes);
     personRoutes.put("index", "\\A/persons/?\\z");
     personRoutes.put("show", "\\A/persons/[0-9]+/?\\z");
     personRoutes.put("_new", "\\A/persons/new/?\\z");
     personRoutes.put("edit", "\\A/persons/[0-9]+/edit/?\\z");
     personRoutes.put("delete", "\\A/persons/[0-9]+/delete/?\\z");
 
+    routes.put(null, contactRoutes);
     contactRoutes.put(
       "_new", "\\A/persons/[0-9]+/contacts/new/?\\z");
     contactRoutes.put(
@@ -44,78 +46,35 @@ public class PersonRouter extends AppRouter {
     contactRoutes.put(
       "delete", "\\A/persons/[0-9]+/contacts/[0-9]+/delete/?\\z");
 
+    routes.put(personRoleController, personRoleRoutes);
     personRoleRoutes.put(
       "_new", "\\A/persons/[0-9]+/roles/new/?\\z");
     personRoleRoutes.put(
       "delete", "\\A/persons/[0-9]+/roles/[0-9]+/delete/?\\z");
 
-    for (String action : personRoutes.keySet()) {
-      if (uri.matches(personRoutes.get(action))) {
-        invoke(personController, action, req, res);
-        return;
-      }
-    }
-
-    for (String action : contactRoutes.keySet()) {
-      if (uri.matches(contactRoutes.get(action))) {
-        res.getWriter().println("<h1>ContactController#" + action + "</h1>");
-        return;
-      }
-    }
-
-    for (String action : personRoleRoutes.keySet()) {
-      if (uri.matches(personRoleRoutes.get(action))) {
-        invoke(personRoleController, action, req, res);
-        return;
-      }
-    }
-     
-    String errMsg = String.format("No action matches GET '%s'", uri);
-    FlashUtil.setError(req, errMsg);
-    res.sendRedirect("/");
+    matchRoute(req, res, routes, "GET");
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException
   {
-    String uri = req.getRequestURI();
-    
-    HashMap<String, String> personRoutes = new HashMap();
-    HashMap<String, String> contactRoutes = new HashMap();
-    HashMap<String, String> personRoleRoutes = new HashMap();
+    Map<AppController, Map<String, String>> routes = new HashMap();
+    Map<String, String> personRoutes = new HashMap();
+    Map<String, String> contactRoutes = new HashMap();
+    Map<String, String> personRoleRoutes = new HashMap();
 
+    routes.put(personController, personRoutes);
     personRoutes.put("create", "\\A/persons/?\\z");
     personRoutes.put("update", "\\A/persons/[0-9]+/?\\z");
 
+    routes.put(null, contactRoutes);
     contactRoutes.put("create", "\\A/persons/[0-9]+/contacts/?\\z");
     contactRoutes.put("update", "\\A/persons/[0-9]+/contacts/[0-9]+/?\\z");
 
+    routes.put(personRoleController, personRoleRoutes);
     personRoleRoutes.put("create", "\\A/persons/[0-9]+/roles/?\\z");
 
-    for (String action : personRoutes.keySet()) {
-      if (uri.matches(personRoutes.get(action))) {
-        invoke(personController, action, req, res);
-        return;
-      }
-    }
-
-    for (String action : contactRoutes.keySet()) {
-      if (uri.matches(contactRoutes.get(action))) {
-        res.getWriter().println("<h1>ContactController#" + action + "</h1>");
-        return;
-      }
-    }
-
-    for (String action : personRoleRoutes.keySet()) {
-      if (uri.matches(personRoleRoutes.get(action))) {
-        invoke(personRoleController, action, req, res);
-        return;
-      }
-    }
-     
-    String errMsg = String.format("No action matches POST '%s'", uri);
-    FlashUtil.setError(req, errMsg);
-    res.sendRedirect("/");
+    matchRoute(req, res, routes, "POST");
   }
 }
