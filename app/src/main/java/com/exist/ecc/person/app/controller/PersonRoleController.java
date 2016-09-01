@@ -66,7 +66,6 @@ public class PersonRoleController extends AppController {
     long personId = getPersonId(req.getRequestURI());
     long roleId = Long.parseLong(req.getParameter("person_role[role_id]"));
 
-
     try {
       Person person = Transactions.get(dbSession, personDao, () ->
         personDao.get(personId));
@@ -87,12 +86,55 @@ public class PersonRoleController extends AppController {
       res.sendRedirect(String.format("/persons/%d", personId));
     }
   }
+ 
+  public void delete(HttpServletRequest req, HttpServletResponse res) 
+    throws IOException
+  {
+    Session dbSession = Sessions.getSession();
+    long personId = getPersonId(req.getRequestURI());
+    long roleId = getRoleId(req.getRequestURI());
+
+    try {
+      Person person = Transactions.get(dbSession, personDao, () ->
+        personDao.get(personId));
+      Role role = Transactions.get(dbSession, roleDao, () ->
+        roleDao.get(roleId));
+
+      person.getRoles().remove(role);
+
+      Transactions.conduct(dbSession, personDao, () ->
+        personDao.save(person));
+
+      FlashUtil.setNotice(req, "Role revoked");
+    } catch (Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+    } finally {
+      dbSession.close();
+      res.sendRedirect(String.format("/persons/%d", personId));
+    }
+  }
 
   protected long getPersonId(String uri) {
     long id = -1;
     
     try {
       String idString = uri.replaceAll("/roles.*", "")  
+                           .replaceAll("[^0-9]", "");
+
+      id = Long.parseLong(idString);
+    } catch (NumberFormatException e) {
+
+    }
+
+    return id;
+  }
+
+  protected long getRoleId(String uri) {
+    long id = -1;
+    
+    try {
+      String idString = uri.replaceAll("persons/[0-9]+/", "")  
                            .replaceAll("[^0-9]", "");
 
       id = Long.parseLong(idString);
