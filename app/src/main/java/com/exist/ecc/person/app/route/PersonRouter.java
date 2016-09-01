@@ -39,12 +39,7 @@ public class PersonRouter extends AppRouter {
     personRoutes.put("delete", "\\A/persons/[0-9]+/delete/?\\z");
 
     routes.put(null, contactRoutes);
-    contactRoutes.put(
-      "_new", "\\A/persons/[0-9]+/contacts/new/?\\z");
-    contactRoutes.put(
-      "edit", "\\A/persons/[0-9]+/contacts/[0-9]+/edit/?\\z");
-    contactRoutes.put(
-      "delete", "\\A/persons/[0-9]+/contacts/[0-9]+/delete/?\\z");
+    contactRoutes.put("_new", "\\A/persons/[0-9]+/contacts/new/?\\z");
 
     routes.put(personRoleController, personRoleRoutes);
     personRoleRoutes.put(
@@ -70,7 +65,6 @@ public class PersonRouter extends AppRouter {
 
     routes.put(null, contactRoutes);
     contactRoutes.put("create", "\\A/persons/[0-9]+/contacts/?\\z");
-    contactRoutes.put("update", "\\A/persons/[0-9]+/contacts/[0-9]+/?\\z");
 
     routes.put(personRoleController, personRoleRoutes);
     personRoleRoutes.put("create", "\\A/persons/[0-9]+/roles/?\\z");

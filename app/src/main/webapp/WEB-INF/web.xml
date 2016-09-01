@@ -13,6 +13,10 @@
     <servlet-name>Roles</servlet-name>
     <servlet-class>com.exist.ecc.person.app.route.RoleRouter</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>Contacts</servlet-name>
+    <servlet-class>com.exist.ecc.person.app.route.ContactRouter</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>Persons</servlet-name>
@@ -21,6 +25,10 @@
   <servlet-mapping>
     <servlet-name>Roles</servlet-name>
     <url-pattern>/roles/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Contacts</servlet-name>
+    <url-pattern>/contacts/*</url-pattern>
   </servlet-mapping>
 </web-app>
 
