@@ -144,7 +144,7 @@ public class ContactController extends AppController {
       personId = contact.getPerson().getPersonId();
 
       req.setAttribute("contact", contactWrapper);
-      req.getRequestDispatcher("/WEB-INF/views/contacts/edit.jsp")
+      req.getRequestDispatcher("/WEB-INF/views/contacts/form.jsp")
          .forward(req, res);
     } catch (Exception e) {
       e.printStackTrace();
