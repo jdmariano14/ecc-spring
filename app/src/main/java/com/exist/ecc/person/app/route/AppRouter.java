@@ -28,11 +28,13 @@ public class AppRouter extends HttpServlet {
     String uri = req.getRequestURI();
 
     try {
-      for (AppController controller : controllerRoutes.keySet()) {
-        Map<String, String> actionRoutes = controllerRoutes.get(controller);
+      for (AppController prototype : controllerRoutes.keySet()) {
+        Map<String, String> actionRoutes = controllerRoutes.get(prototype);
 
         for (String action : actionRoutes.keySet()) {
           if (uri.matches(actionRoutes.get(action))) {
+            AppController controller = prototype.getClass().newInstance();
+            
             invoke(controller, action, req, res);
             return;
           }
