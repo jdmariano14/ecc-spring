@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.exist.ecc.person.app.controller.AppController;
-// import com.exist.ecc.person.app.controller.ContactController;
+import com.exist.ecc.person.app.controller.ContactController;
 
 public class ContactRouter extends AppRouter {
+
+  private final ContactController contactController = new ContactController();
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -22,7 +24,7 @@ public class ContactRouter extends AppRouter {
     Map<AppController, Map<String, String>> routes = new HashMap();
     Map<String, String> contactRoutes = new HashMap();
 
-    routes.put(null, contactRoutes);
+    routes.put(contactController, contactRoutes);
     contactRoutes.put(
       "edit", "\\A/contacts/[0-9]+/edit/?\\z");
     contactRoutes.put(
@@ -38,7 +40,7 @@ public class ContactRouter extends AppRouter {
     Map<AppController, Map<String, String>> routes = new HashMap();
     Map<String, String> contactRoutes = new HashMap();
 
-    routes.put(null, contactRoutes);
+    routes.put(contactController, contactRoutes);
     contactRoutes.put("update", "\\A/contacts/[0-9]+/?\\z");
 
     matchRoute(req, res, routes, "POST");

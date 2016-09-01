@@ -25,7 +25,7 @@
     <c:out value="${contact.info}"/>
     <span>(<a href="/persons/${person.personId}/contacts/${contact.contactId}/edit">edit</a>
     |
-    <a href="/persons/${person.personId}/contacts/${contact.contactId}/delete">delete</a>)</span>
+    <a href="/contacts/${contact.contactId}/delete">delete</a>)</span>
   </li>
 </c:forEach>
 </ul>

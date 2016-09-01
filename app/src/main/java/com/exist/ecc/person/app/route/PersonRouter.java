@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.exist.ecc.person.app.controller.AppController;
+import com.exist.ecc.person.app.controller.ContactController;
 import com.exist.ecc.person.app.controller.PersonController;
 import com.exist.ecc.person.app.controller.PersonRoleController;
 
@@ -19,6 +20,7 @@ import com.exist.ecc.person.app.util.FlashUtil;
 public class PersonRouter extends AppRouter {
 
   private final PersonController personController = new PersonController();
+  private final ContactController contactController = new ContactController();
   private final PersonRoleController personRoleController = 
     new PersonRoleController();
 
@@ -38,7 +40,7 @@ public class PersonRouter extends AppRouter {
     personRoutes.put("edit", "\\A/persons/[0-9]+/edit/?\\z");
     personRoutes.put("delete", "\\A/persons/[0-9]+/delete/?\\z");
 
-    routes.put(null, contactRoutes);
+    routes.put(contactController, contactRoutes);
     contactRoutes.put("_new", "\\A/persons/[0-9]+/contacts/new/?\\z");
 
     routes.put(personRoleController, personRoleRoutes);
@@ -63,7 +65,7 @@ public class PersonRouter extends AppRouter {
     personRoutes.put("create", "\\A/persons/?\\z");
     personRoutes.put("update", "\\A/persons/[0-9]+/?\\z");
 
-    routes.put(null, contactRoutes);
+    routes.put(contactController, contactRoutes);
     contactRoutes.put("create", "\\A/persons/[0-9]+/contacts/?\\z");
 
     routes.put(personRoleController, personRoleRoutes);
