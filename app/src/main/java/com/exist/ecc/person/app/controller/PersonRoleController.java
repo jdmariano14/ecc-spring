@@ -92,11 +92,14 @@ public class PersonRoleController extends AppController {
     long id = -1;
     
     try {
-      id = Long.parseLong(uri.replaceAll("[^0-9]", ""));
+      String idString = uri.replaceAll("/roles.*", "")  
+                           .replaceAll("[^0-9]", "");
+
+      id = Long.parseLong(idString);
     } catch (NumberFormatException e) {
 
     }
 
-    return 48;
+    return id;
   }
 }
