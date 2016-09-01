@@ -1,5 +1,7 @@
 package com.exist.ecc.person.core.model.wrapper;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,6 +15,17 @@ public class RoleWrapper {
 
   public RoleWrapper(Role role) {
     this.role = role;
+  }
+
+  public static List<RoleWrapper> wrapCollection(
+    Collection<Role> collection) 
+  {
+    List<RoleWrapper> roles = 
+      collection.stream()
+                .map(r -> new RoleWrapper(r))
+                .collect(Collectors.toList());
+
+    return roles;
   }
 
   public long getRoleId() {
