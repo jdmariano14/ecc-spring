@@ -127,7 +127,61 @@ public class ContactController extends AppController {
       res.sendRedirect(String.format("/persons/%d", personId));
     }
   }
- 
+
+  public void edit(HttpServletRequest req, HttpServletResponse res) 
+    throws ServletException, IOException
+  {
+    Session dbSession = Sessions.getSession();
+    long contactId = getContactId(req.getRequestURI());
+    long personId = -1;
+    
+    try {
+      Contact contact = Transactions.get(dbSession, contactDao, () ->
+        contactDao.get(contactId));
+
+      ContactWrapper contactWrapper = new ContactWrapper(contact);
+
+      personId = contact.getPerson().getPersonId();
+
+      req.setAttribute("contact", contactWrapper);
+      req.getRequestDispatcher("/WEB-INF/views/contacts/edit.jsp")
+         .forward(req, res);
+    } catch (Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+      res.sendRedirect(String.format("/persons/%d", personId));
+    } finally {
+      dbSession.close();
+    }
+  }
+
+  public void update(HttpServletRequest req, HttpServletResponse res) 
+    throws ServletException, IOException
+  {
+    Session dbSession = Sessions.getSession();
+    long contactId = getContactId(req.getRequestURI());
+    long personId = -1;
+
+    try {
+      Contact contact = Transactions.get(dbSession, contactDao, () ->
+        contactDao.get(contactId));
+
+      personId = contact.getPerson().getPersonId();
+
+      setContactFields(req, contact);
+
+      Transactions.conduct(dbSession, contactDao, () ->
+        contactDao.save(contact));
+
+      FlashUtil.setNotice(req, "Contact updated");
+    } catch (Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+    } finally {
+      dbSession.close();
+      res.sendRedirect(String.format("/persons/%d", personId));
+    }
+  }
  
   public void delete(HttpServletRequest req, HttpServletResponse res) 
     throws IOException

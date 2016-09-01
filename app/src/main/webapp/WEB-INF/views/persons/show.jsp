@@ -23,7 +23,7 @@
   <li>
     <strong><c:out value="${contact.type}"/>:</strong>
     <c:out value="${contact.info}"/>
-    <span>(<a href="/persons/${person.personId}/contacts/${contact.contactId}/edit">edit</a>
+    <span>(<a href="/contacts/${contact.contactId}/edit">edit</a>
     |
     <a href="/contacts/${contact.contactId}/delete">delete</a>)</span>
   </li>
