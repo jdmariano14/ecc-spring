@@ -78,6 +78,7 @@ public class PersonController extends AppController {
     throws IOException
   {
     Session dbSession = Sessions.getSession();
+    long personId = -1;
   
     try {
       Person person = getNewPerson();
@@ -87,13 +88,16 @@ public class PersonController extends AppController {
       Transactions.conduct(dbSession, personDao, () ->
         personDao.save(person));
 
+      dbSession.refresh(person);
+      personId = person.getPersonId();
+
       FlashUtil.setNotice(req, "Person created");
     } catch (Exception e) {
       e.printStackTrace();
       FlashUtil.setError(req, e.getMessage());
     } finally {
       dbSession.close();
-      res.sendRedirect("/persons");
+      res.sendRedirect(String.format("/persons/%d", personId));
     }
   }
 
@@ -163,7 +167,7 @@ public class PersonController extends AppController {
       FlashUtil.setError(req, e.getMessage());
     } finally {
       dbSession.close();
-      res.sendRedirect("/persons");
+      res.sendRedirect(String.format("/persons/%d", personId));
     }
   }
 
@@ -208,16 +212,28 @@ public class PersonController extends AppController {
       new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     try {
-      birthDate = dateFormat.parse(
-        req.getParameter("person[birth_date]"));
-      dateHired = dateFormat.parse(
-        req.getParameter("person[date_hired]"));
+      birthDate = 
+        dateFormat.parse(req.getParameter("person[birth_date]"));
+    } catch (ParseException e) {
+      
+    }
+
+    try {
+      dateHired = 
+        dateFormat.parse(req.getParameter("person[date_hired]"));
+    } catch (ParseException e) {
+      
+    }
+
+    try {
       gwa = new BigDecimal(req.getParameter("person[gwa]"));
+    } catch (NumberFormatException e) {
+
+    }
+
+    try {
       employed = req.getParameter("person[employed]").equals("true");
-    } catch (ParseException
-             | NumberFormatException
-             | NullPointerException e) 
-    {
+    } catch (NullPointerException e) {
 
     }
 
