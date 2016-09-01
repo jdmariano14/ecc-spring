@@ -64,7 +64,7 @@ public class RoleRouter extends AppRouter {
       }
     }
 
-    String errMsg = String.format("No action matches GET '%s'", uri);
+    String errMsg = String.format("No action matches POST '%s'", uri);
     FlashUtil.setError(req, errMsg);
     res.sendRedirect("/");
   }
