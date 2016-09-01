@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,11 +27,15 @@ import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
 import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Address;
 import com.exist.ecc.person.core.model.Person;
-import com.exist.ecc.person.core.model.wrapper.PersonWrapper;  
+import com.exist.ecc.person.core.model.wrapper.PersonWrapper;
+
+import com.exist.ecc.person.util.DateUtil;
 
 public class PersonController extends AppController {
 
   private final PersonCriteriaDao personDao = new PersonCriteriaDao();
+
+  private final List<String> queryProperties = getQueryProperties();
 
   public void index(HttpServletRequest req, HttpServletResponse res) 
     throws IOException
@@ -47,6 +50,7 @@ public class PersonController extends AppController {
         PersonWrapper.wrapCollection(persons);
 
       req.setAttribute("persons", personWrappers);
+      req.setAttribute("properties", queryProperties);
       req.getRequestDispatcher("/WEB-INF/views/persons/index.jsp")
          .forward(req, res);
     } catch (Exception e) {
@@ -191,6 +195,40 @@ public class PersonController extends AppController {
     }    
   }
 
+  public void query(HttpServletRequest req, HttpServletResponse res)
+    throws IOException, ServletException
+  {
+    try {
+      String property = req.getParameter("person_query[property]");
+
+      switch (property) {
+        case "Last name":
+          req.setAttribute("minString", "abc");
+          req.setAttribute("maxString", "xyz");
+          req.setAttribute("likeString", "%ine");
+          break;
+        case "Date hired":
+          req.setAttribute("minDate", "2000-01-15");
+          req.setAttribute("maxDate", "2015-12-31");
+          break;
+        case "GWA":
+          req.setAttribute("minBigDecimal", "1.0");
+          req.setAttribute("maxBigDecimal", "5.0");
+          break;
+        default:
+          throw new RuntimeException("Invalid query property");
+      }
+
+      req.setAttribute("property", property);
+      req.getRequestDispatcher("/WEB-INF/views/persons/query.jsp")
+         .forward(req, res);
+    } catch(Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+      res.sendRedirect("/persons");
+    }
+  }
+
   private Person getNewPerson() {
     Person person = new Person();
     Name name = new Name();
@@ -208,8 +246,7 @@ public class PersonController extends AppController {
     BigDecimal gwa = null;
     boolean employed = false;
 
-    DateFormat dateFormat =
-      new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    DateFormat dateFormat = DateUtil.getDateFormat();
 
     try {
       birthDate = 
@@ -261,6 +298,15 @@ public class PersonController extends AppController {
     person.setDateHired(dateHired);
     person.setGwa(gwa);
     person.setEmployed(employed);
+  }
+
+  private List<String> getQueryProperties() {
+    List<String> queryProperties = new ArrayList(3);
+    queryProperties.add("Last name");
+    queryProperties.add("Date hired");
+    queryProperties.add("GWA");
+
+    return queryProperties;
   }
 
   private long getPersonId(String uri) {

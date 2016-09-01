@@ -64,6 +64,7 @@ public class PersonRouter extends AppRouter {
     routes.put(personController, personRoutes);
     personRoutes.put("create", "\\A/persons/?\\z");
     personRoutes.put("update", "\\A/persons/[0-9]+/?\\z");
+    personRoutes.put("query", "\\A/persons/query/?\\z");
 
     routes.put(contactController, contactRoutes);
     contactRoutes.put("create", "\\A/persons/[0-9]+/contacts/?\\z");
