@@ -3,6 +3,8 @@
 <%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@attribute name="headTitle" fragment="true"%>
 <%@attribute name="bodyTitle" fragment="true"%>
+<%@attribute name="_notice" type="java.lang.String"%>
+<%@attribute name="_error" type="java.lang.String"%>
 
 <!DOCTYPE html>
 <html>

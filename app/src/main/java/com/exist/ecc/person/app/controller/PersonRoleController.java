@@ -47,7 +47,7 @@ public class PersonRoleController extends AppController {
 
       req.setAttribute("person", personWrapper);
       req.setAttribute("roles", roleWrappers);
-      req.getRequestDispatcher("/WEB-INF/views/person_roles/form.jsp")
+      req.getRequestDispatcher("/WEB-INF/views/person_roles/new.jsp")
          .forward(req, res);
     } catch (Exception e) {
       e.printStackTrace();

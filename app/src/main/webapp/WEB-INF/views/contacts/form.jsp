@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:set var="action" scope="session" value="${empty contact.contactId ? '/persons/' += person.personId += '/contacts' : '/contacts/' += contact.contactId}"/>
 

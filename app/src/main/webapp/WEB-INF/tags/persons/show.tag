@@ -13,7 +13,3 @@
 </section>
 <persons:showContacts person="${person}" contacts="${person.contacts}"/>
 <persons:showRoles person="${person}" roles="${person.roles}"/>
-
-<section class="ui segment">
-  <p><a href="/persons/${person.personId}/contacts/new">Add contact</a></p>
-</section>
