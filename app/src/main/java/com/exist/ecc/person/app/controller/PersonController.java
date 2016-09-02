@@ -280,7 +280,7 @@ public class PersonController extends AppController {
       req.setAttribute("persons", personWrappers);
       req.setAttribute("queryProperty", property);
       req.setAttribute("properties", queryProperties);
-      req.getRequestDispatcher("/WEB-INF/views/persons/table.jsp")
+      req.getRequestDispatcher("/WEB-INF/views/persons/result.jsp")
          .forward(req, res);
      } catch(Exception e) {
       e.printStackTrace();

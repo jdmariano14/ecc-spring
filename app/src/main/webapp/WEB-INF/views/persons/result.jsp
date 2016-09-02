@@ -4,8 +4,8 @@
 <%@taglib prefix="persons" tagdir="/WEB-INF/tags/persons" %>
 
 <app:layout>
-  <jsp:attribute name="headTitle">Persons | Home</jsp:attribute>
-  <jsp:attribute name="bodyTitle">Persons - Home</jsp:attribute>
+  <jsp:attribute name="headTitle">Persons | Query Result</jsp:attribute>
+  <jsp:attribute name="bodyTitle">Persons - Query Result</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
       <persons:queryForm properties="${properties}" queryProperty="${queryProperty}"/>
@@ -14,7 +14,7 @@
       <persons:table persons="${persons}" queryProperty="${queryProperty}"/>
     </section>
     <section class="ui segment">
-      <p><a href="/persons/new">Add person</a></p>
+      <p><a href="/persons">Back</a></p>
     </section>
   </jsp:body>
 </app:layout>
