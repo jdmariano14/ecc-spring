@@ -9,6 +9,7 @@
   <p><strong>Date hired:</strong> <c:out value="${person.dateHired}"/></p>
   <p><strong>Employed:</strong> <c:out value="${person.employed ? 'Yes' : 'No'}"/></p>
   <p><strong>GWA:</strong> <c:out value="${person.gwa}"/></p>
+  <p><persons:controls person="${person}"/></p>
 </section>
 <persons:showContacts person="${person}" contacts="${person.contacts}"/>
 <persons:showRoles person="${person}" roles="${person.roles}"/>
