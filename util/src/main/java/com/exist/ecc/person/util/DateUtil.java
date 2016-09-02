@@ -1,8 +1,10 @@
 package com.exist.ecc.person.util;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.Date;
 import java.util.Locale;
 
 public class DateUtil {
@@ -12,6 +14,18 @@ public class DateUtil {
       new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     
     return dateFormat;
+  }
+
+  public static Date parse(DateFormat dateFormat, String dateString) {
+    Date date = null;
+
+    try {
+      date = dateFormat.parse(dateString);
+    } catch (ParseException e) {
+      
+    }
+
+    return date;
   }
 
 }
