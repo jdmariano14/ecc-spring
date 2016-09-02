@@ -51,7 +51,7 @@ public class RoleController extends AppController {
   public void _new(HttpServletRequest req, HttpServletResponse res) 
     throws ServletException, IOException
   {
-    req.getRequestDispatcher("/WEB-INF/views/roles/form.jsp")
+    req.getRequestDispatcher("/WEB-INF/views/roles/new.jsp")
        .forward(req, res);
   }
 
@@ -87,7 +87,7 @@ public class RoleController extends AppController {
         roleDao.get(roleId));
 
       req.setAttribute("role", role);
-      req.getRequestDispatcher("/WEB-INF/views/roles/form.jsp")
+      req.getRequestDispatcher("/WEB-INF/views/roles/edit.jsp")
          .forward(req, res);     
     } catch (Exception e) {
       e.printStackTrace();
