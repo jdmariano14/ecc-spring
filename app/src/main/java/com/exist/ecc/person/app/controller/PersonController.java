@@ -71,8 +71,9 @@ public class PersonController extends AppController {
     try {
       Person person = getNewPerson();
 
+      FlashUtil.clear(req);
       req.setAttribute("person", person);
-      req.getRequestDispatcher("/WEB-INF/views/persons/form.jsp")
+      req.getRequestDispatcher("/WEB-INF/views/persons/new.jsp")
          .forward(req, res);
     } catch(Exception e) {
       e.printStackTrace();
@@ -143,8 +144,9 @@ public class PersonController extends AppController {
       final Person person = Transactions.get(dbSession, personDao, () ->
         personDao.get(personId));
 
+      FlashUtil.clear(req);
       req.setAttribute("person", person);
-      req.getRequestDispatcher("/WEB-INF/views/persons/form.jsp")
+      req.getRequestDispatcher("/WEB-INF/views/persons/edit.jsp")
          .forward(req, res);
     } catch (Exception e) {
       e.printStackTrace();
