@@ -54,7 +54,7 @@ public class PersonController extends AppController {
 
       req.setAttribute("persons", personWrappers);
       req.setAttribute("properties", queryProperties);
-      req.getRequestDispatcher("/WEB-INF/views/persons/table.jsp")
+      req.getRequestDispatcher("/WEB-INF/views/persons/index.jsp")
          .forward(req, res);
     } catch (Exception e) {
       FlashUtil.setError(req, e.getMessage());
