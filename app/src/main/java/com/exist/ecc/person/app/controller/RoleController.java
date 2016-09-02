@@ -19,6 +19,7 @@ import com.exist.ecc.person.core.dao.api.RoleDao;
 import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 
 import com.exist.ecc.person.core.model.Role;
+import com.exist.ecc.person.core.model.wrapper.RoleWrapper;
 
 public class RoleController extends AppController {
 
@@ -33,7 +34,10 @@ public class RoleController extends AppController {
       List<Role> roles = Transactions.get(dbSession, roleDao, () ->
         roleDao.getAll());
 
-      req.setAttribute("roles", roles);
+      List<RoleWrapper> roleWrappers =
+        RoleWrapper.wrapCollection(roles);
+
+      req.setAttribute("roles", roleWrappers);
       req.getRequestDispatcher("/WEB-INF/views/roles/index.jsp")
          .forward(req, res);
     } catch (Exception e) {

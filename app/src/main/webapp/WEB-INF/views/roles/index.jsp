@@ -1,21 +1,17 @@
 <%@ page language="java" contentType="text/html"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
+<%@taglib prefix="roles" tagdir="/WEB-INF/tags/roles"%>
 
-<table>
-<thead>
-  <th>Role</th>
-  <th>Edit</th>
-  <th>Delete</th>
-</thead>
-<tbody>
-<c:forEach items="${roles}" var="role">
-  <tr>
-    <td><c:out value="${role.name}"/></td>
-    <td><a href="/roles/${role.roleId}/edit">Edit</a></td>
-    <td><a href="/roles/${role.roleId}/delete">Delete</a></td>
-  </tr>
-</c:forEach>
-</tbody>
-</table>
-
-<p><a href="/roles/new">Add role</a></p>
+<app:layout>
+  <jsp:attribute name="headTitle">Roles | Home</jsp:attribute>
+  <jsp:attribute name="bodyTitle">Roles - Home</jsp:attribute>
+  <jsp:body>
+    <section class="ui segment">
+      <roles:table roles="${roles}"/>
+    </section>
+    <section class="ui segment">
+      <p><a href="/roles/new">Add role</a></p>
+    </section>
+  </jsp:body>
+</app:layout>

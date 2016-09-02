@@ -1,5 +1,5 @@
 <%@tag pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@attribute name="notice" type="java.lang.String"%>
 <%@attribute name="error" type="java.lang.String"%>
 
