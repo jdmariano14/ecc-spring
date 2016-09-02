@@ -110,12 +110,11 @@ public class ContactController extends AppController {
       Contact contact = Transactions.get(dbSession, contactDao, () ->
         contactDao.get(contactId));
 
-      ContactWrapper contactWrapper = new ContactWrapper(contact);
-
       personId = contact.getPerson().getPersonId();
 
-      req.setAttribute("contact", contactWrapper);
-      req.getRequestDispatcher("/WEB-INF/views/contacts/form.jsp")
+      req.setAttribute("contact", contact);
+      req.setAttribute("contactTypes", contactTypes.keySet());
+      req.getRequestDispatcher("/WEB-INF/views/contacts/edit.jsp")
          .forward(req, res);
     } catch (Exception e) {
       e.printStackTrace();
