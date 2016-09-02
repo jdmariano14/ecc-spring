@@ -3,7 +3,7 @@
 <%@attribute name="persons" required="true" type="java.util.List"%>
 <%@attribute name="queryProperty" type="java.lang.String"%>
 
-<table>
+<table class="ui table">
   <thead>
     <th>Person</th>
     <c:choose>

@@ -1,7 +1,8 @@
 <%@tag pageEncoding="UTF-8"%>
 
-<ul>
-  <li><a href="/home">Home</a></li>
-  <li><a href="/persons">Persons</a></li>
-  <li><a href="/roles">Roles</a></li>
-</ul>
+<nav class="ui menu">
+  <div class="header item">ECC Servlet Activity</div>
+  <a class="item" href="/">Home</a>
+  <a class="item" href="/persons">Persons</a>
+  <a class="item" href="/roles">Roles</a>
+</nav>

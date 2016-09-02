@@ -6,8 +6,14 @@
 <app:layout>
   <jsp:attribute name="title">Persons</jsp:attribute>
   <jsp:body>
-    <persons:queryForm properties="${properties}"/>
-    <persons:table persons="${persons}" queryProperty="${queryProperty}"/>
-    <p><a href="/persons/new">Add person</a></p>
+    <section class="ui segment">
+      <persons:queryForm properties="${properties}"/>
+    </section>
+    <section class="ui segment">
+      <persons:table persons="${persons}" queryProperty="${queryProperty}"/>
+    </section>
+    <section class="ui segment">
+      <p><a href="/persons/new">Add person</a></p>
+    </section>
   </jsp:body>
 </app:layout>
