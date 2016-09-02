@@ -15,13 +15,14 @@ import com.exist.ecc.person.app.util.FlashUtil;
 
 import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dao.Transactions;
+import com.exist.ecc.person.core.dao.api.RoleDao;
 import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 
 import com.exist.ecc.person.core.model.Role;
 
 public class RoleController extends AppController {
 
-  private final RoleCriteriaDao roleDao = new RoleCriteriaDao();
+  private final RoleDao roleDao = new RoleCriteriaDao();
 
   public void index(HttpServletRequest req, HttpServletResponse res) 
     throws IOException

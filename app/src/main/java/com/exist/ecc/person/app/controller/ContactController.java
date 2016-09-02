@@ -34,9 +34,10 @@ import com.exist.ecc.person.core.model.wrapper.PersonWrapper;
 
 public class ContactController extends AppController {
   
-  private final Map<String, Contact> contactTypes = getContactTypes();
   private final PersonDao personDao = new PersonCriteriaDao();
   private final ContactDao contactDao = new ContactCriteriaDao();
+
+  private final Map<String, Contact> contactTypes = getContactTypes();
 
   public void _new(HttpServletRequest req, HttpServletResponse res) 
     throws ServletException, IOException
