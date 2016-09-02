@@ -4,7 +4,7 @@
 <%@taglib prefix="persons" tagdir="/WEB-INF/tags/persons" %>
 
 <app:layout>
-  <jsp:attribute name="title">Persons</jsp:attribute>
+  <jsp:attribute name="title">Person | Home</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
       <persons:queryForm properties="${properties}"/>
