@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +22,7 @@ import com.exist.ecc.person.app.util.FlashUtil;
 
 import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dao.Transactions;
+import com.exist.ecc.person.core.dao.api.PersonDao;
 import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
 
 import com.exist.ecc.person.core.model.Name;
@@ -29,13 +30,15 @@ import com.exist.ecc.person.core.model.Address;
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.wrapper.PersonWrapper;
 
+import com.exist.ecc.person.util.BigDecimalUtil;
 import com.exist.ecc.person.util.DateUtil;
 
 public class PersonController extends AppController {
 
-  private final PersonCriteriaDao personDao = new PersonCriteriaDao();
+  private final PersonDao personDao = new PersonCriteriaDao();
 
   private final List<String> queryProperties = getQueryProperties();
+  private final DateFormat dateFormat = DateUtil.getDateFormat();
 
   public void index(HttpServletRequest req, HttpServletResponse res) 
     throws IOException
@@ -51,7 +54,7 @@ public class PersonController extends AppController {
 
       req.setAttribute("persons", personWrappers);
       req.setAttribute("properties", queryProperties);
-      req.getRequestDispatcher("/WEB-INF/views/persons/index.jsp")
+      req.getRequestDispatcher("/WEB-INF/views/persons/table.jsp")
          .forward(req, res);
     } catch (Exception e) {
       FlashUtil.setError(req, e.getMessage());
@@ -198,14 +201,14 @@ public class PersonController extends AppController {
   public void query(HttpServletRequest req, HttpServletResponse res)
     throws IOException, ServletException
   {
-    try {
-      String property = req.getParameter("person_query[property]");
+    String property = req.getParameter("person_query[property]");
 
+    try {
       switch (property) {
         case "Last name":
           req.setAttribute("minString", "abc");
           req.setAttribute("maxString", "xyz");
-          req.setAttribute("likeString", "%ine");
+          req.setAttribute("likeString", "%man");
           break;
         case "Date hired":
           req.setAttribute("minDate", "2000-01-15");
@@ -219,10 +222,67 @@ public class PersonController extends AppController {
           throw new RuntimeException("Invalid query property");
       }
 
+      FlashUtil.clear(req);
       req.setAttribute("property", property);
       req.getRequestDispatcher("/WEB-INF/views/persons/query.jsp")
          .forward(req, res);
     } catch(Exception e) {
+      e.printStackTrace();
+      FlashUtil.setError(req, e.getMessage());
+      res.sendRedirect("/persons");
+    }
+  }
+
+  public void result(HttpServletRequest req, HttpServletResponse res)
+    throws IOException, ServletException
+  {
+    Session dbSession = Sessions.getSession();
+    String property = req.getParameter("person_result[property]");
+    Boolean desc = req.getParameter("person_result[order]").equals("desc");
+
+    try {
+      List<Person> persons = null;
+
+      switch (property) {
+        case "Last name":
+          String minString = req.getParameter("person_result[min_string]");
+          String maxString = req.getParameter("person_result[max_string]");
+          String likeString = req.getParameter("person_result[like_string]");
+
+          persons = Transactions.get(dbSession, personDao, () ->
+            personDao.queryLastName(minString, maxString, likeString, desc));
+          break;
+        case "Date hired":
+          Date minDate = DateUtil.parse(dateFormat,
+            req.getParameter("person_result[min_date]"));
+          Date maxDate = DateUtil.parse(dateFormat,
+            req.getParameter("person_result[max_date]"));
+
+          persons = Transactions.get(dbSession, personDao, () ->
+            personDao.queryDateHired(minDate, maxDate, desc));
+          break;
+        case "GWA":
+          BigDecimal minBigDecimal = BigDecimalUtil.parse(
+            req.getParameter("person_result[min_big_decimal]"));
+          BigDecimal maxBigDecimal = BigDecimalUtil.parse(
+            req.getParameter("person_result[max_big_decimal]"));
+
+          persons = Transactions.get(dbSession, personDao, () ->
+            personDao.queryGwa(minBigDecimal, maxBigDecimal, desc));
+          break;
+        default:
+          throw new RuntimeException("Invalid query property");
+      }
+
+      List<PersonWrapper> personWrappers = 
+        PersonWrapper.wrapCollection(persons);
+
+      req.setAttribute("persons", personWrappers);
+      req.setAttribute("queryProperty", property);
+      req.setAttribute("properties", queryProperties);
+      req.getRequestDispatcher("/WEB-INF/views/persons/table.jsp")
+         .forward(req, res);
+     } catch(Exception e) {
       e.printStackTrace();
       FlashUtil.setError(req, e.getMessage());
       res.sendRedirect("/persons");
@@ -241,38 +301,12 @@ public class PersonController extends AppController {
   }
 
   private void setPersonFields(HttpServletRequest req, Person person) {
-    Date birthDate = null;
-    Date dateHired = null;
-    BigDecimal gwa = null;
-    boolean employed = false;
-
-    DateFormat dateFormat = DateUtil.getDateFormat();
-
-    try {
-      birthDate = 
-        dateFormat.parse(req.getParameter("person[birth_date]"));
-    } catch (ParseException e) {
-      
-    }
-
-    try {
-      dateHired = 
-        dateFormat.parse(req.getParameter("person[date_hired]"));
-    } catch (ParseException e) {
-      
-    }
-
-    try {
-      gwa = new BigDecimal(req.getParameter("person[gwa]"));
-    } catch (NumberFormatException e) {
-
-    }
-
-    try {
-      employed = req.getParameter("person[employed]").equals("true");
-    } catch (NullPointerException e) {
-
-    }
+    Date birthDate = DateUtil.parse(dateFormat,
+      req.getParameter("person[birth_date]"));
+    Date dateHired = DateUtil.parse(dateFormat, 
+      req.getParameter("person[date_hired]"));
+    BigDecimal gwa = BigDecimalUtil.parse(req.getParameter("person[gwa]"));
+    boolean employed = Boolean.valueOf(req.getParameter("person[employed]")); 
 
     person.getName().setFirstName(
       req.getParameter("person[name[first_name]]"));

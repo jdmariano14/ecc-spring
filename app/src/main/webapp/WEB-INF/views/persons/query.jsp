@@ -4,6 +4,7 @@
 <form name="person_result" action="/persons/result" method="post">
   <fieldset>
     <legend><c:out value="${property}"/></legend>
+    <input type="hidden" name="person_result[property]" value="${property}">
     <c:if test="${not empty minString}">
       <label for="person_result[min_string]">From</label>
       <input type="text" name="person_result[min_string]" placeholder="${minString}">

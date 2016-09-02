@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 
 import com.exist.ecc.person.core.dao.api.CriteriaDao;
 
@@ -23,6 +24,15 @@ public class CriteriaDaoImpl<T, I extends Serializable>
   @Override
   public List<T> getAll() {
     return query(c -> c);
+  }
+
+  public UnaryOperator<Criteria> order(String property, boolean desc) {
+    return c -> {
+      c.addOrder(desc ? Order.desc(property)
+                      : Order.asc(property));
+
+      return c;
+    };
   }
 
 }

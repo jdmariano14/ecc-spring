@@ -21,7 +21,7 @@ public class DateUtil {
 
     try {
       date = dateFormat.parse(dateString);
-    } catch (ParseException e) {
+    } catch (NullPointerException | ParseException e) {
       
     }
 

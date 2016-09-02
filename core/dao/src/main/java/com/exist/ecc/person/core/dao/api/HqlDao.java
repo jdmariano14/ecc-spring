@@ -6,6 +6,4 @@ public interface HqlDao<T> {
 
   public abstract List<T> query(String hql);
   
-  public abstract List<T> getAll();
-  
 }

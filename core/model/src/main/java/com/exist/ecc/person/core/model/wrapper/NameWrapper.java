@@ -34,8 +34,8 @@ public class NameWrapper {
   public String getShortName() {
     String nameString = 
       new StringBuilder()
-      .append(StringUtil.formatUnlessBlank("%s ", name.getFirstName()))
-      .append(StringUtil.formatUnlessBlank("%s", name.getLastName()))
+      .append(StringUtil.formatUnlessBlank("%s, ", name.getLastName()))
+      .append(StringUtil.formatUnlessBlank("%s", name.getFirstName()))
       .toString();
 
     return nameString;

@@ -10,7 +10,5 @@ import org.hibernate.Criteria;
 public interface CriteriaDao<T> {
 
   public abstract List<T> query(UnaryOperator<Criteria> crit);
-  
-  public abstract List<T> getAll();
 
 }

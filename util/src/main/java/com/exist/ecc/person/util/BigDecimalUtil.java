@@ -9,7 +9,7 @@ public class BigDecimalUtil {
 
     try {
       bigDecimal = new BigDecimal(bigDecimalString);
-    } catch (NumberFormatException e) {
+    } catch (NullPointerException | NumberFormatException e) {
       
     }
 

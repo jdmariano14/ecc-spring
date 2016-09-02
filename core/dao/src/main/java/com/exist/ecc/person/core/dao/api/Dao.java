@@ -14,6 +14,8 @@ public interface Dao<T, I> {
   public abstract void setSession(Session session);
   
   public abstract T get(I id);
+  
+  public abstract List<T> getAll();
 
   public abstract void save(T entity);
   

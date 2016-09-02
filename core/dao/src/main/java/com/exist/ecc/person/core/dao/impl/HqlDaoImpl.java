@@ -27,7 +27,6 @@ public class HqlDaoImpl<T, I extends Serializable>
     return (List<T>) query.list(); 
   }
 
-  @Override
   public List<T> getAll() {
     return query("");
   }
