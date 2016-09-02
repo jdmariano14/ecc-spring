@@ -49,11 +49,14 @@ public class ContactController extends AppController {
       Person person = Transactions.get(dbSession, personDao, () ->
         personDao.get(personId));
 
+      Contact contact = new Contact();
+
       PersonWrapper personWrapper = new PersonWrapper(person);
 
+      req.setAttribute("contact", contact);
       req.setAttribute("person", personWrapper);
-      req.setAttribute("types", contactTypes.keySet());
-      req.getRequestDispatcher("/WEB-INF/views/contacts/form.jsp")
+      req.setAttribute("contactTypes", contactTypes.keySet());
+      req.getRequestDispatcher("/WEB-INF/views/contacts/new.jsp")
          .forward(req, res);
     } catch (Exception e) {
       e.printStackTrace();
