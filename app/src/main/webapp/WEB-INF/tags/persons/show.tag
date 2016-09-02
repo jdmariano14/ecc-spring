@@ -4,7 +4,6 @@
 <%@attribute name="person" required="true" type="com.exist.ecc.person.core.model.wrapper.PersonWrapper"%>
 
 <section class="ui segment">
-  <p><strong>Name:</strong> <c:out value="${person.name.fullName}"/></p>
   <p><strong>Address:</strong> <c:out value="${person.address.fullAddress}"/></p>
   <p><strong>Birth date:</strong> <c:out value="${person.birthDate}"/></p>
   <p><strong>Date hired:</strong> <c:out value="${person.dateHired}"/></p>

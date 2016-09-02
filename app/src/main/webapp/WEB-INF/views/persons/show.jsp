@@ -4,8 +4,8 @@
 <%@taglib prefix="persons" tagdir="/WEB-INF/tags/persons" %>
 
 <app:layout>
-  <jsp:attribute name="headTitle">Persons | Show</jsp:attribute>
-  <jsp:attribute name="bodyTitle">Persons - Show</jsp:attribute>
+  <jsp:attribute name="headTitle">Persons | <c:out value="${person.name.shortName}"/></jsp:attribute>
+  <jsp:attribute name="bodyTitle"><c:out value="${person.name.fullName}"/></jsp:attribute>
   <jsp:body>
     <persons:show person="${person}"/>
   </jsp:body>
