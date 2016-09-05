@@ -5,7 +5,9 @@
 <%@attribute name="url" required="true" type="java.lang.String"%>
 
 <form class="ui form" name="role" action="/roles/${role.roleId}" method="post">
-  <label for="role[name]">Name:</label>
-  <input type="text" name="role[name]" value="${role.name}"><br>
+  <div class="field">
+    <label for="role[name]">Name:</label>
+    <input type="text" name="role[name]" value="${role.name}"><br>
+  </div>
   <button class="ui button" type="submit">Save</button>
 </form>
