@@ -9,9 +9,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-      <meta charset="utf-8" />
-      <title>ECC | <jsp:invoke fragment="headTitle"/></title>
-      <link rel="stylesheet" href="/assets/stylesheets/app.css"/>
+    <meta charset="utf-8" />
+    <title>ECC | <jsp:invoke fragment="headTitle"/></title>
+    <app:importSemanticCss/>
+    <link rel="stylesheet" href="/assets/stylesheets/app.css"/>
   </head>
   <body>
     <app:navbar/>
@@ -24,5 +25,7 @@
         <jsp:doBody/>
       </div>
     </section>
+    <app:importJQuery/>
+    <app:importSemanticJs/>
   </body>
 </html>
