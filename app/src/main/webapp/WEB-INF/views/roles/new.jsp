@@ -8,10 +8,7 @@
   <jsp:attribute name="bodyTitle">New Role</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
-      <roles:form role="${role}" url="/roles"/>
-    </section>
-    <section class="ui segment">
-      <p><a href="/roles">Back</a></p>
+      <roles:form role="${role}" url="/roles" backUrl="/roles"/>
     </section>
   </jsp:body>
 </app:layout>

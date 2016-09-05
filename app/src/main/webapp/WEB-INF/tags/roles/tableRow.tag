@@ -5,6 +5,10 @@
 
 <tr>
   <td><c:out value="${role.name}"/></td>
-  <td><a href="/roles/${role.roleId}/edit">Edit</a></td>
-  <td><a href="/roles/${role.roleId}/delete">Delete</a></td>
+  <td><a class="ui primary icon button" title="Edit" href="/roles/${role.roleId}/edit">
+    <i class="ui edit icon">
+  </a></td>
+  <td><a class="ui primary icon button" title="Delete" href="/roles/${role.roleId}/delete">
+    <i class="ui trash outline icon">
+  </a></td>
 </tr>

@@ -11,7 +11,10 @@
       <roles:table roles="${roles}"/>
     </section>
     <section class="ui segment">
-      <p><a href="/roles/new">Add role</a></p>
+      <p><a class="ui primary button" href="/roles/new">
+        <i class="plus icon"></i>
+        Add role
+      </a></p>
     </section>
   </jsp:body>
 </app:layout>
