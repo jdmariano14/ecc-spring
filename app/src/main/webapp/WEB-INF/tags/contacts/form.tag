@@ -5,7 +5,7 @@
 <%@attribute name="contact" required="true" type="com.exist.ecc.person.core.model.Contact"%>
 <%@attribute name="url" required="true" type="java.lang.String"%>
 
-<form name="contact" action="${url}" method="post">
+<form class="ui form" name="contact" action="${url}" method="post">
   <c:if test="${contact.contactId le 0}">
     <label for="contact[type]">Type</label>
     <select name="contact[type]">

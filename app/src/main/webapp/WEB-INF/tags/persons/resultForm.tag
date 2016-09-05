@@ -10,7 +10,7 @@
 <%@attribute name="maxBigDecimal" type="java.lang.String"%>
 <%@attribute name="order" type="java.lang.String"%>
 
-<form name="person_result" action="/persons/result" method="post">
+<form class="ui form" name="person_result" action="/persons/result" method="post">
   <fieldset>
     <legend><c:out value="${property}"/></legend>
     <input type="hidden" name="person_result[property]" value="${property}">

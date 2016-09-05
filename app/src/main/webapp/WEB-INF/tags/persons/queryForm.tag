@@ -3,7 +3,7 @@
 <%@attribute name="properties" type="java.util.List"%>
 <%@attribute name="queryProperty" type="java.lang.String"%>
 
-<form name="person_query" action="/persons/query" method="post">
+<form class="ui form" name="person_query" action="/persons/query" method="post">
   <label for="person_query[property]">Query on</label>
   <select name="person_query[property]">
     <option value="">Please select a property</option>
