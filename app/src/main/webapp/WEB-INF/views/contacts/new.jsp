@@ -8,7 +8,7 @@
   <jsp:attribute name="bodyTitle">New Contact</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
-      <contacts:form contact="${contact}" contactTypes="${contactTypes}" url="/persons/${person.personId}/contacts"/>
+      <contacts:form contact="${contact}" contactTypes="${contactTypes}" url="/persons/${person.personId}/contacts" backUrl="/persons/${person.personId}"/>
     </section>
   </jsp:body>
 </app:layout>

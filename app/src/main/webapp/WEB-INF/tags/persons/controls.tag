@@ -11,4 +11,4 @@
   <i class="trash outline icon"></i>
   Delete
 </a>
-<app:backButton url="${backUrl}"/>
+<app:backButton url="/persons"/>
