@@ -5,7 +5,9 @@
 
 <c:if test="${not empty notice or not empty error}">
   <section class="ui segment">
-    <p><c:out value="${notice}"/></p>
-    <p><c:out value="${error}"/></p>
+    <p class="flash">
+      <span class="notice"><c:out value="${notice}"/></span>
+      <span class="error"><c:out value="${error}"/></span>
+    </p>
   </section>
 </c:if>

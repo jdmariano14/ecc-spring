@@ -31,4 +31,3 @@
     <url-pattern>/contacts/*</url-pattern>
   </servlet-mapping>
 </web-app>
-

@@ -11,6 +11,7 @@
   <head>
       <meta charset="utf-8" />
       <title>ECC | <jsp:invoke fragment="headTitle"/></title>
+      <link rel="stylesheet" href="/assets/stylesheets/app.css"/>
   </head>
   <body>
     <app:navbar/>
