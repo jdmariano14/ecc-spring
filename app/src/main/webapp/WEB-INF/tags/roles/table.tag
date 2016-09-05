@@ -3,7 +3,7 @@
 <%@taglib prefix="roles" tagdir="/WEB-INF/tags/roles"%>
 <%@attribute name="roles" required="true" type="java.util.List"%>
 
-<table class="ui table">
+<table class="ui collapsing celled striped table">
   <thead>
     <th>Role</th>
     <th>Edit</th>
