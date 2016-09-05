@@ -7,5 +7,5 @@
 <form class="ui form" name="role" action="/roles/${role.roleId}" method="post">
   <label for="role[name]">Name:</label>
   <input type="text" name="role[name]" value="${role.name}"><br>
-  <input type="submit" value="Save">
+  <button class="ui button" type="submit">Save</button>
 </form>

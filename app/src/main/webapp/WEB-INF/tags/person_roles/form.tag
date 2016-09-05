@@ -13,5 +13,5 @@
     </c:forEach>
   </select><br>
 
-  <input type="submit" value="Save">
+  <button class="ui button" type="submit">Save</button>
 </form>

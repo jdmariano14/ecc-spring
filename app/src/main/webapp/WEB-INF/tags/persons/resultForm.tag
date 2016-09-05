@@ -53,6 +53,6 @@
     <input type="radio" name="person_result[order]" value="asc" checked> asc
     <input type="radio" name="person_result[order]" value="desc"> desc
     <br>
-    <input type="submit" value="Go">
+    <button class="ui button" type="submit">Go</button>
   </fieldset>
 </form>

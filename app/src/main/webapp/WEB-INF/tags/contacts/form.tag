@@ -18,5 +18,5 @@
 
   <label for="contact[info]">Value</label>
   <input type="text" name="contact[info]" value="${contact.info}"><br>
-  <input type="submit" value="Save">
+  <button class="ui button" type="submit">Save</button>
 </form>

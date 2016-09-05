@@ -12,5 +12,5 @@
     </c:forEach>
   </select><br>
 
-  <input type="submit" value="Go">
+  <button class="ui button" type="submit">Go</button>
 </form>

@@ -22,5 +22,5 @@
     <input type="radio" name="person[employed]" value="true" ${person.employed ? 'checked' : ''}> Yes
     <input type="radio" name="person[employed]" value="false" ${person.employed ? '' : 'checked'}> No<br>
   </fieldset>
-  <input type="submit" value="Save">
+  <button class="ui button" type="submit">Save</button>
 </form>
