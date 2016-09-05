@@ -13,6 +13,10 @@
       <td><c:out value="${person.gwa}"/></td>
     </c:when>
   </c:choose>
-  <td><a href="/persons/${person.personId}/edit">Edit</a></td>
-  <td><a href="/persons/${person.personId}/delete">Delete</a></td>
+  <td><a class="ui primary icon button" title="Edit" href="/persons/${person.personId}/edit">
+    <i class="ui edit icon">
+  </a></td>
+  <td><a class="ui primary icon button" title="Delete" href="/persons/${person.personId}/delete">
+    <i class="ui trash outline icon">
+  </a></td>
 </tr>
