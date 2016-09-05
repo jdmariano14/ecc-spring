@@ -4,7 +4,7 @@
 <%@attribute name="persons" required="true" type="java.util.List"%>
 <%@attribute name="queryProperty" type="java.lang.String"%>
 
-<table class="ui collapsing celled striped table">
+<table class="ui unstackable collapsing celled striped table">
   <thead>
     <th>Person</th>
     <c:choose>
