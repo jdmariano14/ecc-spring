@@ -15,7 +15,7 @@ import com.exist.ecc.person.app.controller.ContactController;
 import com.exist.ecc.person.app.controller.PersonController;
 import com.exist.ecc.person.app.controller.PersonRoleController;
 
-import com.exist.ecc.person.app.util.FlashUtil;
+import com.exist.ecc.person.app.flash.FlashUtil;
  
 public class PersonRouter extends AppRouter {
 

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import com.exist.ecc.person.app.util.FlashUtil;
+import com.exist.ecc.person.app.flash.FlashUtil;
 
 import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dao.Transactions;
@@ -113,6 +113,7 @@ public class ContactController extends AppController {
       PersonWrapper personWrapper = new PersonWrapper(contact.getPerson());
 
       personId = personWrapper.getPersonId();
+
 
       req.setAttribute("contact", contact);
       req.setAttribute("person", personWrapper);

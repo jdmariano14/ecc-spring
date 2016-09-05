@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.exist.ecc.person.app.controller.AppController;
 
-import com.exist.ecc.person.app.util.FlashUtil;
+import com.exist.ecc.person.app.flash.FlashUtil;
  
 public class AppRouter extends HttpServlet {
 

@@ -3,8 +3,8 @@
 <%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@attribute name="headTitle" fragment="true"%>
 <%@attribute name="bodyTitle" fragment="true"%>
-<%@attribute name="_notice" type="java.lang.String"%>
-<%@attribute name="_error" type="java.lang.String"%>
+<%@attribute name="_notice" type="com.exist.ecc.person.app.flash.Flash"%>
+<%@attribute name="_error" type="com.exist.ecc.person.app.flash.Flash"%>
 
 <!DOCTYPE html>
 <html>
@@ -19,7 +19,7 @@
         <section class="ui segment">
           <h1><jsp:invoke fragment="bodyTitle"/></h1>
         </section>
-        <app:flash notice="${_notice}" error="${_error}"/>
+        <app:flash notice="${_notice.message}" error="${_error.message}"/>
         <jsp:doBody/>
       </div>
     </section>

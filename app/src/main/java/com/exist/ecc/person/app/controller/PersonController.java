@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import com.exist.ecc.person.app.util.FlashUtil;
+import com.exist.ecc.person.app.flash.FlashUtil;
 
 import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dao.Transactions;
@@ -71,7 +71,6 @@ public class PersonController extends AppController {
     try {
       Person person = getNewPerson();
 
-      FlashUtil.clear(req);
       req.setAttribute("person", person);
       req.getRequestDispatcher("/WEB-INF/views/persons/new.jsp")
          .forward(req, res);
@@ -120,8 +119,7 @@ public class PersonController extends AppController {
         personDao.get(personId));
 
       PersonWrapper personWrapper = new PersonWrapper(person);
-
-      FlashUtil.clear(req);
+      
       req.setAttribute("person", personWrapper);
       req.getRequestDispatcher("/WEB-INF/views/persons/show.jsp")
          .forward(req, res);
@@ -143,8 +141,7 @@ public class PersonController extends AppController {
     try {
       final Person person = Transactions.get(dbSession, personDao, () ->
         personDao.get(personId));
-
-      FlashUtil.clear(req);
+      
       req.setAttribute("person", person);
       req.getRequestDispatcher("/WEB-INF/views/persons/edit.jsp")
          .forward(req, res);
@@ -223,8 +220,7 @@ public class PersonController extends AppController {
         default:
           throw new RuntimeException("Invalid query property");
       }
-
-      FlashUtil.clear(req);
+      
       req.setAttribute("property", property);
       req.getRequestDispatcher("/WEB-INF/views/persons/query.jsp")
          .forward(req, res);
