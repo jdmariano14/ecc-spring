@@ -9,9 +9,15 @@
       <div class="column">
         <div class="ui container">
           <h1 class="ui header">ECC Servlet Activity</h1>
-          <nav class="ui two item main menu">
-            <a class="item" href="/persons">Persons</a>
-            <a class="item" href="/roles">Roles</a>
+          <nav class="ui two item labeled icon menu">
+            <a class="item" href="/persons">
+              <i class="users icon"></i>
+              Persons
+            </a>
+            <a class="item" href="/roles">
+              <i class="law icon"></i>
+              Roles
+            </a>
           </nav>
           <app:flash notice="${_notice.message}" error="${_error.message}"/>
         </div>

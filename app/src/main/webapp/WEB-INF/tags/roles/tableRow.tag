@@ -6,7 +6,7 @@
 <tr>
   <td><c:out value="${role.name}"/></td>
   <td><a class="ui primary icon button" title="Edit" href="/roles/${role.roleId}/edit">
-    <i class="ui edit icon">
+    <i class="ui write icon">
   </a></td>
   <td><a class="ui primary icon button" title="Delete" href="/roles/${role.roleId}/delete">
     <i class="ui trash outline icon">

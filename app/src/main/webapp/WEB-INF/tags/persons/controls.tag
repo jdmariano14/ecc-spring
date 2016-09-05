@@ -4,11 +4,11 @@
 <%@attribute name="person" required="true" type="com.exist.ecc.person.core.model.wrapper.PersonWrapper"%>
 
 <a class="ui primary button" href="/persons/${person.personId}/edit">
-  <i class="edit icon"></i>
+  <i class="write icon"></i>
   Edit
 </a>
 <a class="ui primary button" href="/persons/${person.personId}/delete">
-  <i class="trash outline icon"></i>
+  <i class="remove user icon"></i>
   Delete
 </a>
 <app:backButton url="/persons"/>

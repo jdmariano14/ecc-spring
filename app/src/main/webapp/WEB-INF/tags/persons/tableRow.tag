@@ -14,9 +14,9 @@
     </c:when>
   </c:choose>
   <td><a class="ui primary icon button" title="Edit" href="/persons/${person.personId}/edit">
-    <i class="ui edit icon">
+    <i class="ui write icon">
   </a></td>
   <td><a class="ui primary icon button" title="Delete" href="/persons/${person.personId}/delete">
-    <i class="ui trash outline icon">
+    <i class="ui remove user icon">
   </a></td>
 </tr>
