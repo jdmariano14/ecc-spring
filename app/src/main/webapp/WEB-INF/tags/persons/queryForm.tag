@@ -4,13 +4,15 @@
 <%@attribute name="queryProperty" type="java.lang.String"%>
 
 <form class="ui form" name="person_query" action="/persons/query" method="post">
-  <label for="person_query[property]">Query on</label>
-  <select name="person_query[property]">
-    <option value="">Please select a property</option>
-    <c:forEach items="${properties}" var="property">
-      <option value="${property}" ${property eq queryProperty ? 'selected' : ''}><c:out value="${property}"/></option>
-    </c:forEach>
-  </select><br>
-
+  <div class="field">
+    <label for="person_query[property]">Query on</label>
+    <select name="person_query[property]">
+      <option value="">Please select a property</option>
+      <c:forEach items="${properties}" var="property">
+        <option value="${property}" ${property eq queryProperty ? 'selected' : ''}><c:out value="${property}"/></option>
+      </c:forEach>
+    </select>
+  </div>
+  
   <button class="ui button" type="submit">Go</button>
 </form>
