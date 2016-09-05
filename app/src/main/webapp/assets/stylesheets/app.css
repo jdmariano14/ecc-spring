@@ -9,3 +9,8 @@
 .error {
   color: red;
 }
+
+.ui.menu.navbar {
+  border-radius: 0;
+  margin: 1rem 0;
+}
