@@ -5,9 +5,11 @@
 
 <table class="ui unstackable collapsing celled striped table">
   <thead>
-    <th>Role</th>
-    <th>Edit</th>
-    <th>Delete</th>
+    <tr>
+      <th>Role</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
   </thead>
   <tbody>
   <c:forEach items="${roles}" var="role">

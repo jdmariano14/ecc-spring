@@ -6,15 +6,9 @@
 <%@attribute name="_notice" type="com.exist.ecc.person.app.flash.Flash"%>
 <%@attribute name="_error" type="com.exist.ecc.person.app.flash.Flash"%>
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>ECC | <jsp:invoke fragment="headTitle"/></title>
-    <app:importSemanticCss/>
-    <link rel="stylesheet" href="/assets/stylesheets/app.css"/>
-  </head>
-  <body>
+<app:boilerplate>
+  <jsp:attribute name="title">ECC | <jsp:invoke fragment="headTitle"/></jsp:attribute>
+  <jsp:body>
     <app:navbar/>
     <section class="ui container">
       <div class="ui segments">
@@ -25,7 +19,5 @@
         <jsp:doBody/>
       </div>
     </section>
-    <app:importJQuery/>
-    <app:importSemanticJs/>
-  </body>
-</html>
+  </jsp:body>
+</app:boilerplate>

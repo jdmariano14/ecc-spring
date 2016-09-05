@@ -6,17 +6,19 @@
 
 <table class="ui unstackable collapsing celled striped table">
   <thead>
-    <th>Person</th>
-    <c:choose>
-      <c:when test="${queryProperty eq 'Date hired'}">
-        <th>Date hired</th>
-      </c:when>
-      <c:when test="${queryProperty eq 'GWA'}">
-        <th>GWA</th>
-      </c:when>
-    </c:choose>
-    <th>Edit</th>
-    <th>Delete</th>
+    <tr>
+      <th>Person</th>
+      <c:choose>
+        <c:when test="${queryProperty eq 'Date hired'}">
+          <th>Date hired</th>
+        </c:when>
+        <c:when test="${queryProperty eq 'GWA'}">
+          <th>GWA</th>
+        </c:when>
+      </c:choose>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
   </thead>
   <tbody>
   <c:forEach items="${persons}" var="person">
