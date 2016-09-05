@@ -20,8 +20,8 @@
       <div class="ui segments">
         <section class="ui segment">
           <h1><jsp:invoke fragment="bodyTitle"/></h1>
+          <app:flash notice="${_notice.message}" error="${_error.message}"/>
         </section>
-        <app:flash notice="${_notice.message}" error="${_error.message}"/>
         <jsp:doBody/>
       </div>
     </section>

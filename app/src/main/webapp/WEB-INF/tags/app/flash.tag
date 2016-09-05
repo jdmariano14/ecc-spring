@@ -3,11 +3,14 @@
 <%@attribute name="notice" type="java.lang.String"%>
 <%@attribute name="error" type="java.lang.String"%>
 
-<c:if test="${not empty notice or not empty error}">
-  <section class="ui segment">
-    <p class="flash">
-      <span class="notice"><c:out value="${notice}"/></span>
-      <span class="error"><c:out value="${error}"/></span>
-    </p>
-  </section>
+<c:if test="${not empty notice}">
+  <div class="ui success message">
+    <div class="header"><c:out value="${notice}"/></div>
+  </div>
+</c:if>
+
+<c:if test="${not empty error}">
+  <div class="ui error message">
+    <div class="header"><c:out value="${error}"/></div>
+  </div>
 </c:if>
