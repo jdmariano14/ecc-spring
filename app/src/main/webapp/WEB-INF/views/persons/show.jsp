@@ -8,8 +8,5 @@
   <jsp:attribute name="bodyTitle"><c:out value="${person.name.fullName}"/></jsp:attribute>
   <jsp:body>
     <persons:show person="${person}"/>
-    <section class="ui segment">
-      <p><a href="/persons">Back</a></p>
-    </section>
   </jsp:body>
 </app:layout>

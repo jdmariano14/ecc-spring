@@ -64,6 +64,8 @@
       <label title="Descending order">desc</label>
     </div>
   </div>
-
-  <button class="ui button" type="submit">Go</button>
+  <button class="ui primary button" type="submit">
+    <i class="ui search icon"></i>
+    Go
+  </button>
 </form>

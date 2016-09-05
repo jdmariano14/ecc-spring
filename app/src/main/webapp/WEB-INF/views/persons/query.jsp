@@ -18,8 +18,5 @@
                           maxBigDecimal="${maxBigDecimal}"
                           order="${order}"/>
     </section>
-    <section class="ui segment">
-      <p><a href="/persons">Back</a></p>
-    </section>
   </jsp:body>
 </app:layout>

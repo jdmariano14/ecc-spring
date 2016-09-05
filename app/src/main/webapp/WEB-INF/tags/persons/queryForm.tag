@@ -13,7 +13,6 @@
       </c:forEach>
     </select>
   </div>
-  
   <button class="ui primary button" type="submit">
     <i class="ui search icon"></i>
     Go

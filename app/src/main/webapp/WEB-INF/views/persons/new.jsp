@@ -8,10 +8,7 @@
   <jsp:attribute name="bodyTitle">New Person</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
-      <persons:form person="${person}" url="/persons"/>
-    </section>
-    <section class="ui segment">
-      <p><a href="/persons">Back</a></p>
+      <persons:form person="${person}" url="/persons" backUrl="/persons"/>
     </section>
   </jsp:body>
 </app:layout>

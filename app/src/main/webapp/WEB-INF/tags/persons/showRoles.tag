@@ -14,5 +14,8 @@
     </li>
   </c:forEach>
   </ul>
-  <p><a href="/persons/${person.personId}/roles/new">Grant role</p>
+  <p><a class="ui primary button" href="/persons/${person.personId}/roles/new">
+    <i class="plus icon"></i>
+    Grant role
+  </a></p>
 </section>
