@@ -5,7 +5,7 @@
 
 <app:layout>
   <jsp:attribute name="headTitle">Persons | New</jsp:attribute>
-  <jsp:attribute name="bodyTitle">Persons - New</jsp:attribute>
+  <jsp:attribute name="bodyTitle">New Person</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
       <persons:form person="${person}" url="/persons"/>

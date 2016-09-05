@@ -4,8 +4,8 @@
 <%@taglib prefix="roles" tagdir="/WEB-INF/tags/roles"%>
 
 <app:layout>
-  <jsp:attribute name="headTitle">Roles | Home</jsp:attribute>
-  <jsp:attribute name="bodyTitle">Roles - Home</jsp:attribute>
+  <jsp:attribute name="headTitle">Roles</jsp:attribute>
+  <jsp:attribute name="bodyTitle">Roles</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
       <roles:table roles="${roles}"/>

@@ -5,7 +5,7 @@
 
 <app:layout>
   <jsp:attribute name="headTitle">Persons | Query Result</jsp:attribute>
-  <jsp:attribute name="bodyTitle">Persons - Query Result</jsp:attribute>
+  <jsp:attribute name="bodyTitle">Person Query Result</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
       <persons:queryForm properties="${properties}" queryProperty="${queryProperty}"/>

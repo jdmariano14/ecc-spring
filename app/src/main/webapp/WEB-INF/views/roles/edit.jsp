@@ -4,8 +4,8 @@
 <%@taglib prefix="roles" tagdir="/WEB-INF/tags/roles"%>
 
 <app:layout>
-  <jsp:attribute name="headTitle">Roles | Edit</jsp:attribute>
-  <jsp:attribute name="bodyTitle">Roles - Edit</jsp:attribute>
+  <jsp:attribute name="headTitle"><c:out value="${role.name}"/> | Edit</jsp:attribute>
+  <jsp:attribute name="bodyTitle">Edit Role</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
       <roles:form role="${role}" url="/roles/${role.roleId}"/>

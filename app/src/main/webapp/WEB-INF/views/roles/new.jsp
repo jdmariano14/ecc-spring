@@ -5,7 +5,7 @@
 
 <app:layout>
   <jsp:attribute name="headTitle">Roles | New</jsp:attribute>
-  <jsp:attribute name="bodyTitle">Roles - New</jsp:attribute>
+  <jsp:attribute name="bodyTitle">New Role</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
       <roles:form role="${role}" url="/roles"/>

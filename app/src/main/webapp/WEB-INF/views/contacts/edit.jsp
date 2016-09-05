@@ -4,8 +4,8 @@
 <%@taglib prefix="contacts" tagdir="/WEB-INF/tags/contacts"%>
 
 <app:layout>
-  <jsp:attribute name="headTitle">Contacts | <c:out value="${person.name.shortName}"/> | Edit</jsp:attribute>
-  <jsp:attribute name="bodyTitle">Contacts - <c:out value="${person.name.shortName}"/> - Edit</jsp:attribute>
+  <jsp:attribute name="headTitle"><c:out value="${person.name.shortName}"/> | Contacts | Edit</jsp:attribute>
+  <jsp:attribute name="bodyTitle">Edit Contact</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
       <contacts:form contact="${contact}" contactTypes="${contactTypes}" url="/contacts/${contact.contactId}"/>

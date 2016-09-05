@@ -4,8 +4,8 @@
 <%@taglib prefix="persons" tagdir="/WEB-INF/tags/persons"%>
 
 <app:layout>
-  <jsp:attribute name="headTitle">Persons | Edit</jsp:attribute>
-  <jsp:attribute name="bodyTitle">Persons - Edit</jsp:attribute>
+  <jsp:attribute name="headTitle"><c:out value="${personWrapper.name.shortName}"/> | Edit</jsp:attribute>
+  <jsp:attribute name="bodyTitle">Edit Person</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
       <persons:form person="${person}" url="/persons/${person.personId}"/>

@@ -139,10 +139,13 @@ public class PersonController extends AppController {
     long personId = getPersonId(req.getRequestURI());
 
     try {
-      final Person person = Transactions.get(dbSession, personDao, () ->
+      Person person = Transactions.get(dbSession, personDao, () ->
         personDao.get(personId));
+
+      PersonWrapper personWrapper = new PersonWrapper(person);
       
       req.setAttribute("person", person);
+      req.setAttribute("personWrapper", personWrapper);
       req.getRequestDispatcher("/WEB-INF/views/persons/edit.jsp")
          .forward(req, res);
     } catch (Exception e) {
