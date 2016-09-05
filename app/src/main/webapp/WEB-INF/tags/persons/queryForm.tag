@@ -1,7 +1,9 @@
 <%@tag pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@attribute name="properties" type="java.util.List"%>
 <%@attribute name="queryProperty" type="java.lang.String"%>
+<%@attribute name="backUrl" type="java.lang.String"%>
 
 <form class="ui form" name="person_query" action="/persons/query" method="post">
   <div class="field">
@@ -13,8 +15,13 @@
       </c:forEach>
     </select>
   </div>
-  <button class="ui primary button" type="submit">
-    <i class="ui search icon"></i>
-    Go
-  </button>
+  <p>
+    <button class="ui primary button" type="submit">
+      <i class="search icon"></i>
+      Go
+    </button>
+    <c:if test="${not empty backUrl}">
+      <app:backButton url="${backUrl}"/>
+    </c:if>
+  </p>
 </form>

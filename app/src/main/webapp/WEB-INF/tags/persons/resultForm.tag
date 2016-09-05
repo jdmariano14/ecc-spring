@@ -1,5 +1,6 @@
 <%@tag pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@attribute name="property" type="java.lang.String"%>
 <%@attribute name="minString" type="java.lang.String"%>
 <%@attribute name="maxString" type="java.lang.String"%>
@@ -9,6 +10,7 @@
 <%@attribute name="minBigDecimal" type="java.lang.String"%>
 <%@attribute name="maxBigDecimal" type="java.lang.String"%>
 <%@attribute name="order" type="java.lang.String"%>
+<%@attribute name="backUrl" type="java.lang.String"%>
 
 <form class="ui form" name="person_result" action="/persons/result" method="post">
   <h4 class="ui dividing header"><c:out value="${property}"/></h4>
@@ -64,8 +66,13 @@
       <label title="Descending order">desc</label>
     </div>
   </div>
-  <button class="ui primary button" type="submit">
-    <i class="ui search icon"></i>
-    Go
-  </button>
+  <p>
+    <button class="ui primary button" type="submit">
+      <i class="search icon"></i>
+      Go
+    </button>
+    <c:if test="${not empty backUrl}">
+      <app:backButton url="${backUrl}"/>
+    </c:if>
+  </p>
 </form>

@@ -16,7 +16,8 @@
                           maxDate="${maxDate}"
                           minBigDecimal="${minBigDecimal}"            
                           maxBigDecimal="${maxBigDecimal}"
-                          order="${order}"/>
+                          order="${order}"
+                          backUrl="/persons"/>
     </section>
   </jsp:body>
 </app:layout>

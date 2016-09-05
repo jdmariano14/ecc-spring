@@ -8,7 +8,7 @@
   <jsp:attribute name="bodyTitle">Person Query Result</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
-      <persons:queryForm properties="${properties}" queryProperty="${queryProperty}"/>
+      <persons:queryForm properties="${properties}" queryProperty="${queryProperty}" backUrl="/persons"/>
     </section>
     <section class="ui segment">
       <persons:table persons="${persons}" queryProperty="${queryProperty}"/>
