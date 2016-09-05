@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
 <%@attribute name="personAddress" required="true" type="com.exist.ecc.person.core.model.Address"%>
 
-<h3 class="ui dividing header">Address</h3>
+<h4 class="ui dividing header">Address</h4>
 <div class="field">
   <label for="person[address[street_address]]">Street</label>
   <input type="text" name="person[address[street_address]]" value="${personAddress.streetAddress}">

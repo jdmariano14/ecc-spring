@@ -8,7 +8,7 @@
   <persons:nameInputs personName="${person.name}"/>
   <persons:addressInputs personAddress="${person.address}"/>
 
-  <h3 class="ui dividing header">Other information</h3>
+  <h4 class="ui dividing header">Other information</h4>
   <div class="three fields">
     <div class="field">
       <label for="person[birth_date]">Birth date</label>

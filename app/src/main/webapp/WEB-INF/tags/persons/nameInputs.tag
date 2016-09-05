@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
 <%@attribute name="personName" required="true" type="com.exist.ecc.person.core.model.Name"%>
 
-<h3 class="ui dividing header">Name</h3>
+<h4 class="ui dividing header">Name</h4>
 <div class="three fields">
   <div class="field">
     <label for="person[name[first_name]]">First</label>
