@@ -7,8 +7,8 @@
   <thead>
     <tr>
       <th>Role</th>
-      <th>Edit</th>
-      <th>Delete</th>
+      <th class="center aligned">Edit</th>
+      <th class="center aligned">Delete</th>
     </tr>
   </thead>
   <tbody>

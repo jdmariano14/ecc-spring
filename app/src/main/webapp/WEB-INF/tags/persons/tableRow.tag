@@ -13,13 +13,19 @@
       <td><c:out value="${person.gwa}"/></td>
     </c:when>
   </c:choose>
-  <td><a class="ui primary icon button" title="Edit" href="/persons/${person.personId}">
-    <i class="open folder icon">
-  </a></td>
-  <td><a class="ui primary icon button" title="Edit" href="/persons/${person.personId}/edit">
-    <i class="write icon">
-  </a></td>
-  <td><a class="ui primary icon button" title="Delete" href="/persons/${person.personId}/delete">
-    <i class="trash outline icon">
-  </a></td>
+  <td class="center aligned">
+    <a class="ui primary icon button" title="Edit" href="/persons/${person.personId}">
+      <i class="open folder icon"></i>
+    </a>
+  </td>
+  <td class="center aligned">
+    <a class="ui primary icon button" title="Edit" href="/persons/${person.personId}/edit">
+      <i class="write icon"></i>
+    </a>
+  </td>
+  <td class="center aligned">
+    <a class="ui primary icon button" title="Delete" href="/persons/${person.personId}/delete">
+      <i class="trash outline icon"></i>
+    </a>
+  </td>
 </tr>

@@ -16,9 +16,9 @@
           <th>GWA</th>
         </c:when>
       </c:choose>
-      <th>Show</th>
-      <th>Edit</th>
-      <th>Delete</th>
+      <th class="center aligned">Show</th>
+      <th class="center aligned">Edit</th>
+      <th class="center aligned">Delete</th>
     </tr>
   </thead>
   <tbody>
