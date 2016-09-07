@@ -4,7 +4,7 @@
 <%@attribute name="queryProperty" type="java.lang.String"%>
 
 <tr>
-  <td><a href="/persons/${person.personId}"><c:out value="${person.name.formalShortName}"/></a></td>
+  <td><c:out value="${person.name.formalShortName}"/></td>
   <c:choose>
     <c:when test="${queryProperty eq 'Date hired'}">
       <td><c:out value="${person.dateHired}"/></td>
@@ -13,6 +13,9 @@
       <td><c:out value="${person.gwa}"/></td>
     </c:when>
   </c:choose>
+  <td><a class="ui primary icon button" title="Edit" href="/persons/${person.personId}">
+    <i class="ui open folder icon">
+  </a></td>
   <td><a class="ui primary icon button" title="Edit" href="/persons/${person.personId}/edit">
     <i class="ui write icon">
   </a></td>
