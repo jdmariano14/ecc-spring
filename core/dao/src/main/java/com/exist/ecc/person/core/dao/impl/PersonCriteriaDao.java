@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.exist.ecc.person.core.dao.api.PersonDao;
@@ -15,6 +16,10 @@ public class PersonCriteriaDao extends CriteriaDaoImpl<Person, Long>
   implements PersonDao
 {
   
+  public List<Person> getAllById() {
+    return query(c -> c.addOrder(Order.asc("personId")));
+  }
+
   public List<Person> queryLastName(String min, String max, String like, 
                                     boolean desc)
   {
@@ -62,6 +67,4 @@ public class PersonCriteriaDao extends CriteriaDaoImpl<Person, Long>
       return order("gwa", desc).apply(c);
     });
   }
-
-
 }

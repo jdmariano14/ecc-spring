@@ -32,7 +32,7 @@ public class RoleController extends AppController {
 
     try {
       List<Role> roles = Transactions.get(dbSession, roleDao, () ->
-        roleDao.getAll());
+        roleDao.getAllById());
 
       List<RoleWrapper> roleWrappers =
         RoleWrapper.wrapCollection(roles);

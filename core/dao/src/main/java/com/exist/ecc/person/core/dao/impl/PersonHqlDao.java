@@ -13,6 +13,10 @@ public class PersonHqlDao extends HqlDaoImpl<Person, Long>
   implements PersonDao 
 {
 
+  public List<Person> getAllById() {
+    throw new UnsupportedOperationException();
+  }
+
   public List<Person> queryLastName(String min, String max, String like, 
                                     boolean desc)
   {

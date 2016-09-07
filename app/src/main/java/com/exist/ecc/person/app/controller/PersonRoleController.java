@@ -40,7 +40,7 @@ public class PersonRoleController extends AppController {
       Person person = Transactions.get(dbSession, personDao, () ->
         personDao.get(personId));
       List<Role> roles = Transactions.get(dbSession, roleDao, () ->
-        roleDao.getAllById(false));
+        roleDao.getAllGrantable(person));
 
       PersonWrapper personWrapper = new PersonWrapper(person);
       List<RoleWrapper> roleWrappers = RoleWrapper.wrapCollection(roles);

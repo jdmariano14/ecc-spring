@@ -9,6 +9,8 @@ import com.exist.ecc.person.core.model.Person;
 
 public interface PersonDao extends Dao<Person, Long> {
 
+  public abstract List<Person> getAllById();
+
   public abstract List<Person> queryLastName(String min, String max,
                                              String like, boolean desc);
 
