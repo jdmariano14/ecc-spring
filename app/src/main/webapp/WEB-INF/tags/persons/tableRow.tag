@@ -14,12 +14,12 @@
     </c:when>
   </c:choose>
   <td><a class="ui primary icon button" title="Edit" href="/persons/${person.personId}">
-    <i class="ui open folder icon">
+    <i class="open folder icon">
   </a></td>
   <td><a class="ui primary icon button" title="Edit" href="/persons/${person.personId}/edit">
-    <i class="ui write icon">
+    <i class="write icon">
   </a></td>
   <td><a class="ui primary icon button" title="Delete" href="/persons/${person.personId}/delete">
-    <i class="ui trash outline icon">
+    <i class="trash outline icon">
   </a></td>
 </tr>
