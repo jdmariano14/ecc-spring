@@ -9,12 +9,12 @@
   <jsp:body>
     <section class="ui segment">
       <roles:table roles="${roles}"/>
-    </section>
-    <section class="ui segment">
-      <p><a class="ui primary button" href="/roles/new">
-        <i class="plus icon"></i>
-        Add role
-      </a></p>
+      <p>
+        <a class="ui primary button" href="/roles/new">
+          <i class="plus icon"></i>
+          Add role
+        </a>
+      </p>
     </section>
   </jsp:body>
 </app:layout>
