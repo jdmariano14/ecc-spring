@@ -128,9 +128,13 @@ public class RoleController extends AppController {
     long roleId = getRoleId(req.getRequestURI());
 
     try {
-      Transactions.conduct(dbSession, roleDao, () -> {
-        roleDao.delete(roleDao.get(roleId));
-      });
+      Role role = Transactions.get(dbSession, roleDao, () ->
+        roleDao.get(roleId));
+
+      role.getPersons().forEach(p -> p.getRoles().remove(role));
+      role.getPersons().clear();
+
+      Transactions.conduct(dbSession, roleDao, () -> roleDao.delete(role));
 
       FlashUtil.setNotice(req, "Role deleted");
     } catch (Exception e) {

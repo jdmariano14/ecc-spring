@@ -187,9 +187,14 @@ public class PersonController extends AppController {
     long personId = getPersonId(req.getRequestURI());
 
     try {
-      Transactions.conduct(dbSession, personDao, () -> {
-        personDao.delete(personDao.get(personId));
-      });
+      Person person =  Transactions.get(dbSession, personDao, () -> 
+        personDao.get(personId));
+
+      person.getRoles().forEach(r -> r.getPersons().remove(person));
+      person.getRoles().clear();
+
+      Transactions.conduct(dbSession, personDao, () -> 
+        personDao.delete(person));
 
       FlashUtil.setNotice(req, "Person deleted");
     } catch (Exception e) {

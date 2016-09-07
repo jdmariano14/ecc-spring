@@ -52,10 +52,11 @@ public class Person {
   @Column(name = "EMPLOYED")
   private boolean employed;
   
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+             mappedBy = "person")
   private Collection<Contact> contacts;
 
-  @ManyToMany(cascade = CascadeType.ALL)
+  @ManyToMany
   @JoinTable(name = "PERSON_ROLE",
              joinColumns = @JoinColumn(name = "PERSON_ID"), 
              inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))

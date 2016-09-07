@@ -25,7 +25,8 @@ public class Role {
   @Column(name = "NAME")
   private String name;
 
-  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "roles")
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, 
+              mappedBy = "roles")
   private Collection<Person> persons;
 
   public long getRoleId() {
