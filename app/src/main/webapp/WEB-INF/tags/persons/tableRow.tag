@@ -1,5 +1,6 @@
 <%@tag pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
+<%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@attribute name="person" required="true" type="com.exist.ecc.person.core.model.wrapper.PersonWrapper"%>
 <%@attribute name="queryProperty" type="java.lang.String"%>
 
@@ -14,18 +15,12 @@
     </c:when>
   </c:choose>
   <td class="center aligned">
-    <a class="ui primary icon button" title="Edit" href="/persons/${person.personId}">
-      <i class="open folder icon"></i>
-    </a>
+    <app:primaryButton url="/persons/${person.personId}" text="Show ${person.name.shortName}" icon="open folder" iconOnly="true"/>
   </td>
   <td class="center aligned">
-    <a class="ui primary icon button" title="Edit" href="/persons/${person.personId}/edit">
-      <i class="write icon"></i>
-    </a>
+    <app:primaryButton url="/persons/${person.personId}/edit" text="Edit ${person.name.shortName}" icon="write" iconOnly="true"/>
   </td>
   <td class="center aligned">
-    <a class="ui primary icon button" title="Delete" href="/persons/${person.personId}/delete">
-      <i class="trash outline icon"></i>
-    </a>
+    <app:primaryButton url="/persons/${person.personId}/delete" text="Delete ${person.name.shortName}" icon="trash outline" iconOnly="true"/>
   </td>
 </tr>

@@ -9,12 +9,7 @@
   <jsp:body>
     <section class="ui segment">
       <roles:table roles="${roles}"/>
-      <p>
-        <a class="ui primary button" href="/roles/new">
-          <i class="plus icon"></i>
-          Add role
-        </a>
-      </p>
+      <p><app:primaryButton url="/roles/new" text="Add role" icon="plus"/></p>
     </section>
   </jsp:body>
 </app:layout>

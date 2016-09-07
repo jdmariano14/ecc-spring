@@ -14,8 +14,5 @@
     </li>
   </c:forEach>
   </ul>
-  <p><a class="ui primary button" href="/persons/${person.personId}/roles/new">
-    <i class="plus icon"></i>
-    Grant role
-  </a></p>
+  <p><app:primaryButton url="/persons/${person.personId}/roles/new" text="Grant role" icon="plus"/></p>
 </section>

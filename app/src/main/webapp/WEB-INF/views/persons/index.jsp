@@ -12,10 +12,7 @@
     </section>
     <section class="ui segment">
       <persons:table persons="${persons}" queryProperty="${queryProperty}"/>
-      <p><a class="ui primary button" href="/persons/new">
-        <i class="plus icon"></i>
-        Add person
-      </a></p>
+      <p><app:primaryButton url="/persons/new" text="Add person" icon="plus"/></p>
     </section>
   </jsp:body>
 </app:layout>

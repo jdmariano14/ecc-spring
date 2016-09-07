@@ -3,12 +3,6 @@
 <%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@attribute name="person" required="true" type="com.exist.ecc.person.core.model.wrapper.PersonWrapper"%>
 
-<a class="ui primary button" href="/persons/${person.personId}/edit">
-  <i class="write icon"></i>
-  Edit
-</a>
-<a class="ui primary button" href="/persons/${person.personId}/delete">
-  <i class="trash outline icon"></i>
-  Delete
-</a>
+<app:primaryButton url="/persons/${person.personId}/edit" text="Edit" icon="write"/>
+<app:primaryButton url="/persons/${person.personId}/delete" text="Delete" icon="trash outline"/>
 <app:backButton url="/persons"/>

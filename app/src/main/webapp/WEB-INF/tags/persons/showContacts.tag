@@ -15,8 +15,5 @@
     </li>
   </c:forEach>
   </ul>
-  <p><a class="ui primary button" href="/persons/${person.personId}/contacts/new">
-    <i class="plus icon"></i>
-    Add contact
-  </a></p>
+  <p><app:primaryButton url="/persons/${person.personId}/contacts/new" text="Add contact" icon="plus"/></p>
 </section>

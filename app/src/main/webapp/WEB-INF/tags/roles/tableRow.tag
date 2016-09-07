@@ -1,18 +1,15 @@
 <%@tag pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@taglib prefix="roles" tagdir="/WEB-INF/tags/roles"%>
 <%@attribute name="role" required="true" type="com.exist.ecc.person.core.model.wrapper.RoleWrapper"%>
 
 <tr>
   <td><c:out value="${role.name}"/></td>
   <td class="center aligned">
-    <a class="ui primary icon button" title="Edit" href="/roles/${role.roleId}/edit">
-      <i class="ui write icon"></i>
-    </a>
+    <app:primaryButton url="/roles/${role.roleId}/edit" text="Edit ${role.name}" icon="write" iconOnly="${true}"/>
   </td>
   <td class="center aligned">
-    <a class="ui primary icon button" title="Delete" href="/roles/${role.roleId}/delete">
-      <i class="ui trash outline icon"></i>
-    </a>
+    <app:primaryButton url="/roles/${role.roleId}/delete" text="Delete ${role.name}" icon="trash outline" iconOnly="${true}"/>
   </td>
 </tr>
