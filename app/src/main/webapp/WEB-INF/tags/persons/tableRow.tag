@@ -17,6 +17,6 @@
     <i class="ui write icon">
   </a></td>
   <td><a class="ui primary icon button" title="Delete" href="/persons/${person.personId}/delete">
-    <i class="ui remove user icon">
+    <i class="ui trash outline icon">
   </a></td>
 </tr>

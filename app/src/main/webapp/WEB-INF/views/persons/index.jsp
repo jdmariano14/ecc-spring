@@ -13,7 +13,7 @@
     <section class="ui segment">
       <persons:table persons="${persons}" queryProperty="${queryProperty}"/>
       <p><a class="ui primary button" href="/persons/new">
-        <i class="add user icon"></i>
+        <i class="plus icon"></i>
         Add person
       </a></p>
     </section>

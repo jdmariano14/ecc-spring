@@ -8,7 +8,7 @@
   Edit
 </a>
 <a class="ui primary button" href="/persons/${person.personId}/delete">
-  <i class="remove user icon"></i>
+  <i class="trash outline icon"></i>
   Delete
 </a>
 <app:backButton url="/persons"/>
