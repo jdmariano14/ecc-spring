@@ -32,7 +32,7 @@ import com.exist.ecc.person.core.model.wrapper.PersonWrapper;
 
 import com.exist.ecc.person.util.BigDecimalUtil;
 import com.exist.ecc.person.util.DateUtil;
-
+  
 public class PersonController extends AppController {
 
   private final PersonDao personDao = new PersonCriteriaDao();

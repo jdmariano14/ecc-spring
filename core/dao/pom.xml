@@ -1,15 +1,14 @@
-
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.exist.ecc</groupId>
-    <artifactId>ecc-servlet-core</artifactId>
+    <artifactId>ecc-spring-core</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>com.exist.ecc</groupId>
-  <artifactId>ecc-servlet-core-dao</artifactId>
+  <artifactId>ecc-spring-core-dao</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>dao</name>
   <url>http://maven.apache.org</url>
@@ -19,15 +18,15 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-core-model</artifactId>
+      <artifactId>ecc-spring-core-model</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-infra-persistence</artifactId>
+      <artifactId>ecc-spring-infra-persistence</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-util</artifactId>
+      <artifactId>ecc-spring-util</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

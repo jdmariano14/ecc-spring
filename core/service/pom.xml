@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.exist.ecc</groupId>
-    <artifactId>ecc-servlet-core</artifactId>
+    <artifactId>ecc-spring-core</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>com.exist.ecc</groupId>
-  <artifactId>ecc-servlet-core-service</artifactId>
+  <artifactId>ecc-spring-core-service</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>service</name>
   <url>http://maven.apache.org</url>
@@ -47,15 +47,15 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-core-dao</artifactId>
+      <artifactId>ecc-spring-core-dao</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-core-model</artifactId>
+      <artifactId>ecc-spring-core-model</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-util</artifactId>
+      <artifactId>ecc-spring-util</artifactId>
     </dependency>
   </dependencies>
 </project>

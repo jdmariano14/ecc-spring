@@ -5,12 +5,12 @@
   
   <parent>
     <groupId>com.exist.ecc</groupId>
-    <artifactId>ecc-servlet</artifactId>
+    <artifactId>ecc-spring</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
   <groupId>com.exist.ecc</groupId>
-  <artifactId>ecc-servlet-app</artifactId>
+  <artifactId>ecc-spring-app</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>app</name>
   <url>http://maven.apache.org</url>
@@ -36,23 +36,23 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-core-dao</artifactId>
+      <artifactId>ecc-spring-core-dao</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-core-model</artifactId>
+      <artifactId>ecc-spring-core-model</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-core-service</artifactId>
+      <artifactId>ecc-spring-core-service</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-infra-persistence</artifactId>
+      <artifactId>ecc-spring-infra-persistence</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-servlet-util</artifactId>
+      <artifactId>ecc-spring-util</artifactId>
     </dependency>
   </dependencies>
 

@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.exist.ecc</groupId>
-  <artifactId>ecc-servlet</artifactId>
+  <artifactId>ecc-spring</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>ecc-servlet</name>
+  <name>ecc-spring</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -111,27 +111,27 @@
 
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>ecc-servlet-core-dao</artifactId>
+        <artifactId>ecc-spring-core-dao</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>ecc-servlet-core-model</artifactId>
+        <artifactId>ecc-spring-core-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>ecc-servlet-core-service</artifactId>
+        <artifactId>ecc-spring-core-service</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>ecc-servlet-infra-persistence</artifactId>
+        <artifactId>ecc-spring-infra-persistence</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>ecc-servlet-util</artifactId>
+        <artifactId>ecc-spring-util</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
