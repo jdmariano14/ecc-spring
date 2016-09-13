@@ -11,6 +11,10 @@
   <url>http://maven.apache.org</url>
 
   <properties>
+    <springVersion>3.1.1.RELEASE</springVersion>
+    <aspectjVersion>1.6.10</aspectjVersion>
+    <slf4jVersion>1.7.21</slf4jVersion>
+
     <jettyVersion>9.4.0.M1</jettyVersion>
     <hibernateValidatorVersion>5.2.4.Final</hibernateValidatorVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,6 +29,83 @@
 
   <dependencyManagement>  
     <dependencies>
+      <!-- Spring -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${springVersion}</version>
+        <exclusions>
+          <!-- Exclude Commons Logging in favor of SLF4j -->
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+           </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${springVersion}</version>
+      </dependency>
+          
+      <!-- AspectJ -->
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjrt</artifactId>
+        <version>${aspectjVersion}</version>
+      </dependency> 
+      
+      <!-- Logging -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4jVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${slf4jVersion}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4jVersion}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.15</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.jms</groupId>
+            <artifactId>jms</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.jdmk</groupId>
+            <artifactId>jmxtools</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.jmx</groupId>
+            <artifactId>jmxri</artifactId>
+          </exclusion>
+        </exclusions>
+        <scope>runtime</scope>
+      </dependency>
+
+      <!-- @Inject -->
+      <dependency>
+        <groupId>javax.inject</groupId>
+        <artifactId>javax.inject</artifactId>
+        <version>1</version>
+      </dependency>
+
+      <!-- Jetty -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
@@ -41,6 +122,7 @@
         <version>${jettyVersion}</version>
       </dependency>
 
+      <!-- Hibernate -->
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
@@ -62,6 +144,7 @@
        <version>${hibernateValidatorVersion}</version>
       </dependency>      
 
+      <!-- el -->
       <dependency>
          <groupId>javax.el</groupId>
          <artifactId>javax.el-api</artifactId>
@@ -72,13 +155,8 @@
          <artifactId>javax.el</artifactId>
          <version>[2.2.4,]</version>
       </dependency>
-      
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>[1.7.21,]</version>
-      </dependency>
 
+      <!-- Apache Commons -->
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
@@ -90,25 +168,14 @@
         <version>[1.9.2,]</version>
       </dependency>
 
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>[1.7.21,]</version>
-      </dependency>
-
+      <!-- Postgres -->
       <dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>[9.1-901-1.jdbc4,]</version>
       </dependency>
 
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>3.8.1</version>
-        <scope>test</scope>
-      </dependency>
-
+      <!-- Project modules -->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>ecc-spring-core-dao</artifactId>
