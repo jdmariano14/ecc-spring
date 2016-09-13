@@ -3,8 +3,6 @@
 <%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@attribute name="headTitle" fragment="true"%>
 <%@attribute name="bodyTitle" fragment="true"%>
-<%@attribute name="_notice" type="com.exist.ecc.person.app.flash.Flash"%>
-<%@attribute name="_error" type="com.exist.ecc.person.app.flash.Flash"%>
 
 <app:boilerplate>
   <jsp:attribute name="title">ECC | <jsp:invoke fragment="headTitle"/></jsp:attribute>
@@ -14,7 +12,6 @@
       <div class="ui segments">
         <section class="ui segment">
           <h1><jsp:invoke fragment="bodyTitle"/></h1>
-          <app:flash notice="${_notice.message}" error="${_error.message}"/>
         </section>
         <jsp:doBody/>
       </div>

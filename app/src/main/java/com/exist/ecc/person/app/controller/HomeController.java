@@ -28,6 +28,13 @@ public class HomeController {
     model.addAttribute("serverTime", formattedDate);
     
     return "app/index";
+  
+    /*
+      Syntax for redirect
+
+      dispatch: return "redirect:persons";
+      absolute path: return "redirect:persons/index.jsp";
+    */
   }
   
 }
