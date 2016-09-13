@@ -52,4 +52,6 @@ public class RoleController {
     return url;
   }
   
+
+  //http://www.concretepage.com/spring/spring-mvc/spring-mvc-modelattribute-annotation-example
 }
