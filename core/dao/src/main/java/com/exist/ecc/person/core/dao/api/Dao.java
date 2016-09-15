@@ -2,7 +2,7 @@ package com.exist.ecc.person.core.dao.api;
 
 import java.util.List;
 
-import java.util.function.UnaryOperator;
+import java.util.function.Supplier;
 
 import org.hibernate.Session;
 import org.hibernate.Criteria;
@@ -24,5 +24,9 @@ public interface Dao<T, I> {
   public abstract void flush();
   
   public abstract void clear();
+
+  public abstract void conduct(Runnable action);
+
+  public abstract <R> R extract(Supplier<R> supplier);
 
 }

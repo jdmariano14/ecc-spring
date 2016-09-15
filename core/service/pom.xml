@@ -46,6 +46,10 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>ecc-spring-core-dto</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>ecc-spring-core-model</artifactId>
     </dependency>
     <dependency>
