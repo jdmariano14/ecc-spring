@@ -7,7 +7,7 @@ import java.util.function.UnaryOperator;
 import org.hibernate.Session;
 import org.hibernate.Criteria;
 
-public interface CriteriaDao<T> {
+public interface CriteriaDao<T, I> extends Dao<T, I> {
 
   public abstract List<T> query(UnaryOperator<Criteria> crit);
 

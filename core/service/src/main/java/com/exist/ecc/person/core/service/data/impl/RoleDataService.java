@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.exist.ecc.person.core.dao.api.Dao;
+import org.hibernate.criterion.Order;
+
+import com.exist.ecc.person.core.dao.api.CriteriaDao;
 import com.exist.ecc.person.core.dao.impl.CriteriaDaoImpl;
 import com.exist.ecc.person.core.dto.RoleDto;
 import com.exist.ecc.person.core.model.Role;
@@ -12,7 +14,7 @@ import com.exist.ecc.person.core.model.Role;
 public class RoleDataService extends AbstractDataService<RoleDto, Long> {
 
   // @Autowired
-  private Dao<Role, Long> roleDao = new CriteriaDaoImpl();
+  private CriteriaDao<Role, Long> roleDao = new CriteriaDaoImpl();
 
   @Override
   public RoleDto get(Long id) {
@@ -21,7 +23,8 @@ public class RoleDataService extends AbstractDataService<RoleDto, Long> {
   
   @Override
   public List<RoleDto> getAll() {
-    return roleDao.getAll().stream()
+    return roleDao.query(c -> c.addOrder(Order.asc("roleId")))
+                  .stream()
                   .map(r -> r.getDto())
                   .collect(Collectors.toList());
   }
@@ -29,6 +32,7 @@ public class RoleDataService extends AbstractDataService<RoleDto, Long> {
   @Override
   public void save(RoleDto dto) {
     Role role = roleDao.get(dto.getRoleId());
+    
     role.readDto(dto);
     roleDao.save(role);
   }
@@ -36,6 +40,10 @@ public class RoleDataService extends AbstractDataService<RoleDto, Long> {
   @Override
   public void delete(RoleDto dto) {
     Role role = roleDao.get(dto.getRoleId());
+
+    role.getPersons().forEach(p -> p.getRoles().remove(role));
+    role.getPersons().clear();
+
     roleDao.delete(role);
   }
 

@@ -4,23 +4,39 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.hibernate.criterion.Restrictions;
+
+import com.exist.ecc.person.core.dao.api.CriteriaDao;
 import com.exist.ecc.person.core.service.data.api.DataService;
 
 public abstract class AbstractDataService<T, I> implements DataService<T, I> {
 /*
-  public void updateSet(Set<T> oldSet,
-                        Set<I> newSet,
-                        Function<T, I> idMethod,
-                        Dao<T, I> dao) 
+  public <R> void updateSet(Set<R> oldSet,
+                            Set<I> newIdSet,
+                            Function<R, I> idMethod,
+                            String idString,
+                            CriteriaDao<T, I> dao)
   {
     Set<I> oldIdSet = oldSet.stream()
-                             .map(idMethod)
-                             .collect(Collectors.toSet());
+                            .map(idMethod)
+                            .collect(Collectors.toSet());
 
-    Set<I> addedIdSet = newSet.removeAll(oldSet);
-    Set<I> removedIdSet = oldSet.removeAll(newSet);
+    Set<I> addedIdSet = newIdSet.removeAll(oldSet);
+    Set<I> removedIdSet = oldSet.removeAll(newIdSet);
 
-    //dao.get(addedIdSet)
+    Set<R> addedSet =
+      dao.query(c -> c.add(Restrictions.in(idString, addedIdSet)));
+
+    Set<R> removedSet =
+      dao.query(c -> c.add(Restrictions.in(idString, removedIdSet)));
+
+    for (R added : addedSet) {
+      oldSet.add(added);
+    }
+
+    for (R removed : removedSet) {
+      oldSet.remove(removed);
+    }
 
   }
 */

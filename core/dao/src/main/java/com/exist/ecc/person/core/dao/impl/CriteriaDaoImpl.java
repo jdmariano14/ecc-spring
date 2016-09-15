@@ -12,7 +12,7 @@ import org.hibernate.criterion.Order;
 import com.exist.ecc.person.core.dao.api.CriteriaDao;
 
 public class CriteriaDaoImpl<T, I extends Serializable> 
-  extends AbstractDao<T, I> implements CriteriaDao<T>
+  extends AbstractDao<T, I> implements CriteriaDao<T, I>
 {
 
   @Override

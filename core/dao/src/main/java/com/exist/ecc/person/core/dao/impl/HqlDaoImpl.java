@@ -10,7 +10,7 @@ import org.hibernate.Query;
 import com.exist.ecc.person.core.dao.api.HqlDao;
 
 public class HqlDaoImpl<T, I extends Serializable> 
-  extends AbstractDao<T, I> implements HqlDao<T>
+  extends AbstractDao<T, I> implements HqlDao<T, I>
 {
 
   @Override
