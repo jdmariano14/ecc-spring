@@ -52,7 +52,7 @@ public class Person {
   @Column(name = "EMPLOYED")
   private boolean employed;
   
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+  @OneToMany(cascade = CascadeType.ALL,
              mappedBy = "person")
   private Collection<Contact> contacts;
 
