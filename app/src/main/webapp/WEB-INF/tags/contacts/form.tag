@@ -11,8 +11,8 @@
 <form class="ui form" name="contact" action="${url}" method="post">
   <c:if test="${contact.contactId le 0}">
     <div class="four wide field">
-      <label for="contact[type]">Type</label>
-      <select name="contact[type]">
+      <label for="contactType">Type</label>
+      <select name="contactType">
         <option value="">Please select a type</option>
         <c:forEach items="${contactTypes}" var="contactType">
           <option value="${contactType}"><c:out value="${contactType}"/></option>
@@ -20,9 +20,12 @@
       </select>
     </div>
   </c:if>
+  <div class="hidden field">
+    <input type="hidden" name="personId" value="${contact.person.personId}"><br>
+  </div>
   <div class="field">
-    <label for="contact[info]">Value</label>
-    <input type="text" name="contact[info]" value="${contact.info}"><br>
+    <label for="info">Value</label>
+    <input type="text" name="info" value="${contact.info}"><br>
   </div>
   <p>
     <button class="ui primary button" type="submit">

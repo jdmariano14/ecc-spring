@@ -103,9 +103,7 @@ public class RoleController {
     Session dbSession = Sessions.getSession();
 
     try {
-      if (role.getRoleId() == roleId) {
-        Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role)); 
-      }
+      Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role)); 
     } catch (Exception e) {
 
     } finally {
