@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import org.hibernate.Session;
@@ -16,8 +17,11 @@ import org.hibernate.Session;
 import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dao.Transactions;
 import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
+import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 
+import com.exist.ecc.person.core.model.Role;
 import com.exist.ecc.person.core.model.Person;
+import com.exist.ecc.person.core.model.wrapper.RoleWrapper;
 import com.exist.ecc.person.core.model.wrapper.PersonWrapper;
 
 @Controller
@@ -26,6 +30,9 @@ public class PersonController {
 
   @Autowired
   private PersonCriteriaDao personDao;
+
+  @Autowired
+  private RoleCriteriaDao roleDao;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String index(Locale locale, Model model) {
@@ -43,6 +50,7 @@ public class PersonController {
       model.addAttribute("persons", personWrappers);
       path = "persons/index";
     } catch (Exception e) {
+      e.printStackTrace();
       path = "redirect:/";
     } finally {
       dbSession.close();
@@ -66,6 +74,7 @@ public class PersonController {
       model.addAttribute("person", personWrapper);
       path = "persons/show";
     } catch (Exception e) {
+      e.printStackTrace();
       path = "redirect:/persons";
     } finally {
       dbSession.close();
@@ -156,10 +165,96 @@ public class PersonController {
       Transactions.conduct(dbSession, personDao, () ->
         personDao.delete(person));
     } catch (Exception e) {
-
+      e.printStackTrace();
     } finally {
       dbSession.close();
       path = "redirect:/persons";
+    }
+
+    return path;
+  }
+
+  @RequestMapping(value = "/{personId}/roles/new", method = RequestMethod.GET)
+  public String newRole(Model model, @PathVariable Long personId) {
+    String path = null;
+    
+    Session dbSession = Sessions.getSession();
+
+    try {
+      Person person = Transactions.get(dbSession, personDao, () ->
+        personDao.get(personId));
+      List<Role> roles = Transactions.get(dbSession, roleDao, () ->
+        roleDao.getAllGrantable(person));
+
+      PersonWrapper personWrapper = new PersonWrapper(person);
+      List<RoleWrapper> roleWrappers = RoleWrapper.wrapCollection(roles);
+
+      model.addAttribute("person", personWrapper);
+      model.addAttribute("roles", roleWrappers);
+      path = "person_roles/new";
+    } catch (Exception e) {
+      e.printStackTrace();
+      path = "redirect:/persons/" + personId;
+    } finally {
+      dbSession.close();
+    }
+
+    return path;
+  }
+
+
+  @RequestMapping(value = "/{personId}/roles", method = RequestMethod.POST)
+  public String createRole(@PathVariable Long personId, 
+    @RequestParam("roleId") Long roleId)
+  {
+    String path = null;
+    
+    Session dbSession = Sessions.getSession();
+
+    try {
+      Person person = Transactions.get(dbSession, personDao, () ->
+        personDao.get(personId));
+      Role role = Transactions.get(dbSession, roleDao, () ->
+        roleDao.get(roleId));
+
+      person.getRoles().add(role);
+
+      Transactions.conduct(dbSession, personDao, () ->
+        personDao.save(person));
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      dbSession.close();
+      path = "redirect:/persons/" + personId;
+    }
+
+    return path;
+  }
+
+  @RequestMapping(value = "/{personId}/roles/{roleId}/delete", 
+                  method = RequestMethod.GET)
+  public String deleteRole(@PathVariable Long personId, 
+    @PathVariable Long roleId) 
+  {
+    String path = null;
+    
+    Session dbSession = Sessions.getSession();
+
+    try {
+      Person person = Transactions.get(dbSession, personDao, () ->
+        personDao.get(personId));
+      Role role = Transactions.get(dbSession, roleDao, () ->
+        roleDao.get(roleId));
+
+      person.getRoles().remove(role);
+
+      Transactions.conduct(dbSession, personDao, () ->
+        personDao.save(person));
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      dbSession.close();
+      path = "redirect:/persons/" + personId;
     }
 
     return path;

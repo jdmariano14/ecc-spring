@@ -8,8 +8,8 @@
 
 <form class="ui form" name="person_role" action="${url}" method="post">
   <div class="field">
-    <label for="person_role[role_id]">Role</label>
-    <select name="person_role[role_id]">
+    <label for="roleId">Role</label>
+    <select name="roleId">
       <option value="-1">Please select a role</option>
       <c:forEach items="${roles}" var="role">
         <option value="${role.roleId}"><c:out value="${role.name}"/></option>
