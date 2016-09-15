@@ -126,6 +126,9 @@ public class RoleController {
       Role role = Transactions.get(dbSession, roleDao, () ->
         roleDao.get(roleId));
 
+      role.getPersons().forEach(p -> p.getRoles().remove(role));
+      role.getPersons().clear();
+
       Transactions.conduct(dbSession, roleDao, () -> roleDao.delete(role));
     } catch (Exception e) {
 
