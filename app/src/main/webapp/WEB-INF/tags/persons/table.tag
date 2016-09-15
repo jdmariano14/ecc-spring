@@ -9,10 +9,10 @@
     <tr>
       <th>Person</th>
       <c:choose>
-        <c:when test="${queryProperty eq 'Date hired'}">
+        <c:when test="${selectedProperty eq 'Date hired'}">
           <th>Date hired</th>
         </c:when>
-        <c:when test="${queryProperty eq 'GWA'}">
+        <c:when test="${selectedProperty eq 'GWA'}">
           <th>GWA</th>
         </c:when>
       </c:choose>

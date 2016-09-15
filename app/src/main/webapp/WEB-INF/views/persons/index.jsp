@@ -8,10 +8,10 @@
   <jsp:attribute name="bodyTitle">Persons</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
-      <persons:queryForm properties="${properties}" queryProperty="${queryProperty}"/>
+      <persons:queryForm queryProperties="${queryProperties}" selectedProperty="${selectedProperty}"/>
     </section>
     <section class="ui segment">
-      <persons:table persons="${persons}" queryProperty="${queryProperty}"/>
+      <persons:table persons="${persons}" queryProperty="${selectedProperty}"/>
       <p><app:primaryButton url="/persons/new" text="Add person" icon="plus"/></p>
     </section>
   </jsp:body>

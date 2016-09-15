@@ -1,18 +1,22 @@
 package com.exist.ecc.person.app.controller;
 
+import java.math.BigDecimal;
+
+import java.text.DateFormat;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
-
-import  org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +35,9 @@ import com.exist.ecc.person.core.model.*;
 import com.exist.ecc.person.core.model.wrapper.RoleWrapper;
 import com.exist.ecc.person.core.model.wrapper.PersonWrapper;
 
+import com.exist.ecc.person.util.BigDecimalUtil;
+import com.exist.ecc.person.util.DateUtil;
+
 @Controller
 @RequestMapping("/persons")
 public class PersonController {
@@ -47,7 +54,7 @@ public class PersonController {
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String index(Locale locale, Model model) {
     String path = null;
-    
+
     Session dbSession = Sessions.getSession();
 
     try {
@@ -58,6 +65,7 @@ public class PersonController {
         PersonWrapper.wrapCollection(persons);
 
       model.addAttribute("persons", personWrappers);
+      model.addAttribute("queryProperties", getQueryProperties());
       path = "persons/index";
     } catch (Exception e) {
       e.printStackTrace();
@@ -205,13 +213,127 @@ public class PersonController {
     return path;
   }
 
+  @RequestMapping(value = "/query", method = RequestMethod.POST)
+  public String query(Model model, @RequestParam String queryProperty) {
+    String path = null;
+
+    try {
+      switch (queryProperty) {
+        case "Last name":
+          model.addAttribute("minString", "abc");
+          model.addAttribute("maxString", "xyz");
+          model.addAttribute("likeString", "%man");
+          break;
+        case "Date hired":
+          model.addAttribute("minDate", "2000-01-15");
+          model.addAttribute("maxDate", "2015-12-31");
+          break;
+        case "GWA":
+          model.addAttribute("minBigDecimal", "1.0");
+          model.addAttribute("maxBigDecimal", "5.0");
+          break;
+        default:
+          throw new RuntimeException("Invalid query property");
+      }
+      
+      model.addAttribute("queryProperty", queryProperty);
+      path = "persons/query";
+    } catch(Exception e) {
+      e.printStackTrace();
+      path = "redirect:/persons";
+    }
+
+    return path;
+  }
+
+  @RequestMapping(value = "/result", 
+                  method = RequestMethod.POST,
+                  params = {"queryProperty=Last name"})
+  public String resultLastName(Model model,
+                 @RequestParam String minString,
+                 @RequestParam String maxString,
+                 @RequestParam String likeString,
+                 @RequestParam String order)
+  {
+    boolean desc = order.equals("desc");
+
+    Supplier<List<Person>> query = () ->
+      personDao.queryLastName(minString, maxString, likeString, desc);
+
+    return getResultPage(model, query, "Last name");
+  }
+
+  @RequestMapping(value = "/result", 
+                  method = RequestMethod.POST,
+                  params = {"queryProperty=Date hired"})
+  public String resultDateHired(Model model,
+                 @RequestParam String minDate,
+                 @RequestParam String maxDate,
+                 @RequestParam String order)
+  {
+    boolean desc = order.equals("desc");
+
+    DateFormat dateFormat = DateUtil.getDateFormat();
+
+    Date _minDate = DateUtil.parse(dateFormat, minDate);
+    Date _maxDate = DateUtil.parse(dateFormat, maxDate);
+
+    Supplier<List<Person>> query = () ->
+      personDao.queryDateHired(_minDate, _maxDate, desc);
+
+    return getResultPage(model, query, "Date hired");
+  }
+
+  @RequestMapping(value = "/result", 
+                  method = RequestMethod.POST,
+                  params = {"queryProperty=GWA"})
+  public String resultGwa(Model model,
+                 @RequestParam String minBigDecimal,
+                 @RequestParam String maxBigDecimal,
+                 @RequestParam String order)
+  {
+    boolean desc = order.equals("desc");
+
+    BigDecimal _minBigDecimal = BigDecimalUtil.parse(minBigDecimal);
+    BigDecimal _maxBigDecimal = BigDecimalUtil.parse(maxBigDecimal);
+
+    Supplier<List<Person>> query = () ->
+      personDao.queryGwa(_minBigDecimal, _maxBigDecimal, desc);
+
+    return getResultPage(model, query, "GWA");
+  }
+
+  private String getResultPage(Model model, Supplier<List<Person>> query, 
+    String property)
+  {
+    String path = null;
+
+    Session dbSession = Sessions.getSession();
+
+    try {
+      List<Person> persons = Transactions.get(dbSession, personDao, query);
+
+      List<PersonWrapper> personWrappers =
+        PersonWrapper.wrapCollection(persons);
+
+      model.addAttribute("persons", personWrappers);
+      model.addAttribute("selectedProperty", property);
+      model.addAttribute("queryProperties", getQueryProperties());
+
+      path = "persons/result";
+    } catch (Exception e) {
+      e.printStackTrace();
+      path = "redirect:/persons";
+    } finally {
+      dbSession.close();
+    }
+
+    return path;
+  }
+
   @RequestMapping(value = "/{personId}/contacts/new", method = RequestMethod.GET)
   public String newContact(Model model, @PathVariable Long personId) {
     String path = null;
-
-    Set<String> contactTypes = 
-      Stream.of("Email", "Landline", "Mobile")
-            .collect(Collectors.toSet());
     
     Session dbSession = Sessions.getSession();
 
@@ -224,7 +346,7 @@ public class PersonController {
 
       model.addAttribute("person", personWrapper);
       model.addAttribute("contact", contact);
-      model.addAttribute("contactTypes", contactTypes);
+      model.addAttribute("contactTypes", getContactTypes());
       path = "contacts/new";
     } catch (Exception e) {
       e.printStackTrace();
@@ -386,6 +508,22 @@ public class PersonController {
     }
 
     return path;
+  }
+
+  private List<String> getQueryProperties() {
+    List<String> queryProperties = 
+      Stream.of("Last name", "Date hired", "GWA")
+            .collect(Collectors.toList());
+
+    return queryProperties;
+  }
+
+  private Set<String> getContactTypes() {
+    Set<String> contactTypes = 
+      Stream.of("Email", "Landline", "Mobile")
+            .collect(Collectors.toSet());
+
+    return contactTypes;
   }
 
   //http://www.concretepage.com/spring/spring-mvc/spring-mvc-modelattribute-annotation-example

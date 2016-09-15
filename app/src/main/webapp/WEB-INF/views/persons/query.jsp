@@ -8,7 +8,7 @@
   <jsp:attribute name="bodyTitle">Person Query</jsp:attribute>
   <jsp:body>
     <section class="ui segment">
-      <persons:resultForm property="${property}"
+      <persons:resultForm queryProperty="${queryProperty}"
                           minString="${minString}"
                           maxString="${maxString}"
                           likeString="${likeString}"
