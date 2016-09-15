@@ -17,8 +17,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <modules>
+    <module>dao</module>
+    <module>dto</module>
     <module>model</module>
     <module>service</module>
-    <module>dao</module>
   </modules>
 </project>

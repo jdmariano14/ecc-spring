@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.exist.ecc.person.core.dto.ContactDto;
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "CONTACT_TYPE")
@@ -32,28 +34,28 @@ public class Contact {
   @JoinColumn(name = "PERSON_ID")
   private Person person;
 
-  public long getContactId() {
-    return contactId;
+  public long getContactId() { return contactId;}
+  public String getInfo() { return info; }
+  public Person getPerson() { return person; }
+
+  public ContactDto getDto() {
+    return new ContactDto(this.getContactId(),
+                          this.getContactType(),
+                          this.getInfo(),
+                          this.getPersonId());
   }
 
-  public void setContactId(long newContactId) {
-    contactId = newContactId;
+  public void readDto(ContactDto dto) {
+    this.info = dto.getValue();
+    //this.person = personService.get(dto.getContactId());
   }
 
-  public String getInfo() {
-    return info;
+  private String getContactType() {
+    return this.getClass().getSimpleName();
   }
 
-  public void setInfo(String newInfo) {
-    info = newInfo;
-  }
-
-  public Person getPerson() {
-    return person;
-  }
-
-  public void setPerson(Person newPerson) {
-    person = newPerson;
+  private long getPersonId() {
+    return this.getPerson().getPersonId();
   }
 
 }

@@ -49,7 +49,7 @@
     
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ecc-spring-util</artifactId>
+      <artifactId>ecc-spring-core-dto</artifactId>
     </dependency>
   </dependencies>
 </project>

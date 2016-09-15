@@ -183,6 +183,11 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>ecc-spring-core-dto</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>ecc-spring-core-model</artifactId>
         <version>${project.version}</version>
       </dependency>

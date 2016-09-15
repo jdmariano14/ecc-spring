@@ -5,13 +5,11 @@ import javax.persistence.Embeddable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.exist.ecc.person.core.dto.NameDto;
+
 @Embeddable
 public class Name {
   
-  @NotBlank
-  @Column(name = "LAST_NAME")
-  private String lastName;
-
   @NotBlank
   @Column(name = "FIRST_NAME")
   private String firstName;
@@ -19,50 +17,37 @@ public class Name {
   @Column(name = "MIDDLE_NAME")
   private String middleName;
 
+  @NotBlank
+  @Column(name = "LAST_NAME")
+  private String lastName;
+
   @Column(name = "SUFFIX")
   private String suffix;
 
   @Column(name = "TITLE")
   private String title;
   
-  public String getLastName() {
-    return lastName;
+  public String getFirstName() { return firstName; }
+  public String getMiddleName() { return middleName; }
+  public String getLastName() { return lastName; }
+  public String getSuffix() { return suffix; }
+  public String getTitle() { return title; }
+
+  public NameDto getDto() {
+    return new NameDto(this.getFirstName(),
+                       this.getMiddleName(),
+                       this.getLastName(),
+                       this.getSuffix(),
+                       this.getTitle());
   }
 
-  public void setLastName(String newLastName) {
-    lastName = newLastName;
+  public void readDto(NameDto dto) {
+    this.firstName = dto.getFirstName();
+    this.middleName = dto.getMiddleName();
+    this.lastName = dto.getLastName();
+    this.suffix = dto.getSuffix();
+    this.title = dto.getTitle();
   }
 
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public void setFirstName(String newFirstName) {
-    firstName = newFirstName;
-  }
-
-  public String getMiddleName() {
-    return middleName;
-  }
-
-  public void setMiddleName(String newMiddleName) {
-    middleName = newMiddleName;
-  }
-
-  public String getSuffix() {
-    return suffix;
-  }
-
-  public void setSuffix(String newSuffix) {
-    suffix = newSuffix;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String newTitle) {
-    title = newTitle;
-  }
 
 }

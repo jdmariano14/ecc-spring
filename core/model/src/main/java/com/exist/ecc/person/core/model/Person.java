@@ -2,7 +2,8 @@ package com.exist.ecc.person.core.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,9 +18,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+
+import com.exist.ecc.person.core.dto.PersonDto;
 
 @Entity
 @Table(name = "PERSON")
@@ -54,84 +56,60 @@ public class Person {
   
   @OneToMany(cascade = CascadeType.ALL,
              mappedBy = "person")
-  private Collection<Contact> contacts;
+  private Set<Contact> contacts;
 
   @ManyToMany
   @JoinTable(name = "PERSON_ROLE",
              joinColumns = @JoinColumn(name = "PERSON_ID"), 
              inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
-  private Collection<Role> roles;
+  private Set<Role> roles;
 
-  public long getPersonId() {
-    return personId;
-  }
-
-  public void setPersonId(long newPersonId) {
-    personId = newPersonId;
-  }
-
-  public Name getName() {
-    return name;
-  }
-
-  public void setName(Name newName) {
-    name = newName;
-  }
-
-  public Address getAddress() {
-    return address;
-  }
-
-  public void setAddress(Address newAddress) {
-    address = newAddress;
-  }
-
-  public Date getBirthDate() {
-    return birthDate;
-  }
-
-  public void setBirthDate(Date newBirthDate) {
-    birthDate = newBirthDate;
-  }
-
-  public Date getDateHired() {
-    return dateHired;
-  }
-
-  public void setDateHired(Date newDateHired) {
-    dateHired = newDateHired;
-  }
-
-  public BigDecimal getGwa() {
-    return gwa;
-  }
-
-  public void setGwa(BigDecimal newGwa) {
-    gwa = newGwa;
-  }
-
-  public boolean isEmployed() {
-    return employed;
-  }
-
-  public void setEmployed(boolean newEmployed) {
-    employed = newEmployed;
-  }
-
-  public Collection<Contact> getContacts() {
-    return contacts;
-  }
-
-  public void setContacts(Collection<Contact> newContacts) {
-    contacts = newContacts;
-  }
-
-  public Collection<Role> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(Collection<Role> newRole) {
-    roles = newRole;
-  }
+  public long getPersonId() { return personId; }
+  public Name getName() { return name; }
+  public Address getAddress() { return address; }
+  public Date getBirthDate() { return birthDate; }
+  public Date getDateHired() { return dateHired; }
+  public BigDecimal getGwa() { return gwa; }
+  public boolean isEmployed() { return employed; }
+  public Set<Contact> getContacts() { return contacts; }
+  public Set<Role> getRoles() { return roles; }
   
+  public PersonDto getDto() {
+    return new PersonDto(this.getPersonId(),
+                         this.getName().getDto(),
+                         this.getAddress().getDto(),
+                         this.getBirthDate(),
+                         this.getDateHired(),
+                         this.getGwa(),
+                         this.isEmployed(),
+                         this.getContactIds(),
+                         this.getRoleIds());
+  }
+
+  public void readDto(PersonDto dto) {
+    this.name.readDto(dto.getName());
+    this.address.readDto(dto.getAddress());
+    this.birthDate = dto.getBirthDate();
+    this.dateHired = dto.getDateHired();
+    this.gwa = dto.getGwa();
+    this.employed = dto.isEmployed();/*
+    this.contacts = dto.getContactIds().stream()
+                       .map(cid -> contactService.get(cid))
+                       .collect(Collectors.toSet());
+    this.roles = dto.getRoleIds().stream()
+                    .map(role -> roleService.get(rid))
+                    .collect(Collectors.toSet());*/
+  }
+
+  private Set<Long> getContactIds() {
+    return contacts.stream()
+                   .map(c -> c.getContactId())
+                   .collect(Collectors.toSet());
+  }
+
+  private Set<Long> getRoleIds() {
+    return roles.stream()
+                .map(r -> r.getRoleId())
+                .collect(Collectors.toSet());
+  }
 }

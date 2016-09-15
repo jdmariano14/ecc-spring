@@ -3,6 +3,8 @@ package com.exist.ecc.person.core.model;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import com.exist.ecc.person.core.dto.AddressDto;
+
 @Embeddable
 public class Address {
 
@@ -18,36 +20,23 @@ public class Address {
   @Column(name = "ZIP_CODE")
   private String zipCode;
 
-  public String getStreetAddress() {
-    return streetAddress;
+  public String getStreetAddress() { return streetAddress; }
+  public String getBarangay() {return barangay; }
+  public String getMunicipality() { return municipality; }
+  public String getZipCode() { return zipCode; }
+
+  public AddressDto getDto() {
+    return new AddressDto(this.getStreetAddress(),
+                          this.getBarangay(),
+                          this.getMunicipality(),
+                          this.getZipCode());
   }
 
-  public void setStreetAddress(String newStreetAddress) {
-    streetAddress = newStreetAddress;
-  }
-
-  public String getBarangay() {
-    return barangay;
-  }
-
-  public void setBarangay(String newBarangay) {
-    barangay = newBarangay;
-  }
-
-  public String getMunicipality() {
-    return municipality;
-  }
-
-  public void setMunicipality(String newMunicipality) {
-    municipality = newMunicipality;
-  }
-
-  public String getZipCode() {
-    return zipCode;
-  }
-
-  public void setZipCode(String newZipCode) {
-    zipCode = newZipCode;
+  public void readDto(AddressDto dto) {
+    this.streetAddress = dto.getStreetAddress();
+    this.barangay = dto.getBarangay();
+    this.municipality = dto.getMunicipality();
+    this.zipCode = dto.getZipCode();
   }
 
 }
