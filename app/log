@@ -1,0 +1,39 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building app 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] >>> jetty-maven-plugin:9.4.0.M1:run (default-cli) > test-compile @ ecc-spring-app >>>
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ ecc-spring-app ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/js/Documents/Dev/Java/ecc-spring/app/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ ecc-spring-app ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ ecc-spring-app ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/js/Documents/Dev/Java/ecc-spring/app/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ ecc-spring-app ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< jetty-maven-plugin:9.4.0.M1:run (default-cli) < test-compile @ ecc-spring-app <<<
+[INFO] 
+[INFO] --- jetty-maven-plugin:9.4.0.M1:run (default-cli) @ ecc-spring-app ---
+[INFO] Configuring Jetty for project: app
+[INFO] webAppSourceDirectory not set. Trying src/main/webapp
+[INFO] Reload Mechanic: automatic
+[INFO] Classes = /home/js/Documents/Dev/Java/ecc-spring/app/target/classes
+[INFO] Logging initialized @5277ms to org.eclipse.jetty.util.log.Slf4jLog
+[INFO] Context path = /
+[INFO] Tmp directory = /home/js/Documents/Dev/Java/ecc-spring/app/target/tmp
+[INFO] Web defaults = org/eclipse/jetty/webapp/webdefault.xml
+[INFO] Web overrides =  none
+[INFO] web.xml file = file:///home/js/Documents/Dev/Java/ecc-spring/app/src/main/webapp/WEB-INF/web.xml
+[INFO] Webapp directory = /home/js/Documents/Dev/Java/ecc-spring/app/src/main/webapp
+[INFO] jetty-9.4.0.M1
+[WARNING] THIS IS NOT A STABLE RELEASE! DO NOT USE IN PRODUCTION!
+[WARNING] Download a stable release from http://download.eclipse.org/jetty/

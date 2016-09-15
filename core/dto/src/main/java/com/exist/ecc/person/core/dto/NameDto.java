@@ -8,6 +8,10 @@ public class NameDto {
   private String suffix;
   private String title;
 
+  public NameDto() {
+    
+  }
+
   public NameDto(String firstName,
                  String middleName,
                  String lastName,

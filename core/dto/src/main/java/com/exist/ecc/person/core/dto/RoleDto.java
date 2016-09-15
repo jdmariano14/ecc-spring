@@ -8,6 +8,10 @@ public class RoleDto {
   private String name;
   private Set<Long> personIds;
 
+  public RoleDto() {
+    
+  }
+
   public RoleDto(long roleId,
                  String name,
                  Set<Long> personIds)

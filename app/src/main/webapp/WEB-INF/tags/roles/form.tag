@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@taglib prefix="persons" tagdir="/WEB-INF/tags/persons"%>
-<%@attribute name="role" required="true" type="com.exist.ecc.person.core.model.Role"%>
+<%@attribute name="role" required="true" type="com.exist.ecc.person.core.dto.RoleDto"%>
 <%@attribute name="url" required="true" type="java.lang.String"%>
 <%@attribute name="backUrl" required="true" type="java.lang.String"%>
 

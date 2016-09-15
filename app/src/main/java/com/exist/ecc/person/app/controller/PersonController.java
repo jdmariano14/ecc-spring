@@ -26,21 +26,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.hibernate.Session;
 
 import com.exist.ecc.person.core.dao.Sessions;
-import com.exist.ecc.person.core.dao.Transactions;
-import com.exist.ecc.person.core.dao.impl.ContactCriteriaDao;
-import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
-import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
-
-import com.exist.ecc.person.core.model.*;
-import com.exist.ecc.person.core.model.wrapper.RoleWrapper;
-import com.exist.ecc.person.core.model.wrapper.PersonWrapper;
 
 import com.exist.ecc.person.util.BigDecimalUtil;
 import com.exist.ecc.person.util.DateUtil;
 
 @Controller
 @RequestMapping("/persons")
-public class PersonController {
+public class PersonController {/*
 
   @Autowired
   private PersonCriteriaDao personDao;
@@ -402,21 +394,18 @@ public class PersonController {
 
   private void createContact(Contact concreteContact, Contact abstractContact, 
     long personId) 
-  {
-    Session dbSession = Sessions.getSession();
-
-    concreteContact.setInfo(abstractContact.getInfo());
+  { 
+    Session dbSession = contactDataService.newSession();
 
     try {
-      Person person = Transactions.get(dbSession, personDao, () ->
-        personDao.get(personId));
+      PersonDto person = personDataService.get(personId);
 
-      concreteContact.setPerson(person);
-      person.getContacts().add(concreteContact);
-
-      Transactions.conduct(dbSession, contactDao, () ->
-        contactDao.save(concreteContact));
-    } catch (Exception e) {
+      person.getContactIds().add(concreteContact.getContactId());
+      contact.setPersonId(person.getPersonId());
+      
+      contactDataService.save(concreteContact);
+      personDataService.save(person);      
+    } catch (Exception e){
       e.printStackTrace();
     } finally {
       dbSession.close();
@@ -525,6 +514,6 @@ public class PersonController {
 
     return contactTypes;
   }
-
+*/
   //http://www.concretepage.com/spring/spring-mvc/spring-mvc-modelattribute-annotation-example
 }

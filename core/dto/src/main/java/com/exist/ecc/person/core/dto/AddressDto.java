@@ -7,6 +7,10 @@ public class AddressDto {
   private String municipality;
   private String zipCode;
 
+  public AddressDto() {
+    
+  }
+
   public AddressDto(String streetAddress,
                     String barangay,
                     String municipality,

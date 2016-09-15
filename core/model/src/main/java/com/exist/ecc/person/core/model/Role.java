@@ -43,30 +43,9 @@ public class Role {
   }
 
   public void readDto(RoleDto dto) {
-    this.name = dto.getName();/*
-    this.persons = dto.getPersonIds().stream()
-                      .map(pid -> personService.get(pid))
-                      .collect(Collectors.toSet());*/
+    this.name = dto.getName();
   }
-/*
-  move association retrieval to service!
-  
-  public void <T, ID> updateSet(Set<T> oldSet,
-                                Set<ID> newSet,
-                                Function<T, ID> idMethod,
-                                Dao<T, ID> dao) 
-  {
-    Set<ID> oldIdSet = oldSet.stream()
-                             .map(idMethod)
-                             .collect(Collectors.toSet());
 
-    Set<ID> addedIdSet = newSet.removeAll(oldSet);
-    Set<ID> removedIdSet = oldSet.removeAll(newSet);
-
-    dao.get(addedIdSet)
-
-  }
-*/
   private Set<Long> getPersonIds() {
     return persons.stream()
                   .map(p -> p.getPersonId())

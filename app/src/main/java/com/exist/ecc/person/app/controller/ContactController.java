@@ -16,19 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.hibernate.Session;
 
 import com.exist.ecc.person.core.dao.Sessions;
-import com.exist.ecc.person.core.dao.Transactions;
-import com.exist.ecc.person.core.dao.impl.ContactCriteriaDao;
-import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
-
-import com.exist.ecc.person.core.model.Contact;
-import com.exist.ecc.person.core.model.Person;
-import com.exist.ecc.person.core.model.wrapper.ContactWrapper;
-import com.exist.ecc.person.core.model.wrapper.PersonWrapper;
 
 @Controller
 @RequestMapping("/contacts")
 public class ContactController {
-
+/*
   @Autowired
   private PersonCriteriaDao personDao;
 

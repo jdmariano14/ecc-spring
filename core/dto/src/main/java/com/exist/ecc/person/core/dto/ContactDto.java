@@ -7,6 +7,10 @@ public class ContactDto {
   private String value;
   private long personId;
 
+  public ContactDto() {
+    
+  }
+
   public ContactDto(long contactId,
                     String contactType,
                     String value,

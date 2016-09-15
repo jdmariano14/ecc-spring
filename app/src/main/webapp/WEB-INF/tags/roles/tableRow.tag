@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@taglib prefix="roles" tagdir="/WEB-INF/tags/roles"%>
-<%@attribute name="role" required="true" type="com.exist.ecc.person.core.model.wrapper.RoleWrapper"%>
+<%@attribute name="role" required="true" type="com.exist.ecc.person.core.dto.RoleDto"%>
 
 <tr>
   <td><c:out value="${role.name}"/></td>

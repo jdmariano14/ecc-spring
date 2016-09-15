@@ -14,36 +14,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.hibernate.Session;
 
 import com.exist.ecc.person.core.dao.Sessions;
-import com.exist.ecc.person.core.dao.Transactions;
-import com.exist.ecc.person.core.dao.api.RoleDao;
-import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
-
-import com.exist.ecc.person.core.model.Role;
-import com.exist.ecc.person.core.model.wrapper.RoleWrapper;
+import com.exist.ecc.person.core.dto.RoleDto;
+import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 
 @Controller
 @RequestMapping("/roles")
 public class RoleController {
-
+  
   @Autowired
-  private RoleCriteriaDao roleDao;
+  private RoleDataService roleDataService;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String index(Locale locale, Model model) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    roleDataService.setSession(dbSession);
 
     try {
-      List<Role> roles = Transactions.get(dbSession, roleDao, () ->
-        roleDao.getAllById());
-
-      List<RoleWrapper> roleWrappers =
-        RoleWrapper.wrapCollection(roles);
-
-      model.addAttribute("roles", roleWrappers);
+      List<RoleDto> roleDtos = roleDataService.getAll();
+      model.addAttribute("roles", roleDtos);
       path = "roles/index";
     } catch (Exception e) {
+      e.printStackTrace();
       path = "redirect:/";
     } finally {
       dbSession.close();
@@ -58,15 +51,16 @@ public class RoleController {
   }
 
   @RequestMapping(value = "", method = RequestMethod.POST)
-  public String create(@ModelAttribute Role role) {
+  public String create(@ModelAttribute RoleDto roleDto) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    roleDataService.setSession(dbSession);
 
     try {
-      Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role));
+      roleDataService.save(roleDto);
     } catch (Exception e) {
-
+      e.printStackTrace();
     } finally {
       dbSession.close();
       path = "redirect:/roles";
@@ -80,14 +74,14 @@ public class RoleController {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    roleDataService.setSession(dbSession);
 
     try {
-      Role role = Transactions.get(dbSession, roleDao, () ->
-        roleDao.get(roleId));
-      
+      RoleDto role = roleDataService.get(roleId);
       model.addAttribute("role", role);
       path = "roles/edit";
     } catch (Exception e) {
+      e.printStackTrace();
       path = "redirect:/roles";
     } finally {
       dbSession.close();
@@ -97,15 +91,16 @@ public class RoleController {
   }
 
   @RequestMapping(value = "/{roleId}", method = RequestMethod.POST)
-  public String update(@ModelAttribute Role role, @PathVariable Long roleId) {
+  public String update(@ModelAttribute RoleDto roleDto, @PathVariable Long roleId) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    roleDataService.setSession(dbSession);
 
     try {
-      Transactions.conduct(dbSession, roleDao, () -> roleDao.save(role)); 
+      roleDataService.save(roleDto);
     } catch (Exception e) {
-
+      e.printStackTrace();
     } finally {
       dbSession.close();
       path = "redirect:/roles";
@@ -119,17 +114,13 @@ public class RoleController {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    roleDataService.setSession(dbSession);
 
     try {
-      Role role = Transactions.get(dbSession, roleDao, () ->
-        roleDao.get(roleId));
-
-      role.getPersons().forEach(p -> p.getRoles().remove(role));
-      role.getPersons().clear();
-
-      Transactions.conduct(dbSession, roleDao, () -> roleDao.delete(role));
+      RoleDto roleDto = roleDataService.get(roleId);
+      roleDataService.delete(roleDto);
     } catch (Exception e) {
-
+      e.printStackTrace();
     } finally {
       dbSession.close();
       path = "redirect:/roles";
@@ -137,6 +128,4 @@ public class RoleController {
 
     return path;
   }
-
-  //http://www.concretepage.com/spring/spring-mvc/spring-mvc-modelattribute-annotation-example
 }

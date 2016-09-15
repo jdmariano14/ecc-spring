@@ -7,16 +7,14 @@ import java.util.stream.Collectors;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 
-import com.exist.ecc.person.core.dao.api.CriteriaDao;
-import com.exist.ecc.person.core.dao.impl.CriteriaDaoImpl;
+import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 import com.exist.ecc.person.core.dto.RoleDto;
 import com.exist.ecc.person.core.model.Role;
 
 public class RoleDataService extends AbstractDataService<RoleDto, Long> {
 
-  // @Autowired
-  private CriteriaDao<Role, Long> roleDao = new CriteriaDaoImpl();
-  
+  private RoleCriteriaDao roleDao = new RoleCriteriaDao();
+
   @Override
   public void setSession(Session session) {
     super.setSession(session);
@@ -38,10 +36,17 @@ public class RoleDataService extends AbstractDataService<RoleDto, Long> {
 
   @Override
   public void save(RoleDto dto) {
-    Role role = roleDao.get(dto.getRoleId());
-    
-    role.readDto(dto);
-    roleDao.save(role);
+    Role role = null;
+
+    try {
+      role = roleDao.get(dto.getRoleId());
+      role.readDto(dto);
+      roleDao.save(role);
+    } catch (Exception e) {
+      role = new Role();
+      role.readDto(dto);
+      roleDao.save(role);
+    }
   }
   
   @Override

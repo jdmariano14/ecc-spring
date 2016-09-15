@@ -5,8 +5,6 @@
   
   <!-- Root Context: defines shared resources visible to all other web components -->
 
-  <bean id="personDao" class="com.exist.ecc.person.core.dao.impl.PersonCriteriaDao"/>
-  <bean id="roleDao" class="com.exist.ecc.person.core.dao.impl.RoleCriteriaDao"/>
-  <bean id="contactDao" class="com.exist.ecc.person.core.dao.impl.ContactCriteriaDao"/>
+  <bean id="roleDataService" class="com.exist.ecc.person.core.service.data.impl.RoleDataService"/>
     
 </beans>

@@ -17,6 +17,10 @@ public class PersonDto {
   private Set<Long> contactIds;
   private Set<Long> roleIds;
 
+  public PersonDto() {
+
+  }
+  
   public PersonDto(long personId,
                    NameDto name,
                    AddressDto address,
