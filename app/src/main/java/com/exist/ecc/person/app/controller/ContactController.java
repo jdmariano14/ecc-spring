@@ -63,27 +63,20 @@ public class ContactController {
   }
 
   @RequestMapping(value = "/{contactId}", method = RequestMethod.POST)
-  public String update(@ModelAttribute Contact contact,
-    @RequestParam Long personId,
-    @PathVariable Long contactId)
-  {
-    String path = null;
-
+  public String update(@ModelAttribute ContactDto contactDto,
+                       @PathVariable Long contactId)
+  { 
+    String path = "redirect:/persons" + contactDto.getPersonId();
+    
     Session dbSession = Sessions.getSession();
+    contactService.setSession(dbSession);
 
     try {
-      Person person = Transactions.get(dbSession, personDao, () ->
-        personDao.get(personId));
-
-      contact.setPerson(person);
-
-      Transactions.conduct(dbSession, contactDao, () ->
-        contactDao.save(contact));
-    } catch (Exception e) {
+      contactService.save(contactDto);
+    } catch (Exception e){
       e.printStackTrace();
     } finally {
       dbSession.close();
-      path = "redirect:/persons/" + personId;
     }
 
     return path;
