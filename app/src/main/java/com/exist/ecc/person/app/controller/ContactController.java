@@ -30,21 +30,21 @@ public class ContactController {
   
   @RequestMapping(value = "/{personId}/contact", method = RequestMethod.POST, params={"type=Email"})
   public String createEmail(Locale locale, Model model, 
-    @PathVariable("personId") Long personId) 
+    @PathVariable Long personId) 
   {
     return "";
   }
 
   @RequestMapping(value = "/{personId}/contact", method = RequestMethod.POST, params={"type=Landline"})
   public String createLandline(Locale locale, Model model, 
-    @PathVariable("personId") Long personId) 
+    @PathVariable Long personId) 
   {
     return "";
   }
 
   @RequestMapping(value = "/{personId}/contact", method = RequestMethod.POST, params={"type=Mobile"})
   public String createMobile(Locale locale, Model model, 
-    @PathVariable("personId") Long personId) 
+    @PathVariable Long personId) 
   {
     return "";
   }

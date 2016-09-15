@@ -8,8 +8,8 @@
 
 <form class="ui form" name="role" action="/roles/${role.roleId}" method="post">
   <div class="field">
-    <label for="role[name]">Name:</label>
-    <input type="text" name="role[name]" value="${role.name}"><br>
+    <label for="name">Name:</label>
+    <input type="text" name="name" value="${role.name}"><br>
   </div>
   <p>
     <button class="ui primary button" type="submit">
