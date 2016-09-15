@@ -73,6 +73,14 @@ public class Person {
   public boolean isEmployed() { return employed; }
   public Set<Contact> getContacts() { return contacts; }
   public Set<Role> getRoles() { return roles; }
+
+  public void setName(Name name) {
+    this.name = name;
+  }
+
+  public void setAddress(Address address) {
+    this.address = address;
+  }
   
   public PersonDto getDto() {
     return new PersonDto(this.getPersonId(),

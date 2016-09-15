@@ -5,6 +5,8 @@
   
   <!-- Root Context: defines shared resources visible to all other web components -->
 
+  <bean id="personDataService" class="com.exist.ecc.person.core.service.data.impl.PersonDataService"/>
   <bean id="roleDataService" class="com.exist.ecc.person.core.service.data.impl.RoleDataService"/>
+  <bean id="contactDataService" class="com.exist.ecc.person.core.service.data.impl.ContactDataService"/>
     
 </beans>

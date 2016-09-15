@@ -26,37 +26,38 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.hibernate.Session;
 
 import com.exist.ecc.person.core.dao.Sessions;
+import com.exist.ecc.person.core.dto.PersonDto;
+import com.exist.ecc.person.core.service.data.impl.PersonDataService;
+import com.exist.ecc.person.core.service.data.impl.ContactDataService;
+import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 
 import com.exist.ecc.person.util.BigDecimalUtil;
 import com.exist.ecc.person.util.DateUtil;
 
 @Controller
 @RequestMapping("/persons")
-public class PersonController {/*
+public class PersonController {
 
   @Autowired
-  private PersonCriteriaDao personDao;
+  private PersonDataService personDataService;
 
   @Autowired
-  private RoleCriteriaDao roleDao;
+  private ContactDataService contactDataService;
 
   @Autowired
-  private ContactCriteriaDao contactDao;
+  private RoleDataService roleDataService;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String index(Locale locale, Model model) {
     String path = null;
 
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
 
     try {
-      List<Person> persons = Transactions.get(dbSession, personDao, () ->
-        personDao.getAllById());
+      List<PersonDto> personDtos = personDataService.getAll();
 
-      List<PersonWrapper> personWrappers =
-        PersonWrapper.wrapCollection(persons);
-
-      model.addAttribute("persons", personWrappers);
+      model.addAttribute("persons", personDtos);
       model.addAttribute("queryProperties", getQueryProperties());
       path = "persons/index";
     } catch (Exception e) {
@@ -68,7 +69,7 @@ public class PersonController {/*
 
     return path;
   }
-
+/*
   @RequestMapping(value = "/{personId}", method = RequestMethod.GET)
   public String show(Model model, @PathVariable Long personId) {
     String path = null;
@@ -498,7 +499,7 @@ public class PersonController {/*
 
     return path;
   }
-
+*/
   private List<String> getQueryProperties() {
     List<String> queryProperties = 
       Stream.of("Last name", "Date hired", "GWA")
@@ -514,6 +515,5 @@ public class PersonController {/*
 
     return contactTypes;
   }
-*/
   //http://www.concretepage.com/spring/spring-mvc/spring-mvc-modelattribute-annotation-example
 }

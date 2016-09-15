@@ -9,19 +9,21 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import com.exist.ecc.person.core.dao.api.CriteriaDao;
-import com.exist.ecc.person.core.dao.impl.CriteriaDaoImpl;
+import com.exist.ecc.person.core.dao.impl.ContactCriteriaDao;
+import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
+import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 import com.exist.ecc.person.core.dto.PersonDto;
+import com.exist.ecc.person.core.model.Address;
 import com.exist.ecc.person.core.model.Contact;
+import com.exist.ecc.person.core.model.Name;
 import com.exist.ecc.person.core.model.Person;
 import com.exist.ecc.person.core.model.Role;
 
 public class PersonDataService extends AbstractDataService<PersonDto, Long> {
 
-  // @Autowired
-  private CriteriaDao<Person, Long> personDao = new CriteriaDaoImpl();
-  private CriteriaDao<Contact, Long> contactDao = new CriteriaDaoImpl();
-  private CriteriaDao<Role, Long> roleDao = new CriteriaDaoImpl();
+  private PersonCriteriaDao personDao = new PersonCriteriaDao();
+  private ContactCriteriaDao contactDao = new ContactCriteriaDao();
+  private RoleCriteriaDao roleDao = new RoleCriteriaDao();
 
   @Override
   public void setSession(Session session) {
@@ -46,13 +48,29 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
 
   @Override
   public void save(PersonDto dto) {
-    Person person = personDao.get(dto.getPersonId());
 
-    updateContacts(person, dto.getContactIds());
-    updateRoles(person, dto.getRoleIds());
+    Person person = null;
 
-    person.readDto(dto);
-    personDao.save(person);
+    try {
+      person = personDao.get(dto.getPersonId());
+
+      person.readDto(dto);
+      updateContacts(person, dto.getContactIds());
+      updateRoles(person, dto.getRoleIds());
+      personDao.save(person);
+    } catch (Exception e) {
+      Name name = new Name();
+      Address address = new Address();
+
+      person = new Person();
+      person.setName(name);
+      person.setAddress(address);
+
+      person.readDto(dto);
+      updateContacts(person, dto.getContactIds());
+      updateRoles(person, dto.getRoleIds());
+      personDao.save(person);
+    }
   }
   
   @Override
