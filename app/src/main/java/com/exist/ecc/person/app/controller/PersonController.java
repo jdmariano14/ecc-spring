@@ -2,6 +2,9 @@ package com.exist.ecc.person.app.controller;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,11 +19,11 @@ import org.hibernate.Session;
 
 import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dao.Transactions;
+import com.exist.ecc.person.core.dao.impl.ContactCriteriaDao;
 import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
 import com.exist.ecc.person.core.dao.impl.RoleCriteriaDao;
 
-import com.exist.ecc.person.core.model.Role;
-import com.exist.ecc.person.core.model.Person;
+import com.exist.ecc.person.core.model.*;
 import com.exist.ecc.person.core.model.wrapper.RoleWrapper;
 import com.exist.ecc.person.core.model.wrapper.PersonWrapper;
 
@@ -33,6 +36,9 @@ public class PersonController {
 
   @Autowired
   private RoleCriteriaDao roleDao;
+
+  @Autowired
+  private ContactCriteriaDao contactDao;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String index(Locale locale, Model model) {
@@ -81,7 +87,7 @@ public class PersonController {
     }
 
     return path;
-  }  
+  }
 
   /*
   @RequestMapping(value = "/new", method = RequestMethod.GET)
@@ -173,6 +179,103 @@ public class PersonController {
 
     return path;
   }
+
+  @RequestMapping(value = "/{personId}/contacts/new", method = RequestMethod.GET)
+  public String newContact(Model model, @PathVariable Long personId) {
+    String path = null;
+
+    Set<String> contactTypes = 
+      Stream.of("Email", "Landline", "Mobile")
+            .collect(Collectors.toSet());
+    
+    Session dbSession = Sessions.getSession();
+
+    try {
+      Person person = Transactions.get(dbSession, personDao, () ->
+        personDao.get(personId));
+      Contact contact = new Contact();
+
+      PersonWrapper personWrapper = new PersonWrapper(person);
+
+      model.addAttribute("person", personWrapper);
+      model.addAttribute("contact", contact);
+      model.addAttribute("contactTypes", contactTypes);
+      path = "contacts/new";
+    } catch (Exception e) {
+      e.printStackTrace();
+      path = "redirect:/persons/" + personId;
+    } finally {
+      dbSession.close();
+    }
+
+    return path;
+  }
+
+  @RequestMapping(value = "/{personId}/contacts", 
+                  method = RequestMethod.POST,
+                  params = {"contactType=Email"})
+  public String createEmail(@ModelAttribute Contact contact,
+    @PathVariable Long personId)
+  {
+    String path = null;
+    Email email = new Email();
+
+    createContact(email, contact, personId);
+
+    return "redirect:/persons/" + personId;
+  }
+
+  @RequestMapping(value = "/{personId}/contacts", 
+                  method = RequestMethod.POST,
+                  params = {"contactType=Landline"})
+  public String createLandline(@ModelAttribute Contact contact,
+    @PathVariable Long personId)
+  {
+    String path = null;
+    Landline landline = new Landline();
+
+    createContact(landline, contact, personId);
+
+    return "redirect:/persons/" + personId;
+  }
+
+  @RequestMapping(value = "/{personId}/contacts", 
+                  method = RequestMethod.POST,
+                  params = {"contactType=Mobile"})
+  public String createMobile(@ModelAttribute Contact contact,
+    @PathVariable Long personId)
+  {
+    String path = null;
+    Mobile mobile = new Mobile();
+
+    createContact(mobile, contact, personId);
+
+    return "redirect:/persons/" + personId;
+  }
+
+  private void createContact(Contact concreteContact, Contact abstractContact, 
+    long personId) 
+  {
+    Session dbSession = Sessions.getSession();
+
+    concreteContact.setInfo(abstractContact.getInfo());
+
+    try {
+      Person person = Transactions.get(dbSession, personDao, () ->
+        personDao.get(personId));
+
+      concreteContact.setPerson(person);
+      person.getContacts().add(concreteContact);
+
+      Transactions.conduct(dbSession, contactDao, () ->
+        contactDao.save(concreteContact));
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      dbSession.close();
+    }
+  }
+
 
   @RequestMapping(value = "/{personId}/roles/new", method = RequestMethod.GET)
   public String newRole(Model model, @PathVariable Long personId) {

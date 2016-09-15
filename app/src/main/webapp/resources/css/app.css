@@ -10,6 +10,10 @@ a:hover, a:focus {
   color: rgba(94,127,60,0.75);
 }
 
+.hidden {
+  display: none; !important
+}
+
 .flash {
   font-weight: bold;
 }
