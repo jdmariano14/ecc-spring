@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 
 import com.exist.ecc.person.core.dao.api.CriteriaDao;
@@ -17,9 +18,16 @@ public class ContactDataService
   extends AbstractDataService<ContactDto, Long> 
 {
 
-  // @Autowired
-  private CriteriaDao<Person, Long> personDao = new CriteriaDaoImpl();
+  // @Autowired;
   private CriteriaDao<Contact, Long> contactDao = new CriteriaDaoImpl();
+  private CriteriaDao<Person, Long> personDao = new CriteriaDaoImpl();
+
+  @Override
+  public void setSession(Session session) {
+    super.setSession(session);
+    contactDao.setSession(session);
+    personDao.setSession(session);
+  }
 
   @Override
   public ContactDto get(Long id) {

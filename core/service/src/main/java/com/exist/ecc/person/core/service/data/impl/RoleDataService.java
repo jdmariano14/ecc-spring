@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 
 import com.exist.ecc.person.core.dao.api.CriteriaDao;
@@ -15,6 +16,12 @@ public class RoleDataService extends AbstractDataService<RoleDto, Long> {
 
   // @Autowired
   private CriteriaDao<Role, Long> roleDao = new CriteriaDaoImpl();
+  
+  @Override
+  public void setSession(Session session) {
+    super.setSession(session);
+    roleDao.setSession(session);
+  }
 
   @Override
   public RoleDto get(Long id) {

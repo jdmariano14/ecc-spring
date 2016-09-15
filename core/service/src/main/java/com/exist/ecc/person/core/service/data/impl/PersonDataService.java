@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -21,6 +22,14 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
   private CriteriaDao<Person, Long> personDao = new CriteriaDaoImpl();
   private CriteriaDao<Contact, Long> contactDao = new CriteriaDaoImpl();
   private CriteriaDao<Role, Long> roleDao = new CriteriaDaoImpl();
+
+  @Override
+  public void setSession(Session session) {
+    super.setSession(session);
+    personDao.setSession(session);
+    contactDao.setSession(session);
+    roleDao.setSession(session);
+  }
 
   @Override
   public PersonDto get(Long id) {
