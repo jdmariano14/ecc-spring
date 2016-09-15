@@ -38,6 +38,10 @@ public class Contact {
   public String getInfo() { return info; }
   public Person getPerson() { return person; }
 
+  public void setPerson(Person person) {
+    this.person = person; 
+  }
+
   public ContactDto getDto() {
     return new ContactDto(this.getContactId(),
                           this.getContactType(),
@@ -47,7 +51,6 @@ public class Contact {
 
   public void readDto(ContactDto dto) {
     this.info = dto.getValue();
-    //this.person = personService.get(dto.getContactId());
   }
 
   private String getContactType() {

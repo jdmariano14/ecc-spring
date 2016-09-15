@@ -9,13 +9,16 @@ import org.hibernate.criterion.Order;
 import com.exist.ecc.person.core.dao.api.CriteriaDao;
 import com.exist.ecc.person.core.dao.impl.CriteriaDaoImpl;
 import com.exist.ecc.person.core.dto.ContactDto;
+import com.exist.ecc.person.core.dto.PersonDto;
 import com.exist.ecc.person.core.model.Contact;
+import com.exist.ecc.person.core.model.Person;
 
 public class ContactDataService 
   extends AbstractDataService<ContactDto, Long> 
 {
 
   // @Autowired
+  private CriteriaDao<Person, Long> personDao = new CriteriaDaoImpl();
   private CriteriaDao<Contact, Long> contactDao = new CriteriaDaoImpl();
 
   @Override
@@ -36,6 +39,8 @@ public class ContactDataService
     Contact contact = contactDao.get(dto.getContactId());
     
     contact.readDto(dto);
+    contact.setPerson(personDao.get(dto.getPersonId()));
+
     contactDao.save(contact);
   }
   
