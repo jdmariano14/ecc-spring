@@ -1,9 +1,10 @@
-package com.exist.ecc.person.app.controller;
+  package com.exist.ecc.person.app.controller;
 
 import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +25,11 @@ import com.exist.ecc.person.core.model.wrapper.RoleWrapper;
 @RequestMapping("/roles")
 public class RoleController {
 
-  private static final RoleDao roleDao = new RoleCriteriaDao();
+  @Autowired
+  private RoleCriteriaDao roleDao;
+
   private static final Logger logger = 
-    LoggerFactory.getLogger(HomeController.class);
+    LoggerFactory.getLogger(RoleController.class);
   
   @RequestMapping(value = "/{roleId}/edit", method = RequestMethod.GET)
   public String edit(Locale locale, Model model, 
