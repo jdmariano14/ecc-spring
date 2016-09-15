@@ -3,6 +3,7 @@ package com.exist.ecc.person.core.dao.impl;
 import java.io.Serializable;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Query;
 
@@ -27,6 +28,7 @@ public class HqlDaoImpl<T, I extends Serializable>
     return (List<T>) query.list(); 
   }
 
+  @Override
   public List<T> getAll() {
     return query("");
   }
