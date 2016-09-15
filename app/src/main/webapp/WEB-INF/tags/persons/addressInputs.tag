@@ -1,23 +1,24 @@
 <%@tag pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@attribute name="personAddress" required="true" type="com.exist.ecc.person.core.model.Address"%>
 
 <h4 class="ui dividing header">Address</h4>
 <div class="field">
-  <label for="person[address[street_address]]">Street</label>
-  <input type="text" name="person[address[street_address]]" value="${personAddress.streetAddress}">
+  <label for="address-streetAddress">Street</label>
+  <form:input id="address-streetAddress" path="address.streetAddress"/>
 </div>
 <div class="two fields">
   <div class="field">
-    <label for="person[address[barangay]]">Barangay</label>
-    <input type="text" name="person[address[barangay]]" value="${personAddress.barangay}">
+    <label for="address-barangay">Barangay</label>
+    <form:input id="address-barangay" path="address.barangay"/>
   </div>
   <div class="field">
-    <label for="person[address[municipality]]">Municipality</label>
-    <input type="text" name="person[address[municipality]]" value="${personAddress.municipality}">
+    <label for="address-municipality">Municipality</label>
+    <form:input id="address-municipality" path="address.municipality"/>
   </div>
 </div>
 <div class="three wide field">
-  <label for="person[address[zip_code]]">Zip</label>
-  <input type="text" name="person[address[zip_code]]" value="${personAddress.zipCode}">
+  <label for="address-zipCode">Zip</label>
+  <form:input id="address-zipCode" path="address.zipCode"/>
 </div>

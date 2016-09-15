@@ -6,6 +6,10 @@ import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
+import  org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,22 +93,34 @@ public class PersonController {
     return path;
   }
 
-  /*
   @RequestMapping(value = "/new", method = RequestMethod.GET)
-  public String _new() {
+  public String _new(Model model) {
+    Person person = new Person();
+    Name name = new Name();
+    Address address = new Address();
+
+    person.setName(name);
+    person.setAddress(address);
+
+    model.addAttribute("person", person);
+
     return "persons/new";
   }
 
   @RequestMapping(value = "", method = RequestMethod.POST)
-  public String create(@ModelAttribute Person person) {
+  public String create(@ModelAttribute Person person, BindingResult result) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
 
+    for (ObjectError error : result.getAllErrors()) {
+      System.out.println(error);
+    }
+
     try {
       Transactions.conduct(dbSession, personDao, () -> personDao.save(person));
     } catch (Exception e) {
-
+      e.printStackTrace();
     } finally {
       dbSession.close();
       path = "redirect:/persons";
@@ -114,7 +130,7 @@ public class PersonController {
   }
 
   @RequestMapping(value = "/{personId}/edit", method = RequestMethod.GET)
-  public String edit(Locale locale, Model model, @PathVariable Long personId) {
+  public String edit(Model model, @PathVariable Long personId) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
@@ -122,10 +138,14 @@ public class PersonController {
     try {
       Person person = Transactions.get(dbSession, personDao, () ->
         personDao.get(personId));
+
+      PersonWrapper personWrapper = new PersonWrapper(person); 
       
       model.addAttribute("person", person);
+      model.addAttribute("personWrapper", personWrapper);
       path = "persons/edit";
     } catch (Exception e) {
+      e.printStackTrace();
       path = "redirect:/persons";
     } finally {
       dbSession.close();
@@ -135,25 +155,30 @@ public class PersonController {
   }
 
   @RequestMapping(value = "/{personId}", method = RequestMethod.POST)
-  public String update(@ModelAttribute Person person, @PathVariable Long personId) {
+  public String update(@ModelAttribute Person person, BindingResult result,
+    @PathVariable Long personId)
+  {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+
+    for (ObjectError error : result.getAllErrors()) {
+      System.out.println(error);
+    }
 
     try {
       if (person.getPersonId() == personId) {
         Transactions.conduct(dbSession, personDao, () -> personDao.save(person)); 
       }
     } catch (Exception e) {
-
+      e.printStackTrace();
     } finally {
       dbSession.close();
-      path = "redirect:/persons";
+      path = "redirect:/persons/" + personId;
     }
 
     return path;
   }
-  */
 
   @RequestMapping(value = "/{personId}/delete", method = RequestMethod.GET)
   public String delete(@PathVariable Long personId) {
