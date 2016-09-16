@@ -19,6 +19,9 @@ public class InputServiceFactory {
           case "roles":
             inputService = new RoleCsvInputService(session);
             break;
+          case "contacts":
+            inputService = new ContactCsvInputService(session);
+            break;
           case "person roles":
             inputService = new PersonRoleCsvInputService(session);
             break;

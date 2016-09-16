@@ -11,6 +11,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.exist.ecc.person.core.dto.ContactDto;
@@ -19,10 +20,12 @@ import com.exist.ecc.person.core.dto.ContactDto;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "CONTACT_TYPE")
 @Table(name = "CONTACT")
-public class Contact {
+public class Contact extends OverridableIdModel<Long> {
 
   @Id
-  @GeneratedValue
+  @GenericGenerator(name="overridable",
+                    strategy="com.exist.ecc.person.core.model.generator.OverridableSequenceGenerator")
+  @GeneratedValue(generator = "overridable")
   @Column(name = "CONTACT_ID")
   private long contactId;
 

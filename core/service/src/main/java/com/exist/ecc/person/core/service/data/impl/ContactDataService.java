@@ -58,14 +58,14 @@ public class ContactDataService
 
       contactDao.save(contact);
     } catch (Exception e) {
-      switch(dto.getContactType()) {
-        case "Email":
+      switch(dto.getContactType().toUpperCase()) {
+        case "EMAIL":
           contact = new Email();
           break;
-        case "Landline":
+        case "LANDLINE":
           contact = new Landline();
           break;
-        case "Mobile":
+        case "MOBILE":
           contact = new Mobile();
           break;
         default:

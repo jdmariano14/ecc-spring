@@ -21,6 +21,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import com.exist.ecc.person.core.dto.PersonDto;
 
 @Entity
@@ -28,7 +30,9 @@ import com.exist.ecc.person.core.dto.PersonDto;
 public class Person extends OverridableIdModel<Long> {
 
   @Id
-  @GeneratedValue
+  @GenericGenerator(name="overridable",
+                    strategy="com.exist.ecc.person.core.model.generator.OverridableSequenceGenerator")
+  @GeneratedValue(generator = "overridable")
   @Column(name = "PERSON_ID")
   private long personId;
 
