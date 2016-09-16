@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.hibernate.Session;
 
 import com.exist.ecc.person.core.dao.Sessions;
+import com.exist.ecc.person.core.dto.ContactDto;
 import com.exist.ecc.person.core.dto.PersonDto;
+import com.exist.ecc.person.core.dto.RoleDto;
 import com.exist.ecc.person.core.service.data.impl.PersonDataService;
 import com.exist.ecc.person.core.service.data.impl.ContactDataService;
 import com.exist.ecc.person.core.service.data.impl.RoleDataService;
@@ -76,10 +78,15 @@ public class PersonController {
     
     Session dbSession = Sessions.getSession();
     personDataService.setSession(dbSession);
+    roleDataService.setSession(dbSession);
 
     try {
       PersonDto personDto = personDataService.get(personId);
+      List<RoleDto> roleDtos = 
+        roleDataService.getFromPerson(personDto);
+
       model.addAttribute("person", personDto);
+      model.addAttribute("roles", roleDtos);
       path = "persons/show";
     } catch (Exception e) {
       e.printStackTrace();
@@ -399,25 +406,22 @@ public class PersonController {
       dbSession.close();
     }
   }
-
+*/
 
   @RequestMapping(value = "/{personId}/roles/new", method = RequestMethod.GET)
   public String newRole(Model model, @PathVariable Long personId) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
+    roleDataService.setSession(dbSession);
 
     try {
-      Person person = Transactions.get(dbSession, personDao, () ->
-        personDao.get(personId));
-      List<Role> roles = Transactions.get(dbSession, roleDao, () ->
-        roleDao.getAllGrantable(person));
+      PersonDto personDto = personDataService.get(personId);
+      List<RoleDto> roleDtos = roleDataService.getAll();
 
-      PersonWrapper personWrapper = new PersonWrapper(person);
-      List<RoleWrapper> roleWrappers = RoleWrapper.wrapCollection(roles);
-
-      model.addAttribute("person", personWrapper);
-      model.addAttribute("roles", roleWrappers);
+      model.addAttribute("person", personDto);
+      model.addAttribute("roles", roleDtos);
       path = "person_roles/new";
     } catch (Exception e) {
       e.printStackTrace();
@@ -437,17 +441,14 @@ public class PersonController {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
 
     try {
-      Person person = Transactions.get(dbSession, personDao, () ->
-        personDao.get(personId));
-      Role role = Transactions.get(dbSession, roleDao, () ->
-        roleDao.get(roleId));
-
-      person.getRoles().add(role);
-
-      Transactions.conduct(dbSession, personDao, () ->
-        personDao.save(person));
+      PersonDto personDto = personDataService.get(personId);
+      personDto.getRoleIds().add(roleId);
+      System.out.println("I got here");
+      personDataService.save(personDto);
+      System.out.println("I got there");
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -466,17 +467,12 @@ public class PersonController {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
 
     try {
-      Person person = Transactions.get(dbSession, personDao, () ->
-        personDao.get(personId));
-      Role role = Transactions.get(dbSession, roleDao, () ->
-        roleDao.get(roleId));
-
-      person.getRoles().remove(role);
-
-      Transactions.conduct(dbSession, personDao, () ->
-        personDao.save(person));
+      PersonDto personDto = personDataService.get(personId);
+      personDto.getRoleIds().remove(roleId);
+      personDataService.save(personDto);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -486,7 +482,7 @@ public class PersonController {
 
     return path;
   }
-*/
+
   private List<String> getQueryProperties() {
     List<String> queryProperties = 
       Stream.of("Last name", "Date hired", "GWA")
