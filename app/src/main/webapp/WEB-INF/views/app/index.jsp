@@ -8,7 +8,7 @@
     <div class="ui middle aligned center aligned full height ecc home grid">
       <div class="column">
         <div class="ui container">
-          <h1 class="ui header">ECC Servlet Activity</h1>
+          <h1 class="ui header">ECC Spring Activity</h1>
           <nav class="ui two item labeled icon menu">
             <a class="item" href="/persons">
               <i class="users icon"></i>
