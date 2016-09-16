@@ -8,7 +8,7 @@
   <jsp:attribute name="bodyTitle">Upload <c:out value="${uploadType}"/></jsp:attribute>
   <jsp:body>
     <section class="ui segment">
-      <uploads:form backUrl="/"/>
+      <uploads:form uploadType="${uploadType}" backUrl="/"/>
     </section>
   </jsp:body>
 </app:layout>
