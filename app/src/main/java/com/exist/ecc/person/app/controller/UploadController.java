@@ -61,4 +61,25 @@ public class UploadController {
     return path;
   }
 
+  @RequestMapping(value = "", method = RequestMethod.POST, params={"clear"})
+  public String processClear(@RequestParam String uploadType,
+                             @RequestParam MultipartFile file)
+  {
+    String path = null;
+
+    Session dbSession = Sessions.getSession();
+    roleDataService.setSession(dbSession);
+
+    try {
+      roleCsvInputService.execute(file.getInputStream(), true); 
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      dbSession.close();
+      path = "redirect:/roles";
+    }
+
+    return path;
+  }
+
 }
