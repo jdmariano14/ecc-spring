@@ -59,7 +59,7 @@ public class ContactController {
     return path;
   }
 
-  public String create(ContactDto contactDto, Long personId) { 
+  public String create(ContactDto contactDto, Long personId) {
     String path = null;
 
     Session dbSession = Sessions.getSession();
@@ -78,23 +78,18 @@ public class ContactController {
   }
 
 
-/*
   @RequestMapping(value = "/{contactId}/edit", method = RequestMethod.GET)
   public String edit(Model model, @PathVariable Long contactId) {
     String path = null;
     long personId = -1;
     
     Session dbSession = Sessions.getSession();
+    contactDataService.setSession(dbSession);
 
     try {
-      Contact contact = Transactions.get(dbSession, contactDao, () ->
-        contactDao.get(contactId)); 
-
-      PersonWrapper personWrapper = new PersonWrapper(contact.getPerson());
-
-      personId = personWrapper.getPersonId();
-
-      model.addAttribute("contact", contact);
+      ContactDto contactDto = contactDataService.get(contactId);
+      personId = contactDto.getPersonId();
+      model.addAttribute("contact", contactDto);
       path = "contacts/edit";
     } catch (Exception e) {
       e.printStackTrace();
@@ -110,38 +105,37 @@ public class ContactController {
   public String update(@ModelAttribute ContactDto contactDto,
                        @PathVariable Long contactId)
   { 
-    String path = "redirect:/persons" + contactDto.getPersonId();
-    
+    String path = null;
+    long personId = -1;
+
     Session dbSession = Sessions.getSession();
-    contactService.setSession(dbSession);
+    contactDataService.setSession(dbSession);
 
     try {
-      contactService.save(contactDto);
+      contactDataService.save(contactDto);
+      personId = contactDto.getPersonId();
     } catch (Exception e){
       e.printStackTrace();
     } finally {
       dbSession.close();
+      path = "redirect:/persons/" + personId;
     }
 
     return path;
   }
 
   @RequestMapping(value = "/{contactId}/delete", method = RequestMethod.GET)
-  public String delete(@PathVariable Long contactId) 
-  {
+  public String delete(@PathVariable Long contactId) {
     String path = null;
     long personId = -1;
 
     Session dbSession = Sessions.getSession();
+    contactDataService.setSession(dbSession);
 
     try {
-      Contact contact = Transactions.get(dbSession, contactDao, () ->
-        contactDao.get(contactId)); 
-
-      personId = contact.getPerson().getPersonId();
-
-      Transactions.conduct(dbSession, contactDao, () ->
-        contactDao.delete(contact));
+      ContactDto contactDto = contactDataService.get(contactId);
+      personId = contactDto.getPersonId();
+      contactDataService.delete(contactDto);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -150,8 +144,7 @@ public class ContactController {
     }
 
     return path;
-  }*/
-
+  }
 
   private Set<String> getContactTypes() {
     Set<String> contactTypes = 
