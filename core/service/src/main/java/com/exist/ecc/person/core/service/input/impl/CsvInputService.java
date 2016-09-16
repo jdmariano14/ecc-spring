@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.exist.ecc.person.core.service.input.api.InputService;
 
 public abstract class CsvInputService extends AbstractInputService {
+  
 
   @Override
   public void processInputStream(InputStream inputStream) {

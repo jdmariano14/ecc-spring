@@ -22,7 +22,8 @@ import org.hibernate.Session;
 
 import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.service.data.impl.RoleDataService;
-import com.exist.ecc.person.core.service.input.impl.RoleCsvInputService;
+import com.exist.ecc.person.core.service.input.InputServiceFactory;
+import com.exist.ecc.person.core.service.input.api.InputService;
 
 @Controller
 @RequestMapping("/uploads")
@@ -32,7 +33,7 @@ public class UploadController {
   private RoleDataService roleDataService;
 
   @Autowired
-  private RoleCsvInputService roleCsvInputService;
+  private InputServiceFactory inputServiceFactory;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String upload(Model model, @RequestParam String uploadType) {
@@ -40,46 +41,44 @@ public class UploadController {
     return "uploads/upload";
   }
 
-  @RequestMapping(value = "", method = RequestMethod.POST)
-  public String process(@RequestParam String uploadType,
-                        @RequestParam MultipartFile file)
+  private String process(String uploadType, 
+                         MultipartFile file,
+                         boolean clear)
   {
     String path = null;
 
     Session dbSession = Sessions.getSession();
-    roleDataService.setSession(dbSession);
 
     try {
-      roleCsvInputService.execute(file.getInputStream(), false); 
+      String filename = file.getOriginalFilename();
+      String extension = filename.substring(filename.lastIndexOf(".") + 1);
+
+      InputService inputService = 
+        inputServiceFactory.get(dbSession, uploadType, extension);
+
+      inputService.execute(file.getInputStream(), clear);
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
       dbSession.close();
-      path = "redirect:/roles";
+      path = "redirect:/uploads?uploadType=" + uploadType;
     }
 
     return path;
+  }
+  
+  @RequestMapping(value = "", method = RequestMethod.POST)
+  public String processRetain(@RequestParam String uploadType,
+                              @RequestParam MultipartFile file)
+  {
+    return process(uploadType, file, false);
   }
 
   @RequestMapping(value = "", method = RequestMethod.POST, params={"clear"})
   public String processClear(@RequestParam String uploadType,
                              @RequestParam MultipartFile file)
   {
-    String path = null;
-
-    Session dbSession = Sessions.getSession();
-    roleDataService.setSession(dbSession);
-
-    try {
-      roleCsvInputService.execute(file.getInputStream(), true); 
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      dbSession.close();
-      path = "redirect:/roles";
-    }
-
-    return path;
+    return process(uploadType, file, true);
   }
 
 }
