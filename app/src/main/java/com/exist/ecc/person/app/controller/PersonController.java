@@ -41,6 +41,9 @@ import com.exist.ecc.person.util.DateUtil;
 public class PersonController {
 
   @Autowired
+  private PersonRoleController personRoleController;
+
+  @Autowired
   private PersonDataService personDataService;
 
   @Autowired
@@ -410,77 +413,23 @@ public class PersonController {
 
   @RequestMapping(value = "/{personId}/roles/new", method = RequestMethod.GET)
   public String newRole(Model model, @PathVariable Long personId) {
-    String path = null;
-    
-    Session dbSession = Sessions.getSession();
-    personDataService.setSession(dbSession);
-    roleDataService.setSession(dbSession);
-
-    try {
-      PersonDto personDto = personDataService.get(personId);
-      List<RoleDto> roleDtos = roleDataService.getAll();
-
-      model.addAttribute("person", personDto);
-      model.addAttribute("roles", roleDtos);
-      path = "person_roles/new";
-    } catch (Exception e) {
-      e.printStackTrace();
-      path = "redirect:/persons/" + personId;
-    } finally {
-      dbSession.close();
-    }
-
-    return path;
+    return personRoleController._new(model, personId);
   }
 
 
   @RequestMapping(value = "/{personId}/roles", method = RequestMethod.POST)
   public String createRole(@PathVariable Long personId, 
-    @RequestParam("roleId") Long roleId)
+                           @RequestParam Long roleId)
   {
-    String path = null;
-    
-    Session dbSession = Sessions.getSession();
-    personDataService.setSession(dbSession);
-
-    try {
-      PersonDto personDto = personDataService.get(personId);
-      personDto.getRoleIds().add(roleId);
-      System.out.println("I got here");
-      personDataService.save(personDto);
-      System.out.println("I got there");
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      dbSession.close();
-      path = "redirect:/persons/" + personId;
-    }
-
-    return path;
+    return personRoleController.create(personId, roleId);
   }
 
   @RequestMapping(value = "/{personId}/roles/{roleId}/delete", 
                   method = RequestMethod.GET)
   public String deleteRole(@PathVariable Long personId, 
-    @PathVariable Long roleId) 
+                           @PathVariable Long roleId) 
   {
-    String path = null;
-    
-    Session dbSession = Sessions.getSession();
-    personDataService.setSession(dbSession);
-
-    try {
-      PersonDto personDto = personDataService.get(personId);
-      personDto.getRoleIds().remove(roleId);
-      personDataService.save(personDto);
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      dbSession.close();
-      path = "redirect:/persons/" + personId;
-    }
-
-    return path;
+    return personRoleController.delete(personId, roleId);
   }
 
   private List<String> getQueryProperties() {
