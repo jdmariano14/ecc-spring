@@ -12,6 +12,10 @@
     <label for="file" title="A CSV file">File</label>
     <input type="file" name="file">
   </div>
+  <div class="inline field">
+    <input name="clear" tabindex="0" type="checkbox">
+    <label for="clear">Clear existing table</label>
+  </div>
   <button class="ui primary button" type="submit">
     <i class="upload icon"></i>
     Upload
