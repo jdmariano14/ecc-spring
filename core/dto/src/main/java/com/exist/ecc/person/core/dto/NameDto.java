@@ -1,5 +1,7 @@
 package com.exist.ecc.person.core.dto;
 
+import com.exist.ecc.person.util.StringUtil;
+
 public class NameDto {
   
   private String firstName;
@@ -24,7 +26,6 @@ public class NameDto {
     setSuffix(suffix);
     setTitle(title);
   }
-  
 
   public String getFirstName() {
     return firstName;
@@ -64,6 +65,38 @@ public class NameDto {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public String getShortName() {
+    String nameString = 
+      StringUtil.formatUnlessBlank("%s ", getFirstName())
+      + StringUtil.formatUnlessBlank("%s", getLastName());
+
+    return nameString;
+  }
+
+  public String getFormalShortName() {
+    String nameString = 
+      StringUtil.formatUnlessBlank("%s, ", getLastName())
+      + StringUtil.formatUnlessBlank("%s", getFirstName());
+
+    return nameString;
+  }
+
+  public String getFullName() {
+    String nameString = 
+      StringUtil.formatUnlessBlank("%s ", getTitle())
+      + StringUtil.formatUnlessBlank("%s ", getFirstName())
+      + StringUtil.formatUnlessBlank("%s ", getMiddleName())
+      + StringUtil.formatUnlessBlank("%s", getLastName())
+      + StringUtil.formatUnlessBlank(", %s", getSuffix());
+
+    return nameString;
+  }
+
+  @Override
+  public String toString() {
+    return getFullName();
   }
 
 }

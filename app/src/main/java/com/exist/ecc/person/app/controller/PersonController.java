@@ -69,20 +69,17 @@ public class PersonController {
 
     return path;
   }
-/*
+
   @RequestMapping(value = "/{personId}", method = RequestMethod.GET)
   public String show(Model model, @PathVariable Long personId) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
 
     try {
-      Person person = Transactions.get(dbSession, personDao, () ->
-        personDao.get(personId));
-
-      PersonWrapper personWrapper = new PersonWrapper(person);
-
-      model.addAttribute("person", personWrapper);
+      PersonDto personDto = personDataService.get(personId);
+      model.addAttribute("person", personDto);
       path = "persons/show";
     } catch (Exception e) {
       e.printStackTrace();
@@ -93,7 +90,8 @@ public class PersonController {
 
     return path;
   }
-
+  
+/*
   @RequestMapping(value = "/new", method = RequestMethod.GET)
   public String _new(Model model) {
     Person person = new Person();

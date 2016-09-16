@@ -1,7 +1,7 @@
 <%@tag pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@attribute name="personName" required="true" type="com.exist.ecc.person.core.model.Name"%>
+<%@attribute name="personName" required="true" type="com.exist.ecc.person.core.dto.NameDto"%>
 
 <h4 class="ui dividing header">Name</h4>
 <div class="three fields">

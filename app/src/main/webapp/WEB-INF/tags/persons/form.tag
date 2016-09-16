@@ -3,7 +3,7 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@taglib prefix="persons" tagdir="/WEB-INF/tags/persons"%>
-<%@attribute name="person" required="true" type="com.exist.ecc.person.core.model.Person"%>
+<%@attribute name="person" required="true" type="com.exist.ecc.person.core.dto.PersonDto"%>
 <%@attribute name="url" required="true" type="java.lang.String"%>
 <%@attribute name="backUrl" type="java.lang.String"%>
 

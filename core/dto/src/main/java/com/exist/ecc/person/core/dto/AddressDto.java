@@ -1,5 +1,7 @@
 package com.exist.ecc.person.core.dto;
 
+import com.exist.ecc.person.util.StringUtil;
+
 public class AddressDto {
 
   private String streetAddress;
@@ -52,6 +54,16 @@ public class AddressDto {
 
   public void setZipCode(String zipCode) {
     this.zipCode = zipCode;
+  }
+
+  public String getFullAddress() {
+    String addressString = 
+      StringUtil.formatUnlessBlank("%s, ", getStreetAddress())
+      + StringUtil.formatUnlessBlank("%s, ", getBarangay())
+      + StringUtil.formatUnlessBlank("%s ", getMunicipality())
+      + StringUtil.formatUnlessBlank("%s", getZipCode());
+
+    return addressString;
   }
 
 }

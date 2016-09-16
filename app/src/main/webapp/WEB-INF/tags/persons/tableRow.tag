@@ -5,7 +5,7 @@
 <%@attribute name="queryProperty" type="java.lang.String"%>
 
 <tr>
-  <td><c:out value="${person.name.lastName}, ${person.name.firstName}"/></td>
+  <td><c:out value="${person.name.formalShortName}"/></td>
   <c:choose>
     <c:when test="${queryProperty eq 'Date hired'}">
       <td><c:out value="${person.dateHired}"/></td>
@@ -15,12 +15,12 @@
     </c:when>
   </c:choose>
   <td class="center aligned">
-    <app:primaryButton url="/persons/${person.personId}" text="Show ${person.name.firstName} ${person.name.lastName}" icon="open folder" iconOnly="true"/>
+    <app:primaryButton url="/persons/${person.personId}" text="Show ${person.name.shortName}" icon="open folder" iconOnly="true"/>
   </td>
   <td class="center aligned">
-    <app:primaryButton url="/persons/${person.personId}/edit" text="Edit ${person.name.firstName} ${person.name.lastName}" icon="write" iconOnly="true"/>
+    <app:primaryButton url="/persons/${person.personId}/edit" text="Edit ${person.name.shortName}" icon="write" iconOnly="true"/>
   </td>
   <td class="center aligned">
-    <app:primaryButton url="/persons/${person.personId}/delete" text="Delete ${person.name.firstName} ${person.name.lastName}" icon="trash outline" iconOnly="true"/>
+    <app:primaryButton url="/persons/${person.personId}/delete" text="Delete ${person.name.shortName}" icon="trash outline" iconOnly="true"/>
   </td>
 </tr>
