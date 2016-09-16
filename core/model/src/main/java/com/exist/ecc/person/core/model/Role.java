@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.exist.ecc.person.core.dto.RoleDto;
@@ -20,7 +21,9 @@ import com.exist.ecc.person.core.dto.RoleDto;
 public class Role {
 
   @Id
-  @GeneratedValue
+  @GenericGenerator(name="overridable",
+                    strategy="com.exist.ecc.person.core.model.generator.OverridableSequenceGenerator")
+  @GeneratedValue(generator = "overridable")
   @Column(name = "ROLE_ID")
   private long roleId;
   
@@ -43,6 +46,12 @@ public class Role {
   }
 
   public void readDto(RoleDto dto) {
+    long dtoId = dto.getRoleId();
+
+    if (this.roleId <= 0 && dtoId > 0) {
+      //this.roleId = dtoId;
+    }
+
     this.name = dto.getName();
   }
 

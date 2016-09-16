@@ -8,5 +8,9 @@
   <bean id="personDataService" class="com.exist.ecc.person.core.service.data.impl.PersonDataService"/>
   <bean id="roleDataService" class="com.exist.ecc.person.core.service.data.impl.RoleDataService"/>
   <bean id="contactDataService" class="com.exist.ecc.person.core.service.data.impl.ContactDataService"/>
+
+  <bean id="roleCsvInputService" class="com.exist.ecc.person.core.service.input.impl.RoleCsvInputService">
+    <constructor-arg ref="roleDataService"/>
+  </bean>
     
 </beans>

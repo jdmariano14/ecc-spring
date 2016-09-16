@@ -21,10 +21,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.hibernate.Session;
 
 import com.exist.ecc.person.core.dao.Sessions;
+import com.exist.ecc.person.core.service.data.impl.RoleDataService;
+import com.exist.ecc.person.core.service.input.impl.RoleCsvInputService;
 
 @Controller
 @RequestMapping("/uploads")
 public class UploadController {
+
+  @Autowired
+  private RoleDataService roleDataService;
+
+  @Autowired
+  private RoleCsvInputService roleCsvInputService;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String upload(Model model, @RequestParam String uploadType) {
@@ -33,22 +41,24 @@ public class UploadController {
   }
 
   @RequestMapping(value = "", method = RequestMethod.POST)
-  public @ResponseBody String process(@RequestParam String uploadType,
-                                      @RequestParam MultipartFile file)
+  public String process(@RequestParam String uploadType,
+                        @RequestParam MultipartFile file)
   {
-    String body = "";
+    String path = null;
+
+    Session dbSession = Sessions.getSession();
+    roleDataService.setSession(dbSession);
 
     try {
-      Scanner scanner = new Scanner(file.getInputStream());
-
-      while(scanner.hasNext()) {
-        body += scanner.nextLine() + System.lineSeparator();
-      }
-    } catch(Exception e) {
+      roleCsvInputService.execute(file.getInputStream(), false); 
+    } catch (IOException e) {
       e.printStackTrace();
+    } finally {
+      dbSession.close();
+      path = "redirect:/roles";
     }
 
-    return body;
+    return path;
   }
 
 }
