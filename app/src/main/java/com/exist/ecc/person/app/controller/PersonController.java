@@ -209,7 +209,6 @@ public class PersonController {
     return path;
   }
 
-/*
   @RequestMapping(value = "/query", method = RequestMethod.POST)
   public String query(Model model, @RequestParam String queryProperty) {
     String path = null;
@@ -254,8 +253,8 @@ public class PersonController {
   {
     boolean desc = order.equals("desc");
 
-    Supplier<List<Person>> query = () ->
-      personDao.queryLastName(minString, maxString, likeString, desc);
+    Supplier<List<PersonDto>> query = () ->
+      personDataService.queryLastName(minString, maxString, likeString, desc);
 
     return getResultPage(model, query, "Last name");
   }
@@ -275,8 +274,8 @@ public class PersonController {
     Date _minDate = DateUtil.parse(dateFormat, minDate);
     Date _maxDate = DateUtil.parse(dateFormat, maxDate);
 
-    Supplier<List<Person>> query = () ->
-      personDao.queryDateHired(_minDate, _maxDate, desc);
+    Supplier<List<PersonDto>> query = () ->
+      personDataService.queryDateHired(_minDate, _maxDate, desc);
 
     return getResultPage(model, query, "Date hired");
   }
@@ -294,26 +293,25 @@ public class PersonController {
     BigDecimal _minBigDecimal = BigDecimalUtil.parse(minBigDecimal);
     BigDecimal _maxBigDecimal = BigDecimalUtil.parse(maxBigDecimal);
 
-    Supplier<List<Person>> query = () ->
-      personDao.queryGwa(_minBigDecimal, _maxBigDecimal, desc);
+    Supplier<List<PersonDto>> query = () ->
+      personDataService.queryGwa(_minBigDecimal, _maxBigDecimal, desc);
 
     return getResultPage(model, query, "GWA");
   }
 
-  private String getResultPage(Model model, Supplier<List<Person>> query, 
-    String property)
+  private String getResultPage(Model model, 
+                               Supplier<List<PersonDto>> query,
+                               String property)
   {
     String path = null;
 
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
 
     try {
-      List<Person> persons = Transactions.get(dbSession, personDao, query);
+      List<PersonDto> personDtos = query.get();
 
-      List<PersonWrapper> personWrappers =
-        PersonWrapper.wrapCollection(persons);
-
-      model.addAttribute("persons", personWrappers);
+      model.addAttribute("persons", personDtos);
       model.addAttribute("selectedProperty", property);
       model.addAttribute("queryProperties", getQueryProperties());
 
@@ -327,7 +325,7 @@ public class PersonController {
 
     return path;
   }
-  */
+  
 
   @RequestMapping(value = "/{personId}/contacts/new", method = RequestMethod.GET)
   public String newContact(Model model, @PathVariable Long personId) {

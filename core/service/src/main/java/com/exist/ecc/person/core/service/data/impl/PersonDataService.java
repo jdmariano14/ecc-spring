@@ -1,10 +1,15 @@
 package com.exist.ecc.person.core.service.data.impl;
 
+import java.math.BigDecimal;
+
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -40,10 +45,7 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
   
   @Override
   public List<PersonDto> getAll() {
-    return personDao.query(c -> c.addOrder(Order.asc("personId")))
-                  .stream()
-                  .map(r -> r.getDto())
-                  .collect(Collectors.toList());
+    return getDtos(personDao.query(c -> c.addOrder(Order.asc("personId"))));
   }
 
   @Override
@@ -80,6 +82,71 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
     person.getRoles().clear();
     
     personDao.delete(person);
+  }
+
+  public List<PersonDto> queryLastName(String min, 
+                                       String max, 
+                                       String like, 
+                                       boolean desc)
+  {
+    return getDtos(personDao.query(c -> {
+      if (!min.isEmpty()) {
+        c.add(Restrictions.ge("name.lastName", min).ignoreCase());
+      }
+
+      if (!max.isEmpty()) {
+        c.add(Restrictions.le("name.lastName", max).ignoreCase());
+      }
+
+      if (!like.isEmpty()) {
+        c.add(Restrictions.like("name.lastName", like).ignoreCase());
+      }
+
+      return order("name.lastName", desc).apply(c);
+    }));
+  }
+
+  public List<PersonDto> queryDateHired(Date min, Date max, boolean desc) {
+    return getDtos(personDao.query(c -> {
+      if (min != null) {
+        c.add(Restrictions.ge("dateHired", min));
+      }
+
+      if (max != null) {
+        c.add(Restrictions.le("dateHired", max));
+      }
+
+      return order("dateHired", desc).apply(c);
+    }));
+  }
+
+  public List<PersonDto> queryGwa(BigDecimal min, BigDecimal max, boolean desc) {
+    return getDtos(personDao.query(c -> {
+      if (min != null) {
+        c.add(Restrictions.ge("gwa", min));
+      }
+
+      if (max != null) {
+        c.add(Restrictions.le("gwa", max));
+      }
+
+      return order("gwa", desc).apply(c);
+    }));
+  }
+
+  private List<PersonDto> getDtos(List<Person> persons) {
+    return persons.stream()
+                  .map(r -> r.getDto())
+                  .collect(Collectors.toList());
+  }
+
+  private UnaryOperator<Criteria> order(String property, boolean desc) {
+    return c -> {
+      c.addOrder(desc ? Order.desc(property)
+                      : Order.asc(property));
+
+      return c;
+    };
   }
 
   private void updateContacts(Person person, Set<Long> newContactIds) {
