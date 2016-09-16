@@ -29,8 +29,8 @@ import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dto.ContactDto;
 import com.exist.ecc.person.core.dto.PersonDto;
 import com.exist.ecc.person.core.dto.RoleDto;
-import com.exist.ecc.person.core.service.data.impl.PersonDataService;
 import com.exist.ecc.person.core.service.data.impl.ContactDataService;
+import com.exist.ecc.person.core.service.data.impl.PersonDataService;
 import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 
 import com.exist.ecc.person.util.BigDecimalUtil;
@@ -331,95 +331,15 @@ public class PersonController {
 
   @RequestMapping(value = "/{personId}/contacts/new", method = RequestMethod.GET)
   public String newContact(Model model, @PathVariable Long personId) {
-    String path = null;
-    
-    Session dbSession = Sessions.getSession();
-    personDataService.setSession(dbSession);
-
-    try {
-      PersonDto personDto = personDataService.get(personId);
-      ContactDto contactDto = new ContactDto();
-      contactDto.setPersonId(personId);
-
-      model.addAttribute("person", personDto);
-      model.addAttribute("contact", contactDto);
-      model.addAttribute("contactTypes", getContactTypes());
-      path = "contacts/new";
-    } catch (Exception e) {
-      e.printStackTrace();
-      path = "redirect:/persons/" + personId;
-    } finally {
-      dbSession.close();
-    }
-
-    return path;
+    return contactController._new(model, personId);
   }
   
-  /*
-  @RequestMapping(value = "/{personId}/contacts", 
-                  method = RequestMethod.POST,
-                  params = {"contactType=Email"})
-  public String createEmail(@ModelAttribute Contact contact,
-    @PathVariable Long personId)
-  {
-    String path = null;
-    Email email = new Email();
-
-    createContact(email, contact, personId);
-
-    return "redirect:/persons/" + personId;
-  }
-
-  @RequestMapping(value = "/{personId}/contacts", 
-                  method = RequestMethod.POST,
-                  params = {"contactType=Landline"})
-  public String createLandline(@ModelAttribute Contact contact,
-    @PathVariable Long personId)
-  {
-    String path = null;
-    Landline landline = new Landline();
-
-    createContact(landline, contact, personId);
-
-    return "redirect:/persons/" + personId;
-  }
-
-  @RequestMapping(value = "/{personId}/contacts", 
-                  method = RequestMethod.POST,
-                  params = {"contactType=Mobile"})
-  public String createMobile(@ModelAttribute Contact contact,
-    @PathVariable Long personId)
-  {
-    String path = null;
-    Mobile mobile = new Mobile();
-
-    createContact(mobile, contact, personId);
-
-    return "redirect:/persons/" + personId;
-  }
-  */
-
-
   @RequestMapping(value = "/{personId}/contacts", 
                   method = RequestMethod.POST)
   public String createContact(@ModelAttribute ContactDto contactDto,
                               @PathVariable Long personId)
   { 
-    String path = null;
-
-    Session dbSession = Sessions.getSession();
-    contactDataService.setSession(dbSession);
-
-    try {
-      contactDataService.save(contactDto);
-    } catch (Exception e){
-      e.printStackTrace();
-    } finally {
-      dbSession.close();
-      path = "redirect:/persons/" + personId;
-    }
-
-    return path;
+    return contactController.create(contactDto, personId);
   }
 
   @RequestMapping(value = "/{personId}/roles/new", method = RequestMethod.GET)
@@ -450,12 +370,5 @@ public class PersonController {
     return queryProperties;
   }
 
-  private Set<String> getContactTypes() {
-    Set<String> contactTypes = 
-      Stream.of("Email", "Landline", "Mobile")
-            .collect(Collectors.toSet());
-
-    return contactTypes;
-  }
   //http://www.concretepage.com/spring/spring-mvc/spring-mvc-modelattribute-annotation-example
 }

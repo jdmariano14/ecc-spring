@@ -1,6 +1,9 @@
-  package com.exist.ecc.person.app.controller;
+package com.exist.ecc.person.app.controller;
 
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,17 +19,66 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.hibernate.Session;
 
 import com.exist.ecc.person.core.dao.Sessions;
+import com.exist.ecc.person.core.dto.ContactDto;
+import com.exist.ecc.person.core.dto.PersonDto;
+import com.exist.ecc.person.core.service.data.impl.ContactDataService;
+import com.exist.ecc.person.core.service.data.impl.PersonDataService;
 
 @Controller
 @RequestMapping("/contacts")
 public class ContactController {
+
+  @Autowired
+  private ContactDataService contactDataService;
+
+  @Autowired
+  private PersonDataService personDataService;
+
+  public String _new(Model model, Long personId) { 
+    String path = null;
+    
+    Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
+
+    try {
+      PersonDto personDto = personDataService.get(personId);
+      ContactDto contactDto = new ContactDto();
+      contactDto.setPersonId(personId);
+
+      model.addAttribute("person", personDto);
+      model.addAttribute("contact", contactDto);
+      model.addAttribute("contactTypes", getContactTypes());
+      path = "contacts/new";
+    } catch (Exception e) {
+      e.printStackTrace();
+      path = "redirect:/persons/" + personId;
+    } finally {
+      dbSession.close();
+    }
+
+    return path;
+  }
+
+  public String create(ContactDto contactDto, Long personId) { 
+    String path = null;
+
+    Session dbSession = Sessions.getSession();
+    contactDataService.setSession(dbSession);
+
+    try {
+      contactDataService.save(contactDto);
+    } catch (Exception e){
+      e.printStackTrace();
+    } finally {
+      dbSession.close();
+      path = "redirect:/persons/" + personId;
+    }
+
+    return path;
+  }
+
+
 /*
-  @Autowired
-  private PersonCriteriaDao personDao;
-
-  @Autowired
-  private ContactCriteriaDao contactDao;
-
   @RequestMapping(value = "/{contactId}/edit", method = RequestMethod.GET)
   public String edit(Model model, @PathVariable Long contactId) {
     String path = null;
@@ -98,30 +150,14 @@ public class ContactController {
     }
 
     return path;
-  }
-
-  /*
-  @RequestMapping(value = "/{personId}/contact", method = RequestMethod.POST, params={"type=Email"})
-  public String createEmail(Locale locale, Model model, 
-    @PathVariable Long personId) 
-  {
-    return "";
-  }
-
-  @RequestMapping(value = "/{personId}/contact", method = RequestMethod.POST, params={"type=Landline"})
-  public String createLandline(Locale locale, Model model, 
-    @PathVariable Long personId) 
-  {
-    return "";
-  }
-
-  @RequestMapping(value = "/{personId}/contact", method = RequestMethod.POST, params={"type=Mobile"})
-  public String createMobile(Locale locale, Model model, 
-    @PathVariable Long personId) 
-  {
-    return "";
   }*/
-  
 
-  //http://www.concretepage.com/spring/spring-mvc/spring-mvc-modelattribute-annotation-example
+
+  private Set<String> getContactTypes() {
+    Set<String> contactTypes = 
+      Stream.of("Email", "Landline", "Mobile")
+            .collect(Collectors.toSet());
+
+    return contactTypes;
+  }
 }
