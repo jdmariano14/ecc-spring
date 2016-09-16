@@ -124,21 +124,18 @@ public class PersonController {
 
     return path;
   }
-/*
+
   @RequestMapping(value = "/{personId}/edit", method = RequestMethod.GET)
   public String edit(Model model, @PathVariable Long personId) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
 
     try {
-      Person person = Transactions.get(dbSession, personDao, () ->
-        personDao.get(personId));
-
-      PersonWrapper personWrapper = new PersonWrapper(person); 
+      PersonDto personDto = personDataService.get(personId);
       
-      model.addAttribute("person", person);
-      model.addAttribute("personWrapper", personWrapper);
+      model.addAttribute("person", personDto);
       path = "persons/edit";
     } catch (Exception e) {
       e.printStackTrace();
@@ -151,21 +148,20 @@ public class PersonController {
   }
 
   @RequestMapping(value = "/{personId}", method = RequestMethod.POST)
-  public String update(@ModelAttribute Person person, BindingResult result,
-    @PathVariable Long personId)
+  public String update(@ModelAttribute PersonDto personDto, 
+    BindingResult result, @PathVariable Long personId)
   {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = Sessions.getSession();    
+    personDataService.setSession(dbSession);
 
     for (ObjectError error : result.getAllErrors()) {
       System.out.println(error);
     }
 
     try {
-      if (person.getPersonId() == personId) {
-        Transactions.conduct(dbSession, personDao, () -> personDao.save(person)); 
-      }
+      personDataService.save(personDto);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -175,7 +171,7 @@ public class PersonController {
 
     return path;
   }
-
+/*
   @RequestMapping(value = "/{personId}/delete", method = RequestMethod.GET)
   public String delete(@PathVariable Long personId) {
     String path = null;
