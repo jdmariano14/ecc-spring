@@ -1,17 +1,22 @@
 package com.exist.ecc.person.core.service.data.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import com.exist.ecc.person.core.dao.impl.ContactCriteriaDao;
 import com.exist.ecc.person.core.dao.impl.PersonCriteriaDao;
 import com.exist.ecc.person.core.dto.ContactDto;
 import com.exist.ecc.person.core.dto.PersonDto;
 import com.exist.ecc.person.core.model.Contact;
+import com.exist.ecc.person.core.model.Email;
+import com.exist.ecc.person.core.model.Landline;
+import com.exist.ecc.person.core.model.Mobile;
 import com.exist.ecc.person.core.model.Person;
 
 public class ContactDataService 
@@ -43,12 +48,35 @@ public class ContactDataService
 
   @Override
   public void save(ContactDto dto) {
-    Contact contact = contactDao.get(dto.getContactId());
-    
-    contact.readDto(dto);
-    contact.setPerson(personDao.get(dto.getPersonId()));
+    Contact contact = null;
 
-    contactDao.save(contact);
+    try {
+      contact = contactDao.get(dto.getContactId());
+
+      contact.readDto(dto);
+      contact.setPerson(personDao.get(dto.getPersonId()));
+
+      contactDao.save(contact);
+    } catch (Exception e) {
+      switch(dto.getContactType()) {
+        case "Email":
+          contact = new Email();
+          break;
+        case "Landline":
+          contact = new Landline();
+          break;
+        case "Mobile":
+          contact = new Mobile();
+          break;
+        default:
+          throw e;
+      }
+
+      contact.readDto(dto);
+      contact.setPerson(personDao.get(dto.getPersonId()));
+
+      contactDao.save(contact);
+    }
   }
   
   @Override
@@ -56,6 +84,23 @@ public class ContactDataService
     Contact contact = contactDao.get(dto.getContactId());
     
     contactDao.delete(contact);
+  }
+
+  public List<ContactDto> getFromPerson(PersonDto personDto) {
+    List<ContactDto> contactDtos;
+    Set<Long> contactIds = personDto.getContactIds();
+
+    if (!contactIds.isEmpty()) {
+      contactDtos = 
+        contactDao.query(c -> c.add(Restrictions.in("contactId", contactIds)))
+                  .stream()
+                  .map(r -> r.getDto())
+                  .collect(Collectors.toList());
+    } else {
+      contactDtos = new ArrayList(0);
+    }
+
+    return contactDtos;
   }
 
 }

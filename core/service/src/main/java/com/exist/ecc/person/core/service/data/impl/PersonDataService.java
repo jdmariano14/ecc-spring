@@ -48,7 +48,6 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
 
   @Override
   public void save(PersonDto dto) {
-
     Person person = null;
 
     try {

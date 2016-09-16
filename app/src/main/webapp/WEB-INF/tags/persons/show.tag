@@ -11,4 +11,5 @@
   <p><strong>GWA:</strong> <c:out value="${person.gwa}"/></p>
   <p><persons:controls person="${person}"/></p>
 </section>
+<persons:showContacts person="${person}" contacts="${contacts}"/>
 <persons:showRoles person="${person}" roles="${roles}"/>

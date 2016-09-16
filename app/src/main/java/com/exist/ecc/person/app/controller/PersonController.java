@@ -41,9 +41,6 @@ import com.exist.ecc.person.util.DateUtil;
 public class PersonController {
 
   @Autowired
-  private PersonRoleController personRoleController;
-
-  @Autowired
   private PersonDataService personDataService;
 
   @Autowired
@@ -51,6 +48,12 @@ public class PersonController {
 
   @Autowired
   private RoleDataService roleDataService;
+
+  @Autowired
+  private ContactController contactController;
+
+  @Autowired
+  private PersonRoleController personRoleController;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String index(Locale locale, Model model) {
@@ -82,13 +85,17 @@ public class PersonController {
     Session dbSession = Sessions.getSession();
     personDataService.setSession(dbSession);
     roleDataService.setSession(dbSession);
+    contactDataService.setSession(dbSession);
 
     try {
       PersonDto personDto = personDataService.get(personId);
+      List<ContactDto> contactDtos = 
+        contactDataService.getFromPerson(personDto);
       List<RoleDto> roleDtos = 
         roleDataService.getFromPerson(personDto);
 
       model.addAttribute("person", personDto);
+      model.addAttribute("contacts", contactDtos);
       model.addAttribute("roles", roleDtos);
       path = "persons/show";
     } catch (Exception e) {
@@ -320,22 +327,22 @@ public class PersonController {
 
     return path;
   }
+  */
 
   @RequestMapping(value = "/{personId}/contacts/new", method = RequestMethod.GET)
   public String newContact(Model model, @PathVariable Long personId) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
 
     try {
-      Person person = Transactions.get(dbSession, personDao, () ->
-        personDao.get(personId));
-      Contact contact = new Contact();
+      PersonDto personDto = personDataService.get(personId);
+      ContactDto contactDto = new ContactDto();
+      contactDto.setPersonId(personId);
 
-      PersonWrapper personWrapper = new PersonWrapper(person);
-
-      model.addAttribute("person", personWrapper);
-      model.addAttribute("contact", contact);
+      model.addAttribute("person", personDto);
+      model.addAttribute("contact", contactDto);
       model.addAttribute("contactTypes", getContactTypes());
       path = "contacts/new";
     } catch (Exception e) {
@@ -347,7 +354,8 @@ public class PersonController {
 
     return path;
   }
-
+  
+  /*
   @RequestMapping(value = "/{personId}/contacts", 
                   method = RequestMethod.POST,
                   params = {"contactType=Email"})
@@ -389,33 +397,35 @@ public class PersonController {
 
     return "redirect:/persons/" + personId;
   }
+  */
 
-  private void createContact(Contact concreteContact, Contact abstractContact, 
-    long personId) 
+
+  @RequestMapping(value = "/{personId}/contacts", 
+                  method = RequestMethod.POST)
+  public String createContact(@ModelAttribute ContactDto contactDto,
+                              @PathVariable Long personId)
   { 
-    Session dbSession = contactDataService.newSession();
+    String path = null;
+
+    Session dbSession = Sessions.getSession();
+    contactDataService.setSession(dbSession);
 
     try {
-      PersonDto person = personDataService.get(personId);
-
-      person.getContactIds().add(concreteContact.getContactId());
-      contact.setPersonId(person.getPersonId());
-      
-      contactDataService.save(concreteContact);
-      personDataService.save(person);      
+      contactDataService.save(contactDto);
     } catch (Exception e){
       e.printStackTrace();
     } finally {
       dbSession.close();
+      path = "redirect:/persons/" + personId;
     }
+
+    return path;
   }
-*/
 
   @RequestMapping(value = "/{personId}/roles/new", method = RequestMethod.GET)
   public String newRole(Model model, @PathVariable Long personId) {
     return personRoleController._new(model, personId);
   }
-
 
   @RequestMapping(value = "/{personId}/roles", method = RequestMethod.POST)
   public String createRole(@PathVariable Long personId, 

@@ -56,9 +56,7 @@ public class PersonRoleController {
     try {
       PersonDto personDto = personDataService.get(personId);
       personDto.getRoleIds().add(roleId);
-      System.out.println("I got here");
       personDataService.save(personDto);
-      System.out.println("I got there");
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
