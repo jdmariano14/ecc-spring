@@ -53,7 +53,7 @@ public abstract class AbstractDao<T, I extends Serializable>
   
   @Override
   public void save(T entity) {
-    conduct(() -> getSession().saveOrUpdate(entity));
+    conduct(() -> getSession().saveOrUpdate(entity)); 
   }
 
   @Override

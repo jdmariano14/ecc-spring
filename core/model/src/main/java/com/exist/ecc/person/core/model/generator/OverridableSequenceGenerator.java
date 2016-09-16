@@ -6,6 +6,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.id.SequenceGenerator;
 
+import com.exist.ecc.person.core.model.OverridableIdModel;
+
 public class OverridableSequenceGenerator extends SequenceGenerator {
 
   @Override
@@ -14,14 +16,13 @@ public class OverridableSequenceGenerator extends SequenceGenerator {
   {
     Serializable returnId;
 
-    Serializable currentId = session.getEntityPersister(null, object)
-                                    .getClassMetadata()
-                                    .getIdentifier(object, session);
 
-    if (currentId == null || (Long) currentId <= 0 ) {
-      returnId = super.generate(session, object);
+    if (object instanceof OverridableIdModel
+        && ((OverridableIdModel) object).getOverrideId() != null )
+    {
+      returnId = ((OverridableIdModel) object).getOverrideId();
     } else {
-      returnId = currentId;
+      returnId = super.generate(session, object);
     }
 
     return returnId;

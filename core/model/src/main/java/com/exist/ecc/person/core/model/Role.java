@@ -18,7 +18,7 @@ import com.exist.ecc.person.core.dto.RoleDto;
 
 @Entity
 @Table(name = "ROLE")
-public class Role {
+public class Role extends OverridableIdModel<Long> {
 
   @Id
   @GenericGenerator(name="overridable",
@@ -48,8 +48,8 @@ public class Role {
   public void readDto(RoleDto dto) {
     long dtoId = dto.getRoleId();
 
-    if (this.roleId <= 0 && dtoId > 0) {
-      //this.roleId = dtoId;
+    if (dtoId > 0) {
+      setOverrideId(dtoId);
     }
 
     this.name = dto.getName();
