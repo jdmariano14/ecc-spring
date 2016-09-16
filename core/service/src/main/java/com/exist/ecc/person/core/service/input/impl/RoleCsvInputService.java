@@ -8,11 +8,10 @@ import com.exist.ecc.person.core.dto.RoleDto;
 import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 
 public class RoleCsvInputService extends CsvInputService {
+  RoleDataService roleDataService = new RoleDataService();
   
   public RoleCsvInputService(Session session) {
-    RoleDataService roleDataService = new RoleDataService();
     roleDataService.setSession(session);
-    setDataService(roleDataService);
   }
 
   @Override
@@ -26,15 +25,15 @@ public class RoleCsvInputService extends CsvInputService {
 
     RoleDto roleDto = new RoleDto(roleId, name, null);
 
-    getDataService().save(roleDto);
+    roleDataService.save(roleDto);
   }
 
   @Override
   public void clearDatabaseTable() {
-    List<RoleDto> roleDtos = getDataService().getAll();
+    List<RoleDto> roleDtos = roleDataService.getAll();
 
     for (RoleDto roleDto : roleDtos) {
-      getDataService().delete(roleDto);
+      roleDataService.delete(roleDto);
     }
   }
 

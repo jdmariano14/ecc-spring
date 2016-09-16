@@ -15,11 +15,10 @@ import com.exist.ecc.person.util.BigDecimalUtil;
 import com.exist.ecc.person.util.DateUtil;
 
 public class PersonCsvInputService extends CsvInputService {
+  PersonDataService personDataService = new PersonDataService();
 
   public PersonCsvInputService(Session session) {
-    PersonDataService personDataService = new PersonDataService();
     personDataService.setSession(session);
-    setDataService(personDataService);
   }
 
   @Override
@@ -47,15 +46,15 @@ public class PersonCsvInputService extends CsvInputService {
                                         birthDate, dateHired, gwa,
                                         employed, null, null);
 
-    getDataService().save(personDto);
+    personDataService.save(personDto);
   }
 
   @Override
   public void clearDatabaseTable() {
-    List<PersonDto> personDtos = getDataService().getAll();
+    List<PersonDto> personDtos = personDataService.getAll();
 
     for (PersonDto personDto : personDtos) {
-      getDataService().delete(personDto);
+      personDataService.delete(personDto);
     }
   }
 
