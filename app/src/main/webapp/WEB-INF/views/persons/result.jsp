@@ -13,8 +13,5 @@
     <section class="ui segment">
       <persons:table persons="${persons}" queryProperty="${selectedProperty}"/>
     </section>
-    <section class="ui segment">
-      <p><a href="/persons">Back</a></p>
-    </section>
   </jsp:body>
 </app:layout>
