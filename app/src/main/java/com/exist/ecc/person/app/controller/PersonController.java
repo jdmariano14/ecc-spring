@@ -171,22 +171,17 @@ public class PersonController {
 
     return path;
   }
-/*
+
   @RequestMapping(value = "/{personId}/delete", method = RequestMethod.GET)
   public String delete(@PathVariable Long personId) {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
 
     try {
-      Person person = Transactions.get(dbSession, personDao, () ->
-        personDao.get(personId));
-
-      person.getRoles().forEach(r -> r.getPersons().remove(person));
-      person.getRoles().clear();
-
-      Transactions.conduct(dbSession, personDao, () ->
-        personDao.delete(person));
+      PersonDto personDto = personDataService.get(personId);
+      personDataService.delete(personDto);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -197,6 +192,7 @@ public class PersonController {
     return path;
   }
 
+/*
   @RequestMapping(value = "/query", method = RequestMethod.POST)
   public String query(Model model, @RequestParam String queryProperty) {
     String path = null;
