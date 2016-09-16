@@ -1,5 +1,6 @@
 package com.exist.ecc.person.core.dto;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class RoleDto {
@@ -9,7 +10,7 @@ public class RoleDto {
   private Set<Long> personIds;
 
   public RoleDto() {
-    
+    personIds = new HashSet();
   }
 
   public RoleDto(long roleId,

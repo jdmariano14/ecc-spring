@@ -3,6 +3,7 @@ package com.exist.ecc.person.core.dto;
 import java.math.BigDecimal;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 public class PersonDto {
@@ -18,7 +19,10 @@ public class PersonDto {
   private Set<Long> roleIds;
 
   public PersonDto() {
-
+    name = new NameDto();
+    address = new AddressDto();
+    contactIds = new HashSet();
+    roleIds = new HashSet();
   }
   
   public PersonDto(long personId,

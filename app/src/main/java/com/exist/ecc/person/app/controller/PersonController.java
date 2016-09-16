@@ -91,33 +91,30 @@ public class PersonController {
     return path;
   }
   
-/*
   @RequestMapping(value = "/new", method = RequestMethod.GET)
   public String _new(Model model) {
-    Person person = new Person();
-    Name name = new Name();
-    Address address = new Address();
-
-    person.setName(name);
-    person.setAddress(address);
-
-    model.addAttribute("person", person);
+    PersonDto personDto = new PersonDto();
+    model.addAttribute("person", personDto);
 
     return "persons/new";
   }
 
+
   @RequestMapping(value = "", method = RequestMethod.POST)
-  public String create(@ModelAttribute Person person, BindingResult result) {
+  public String create(@ModelAttribute PersonDto personDto, 
+    BindingResult result) 
+  {
     String path = null;
     
     Session dbSession = Sessions.getSession();
+    personDataService.setSession(dbSession);
 
     for (ObjectError error : result.getAllErrors()) {
       System.out.println(error);
     }
 
     try {
-      Transactions.conduct(dbSession, personDao, () -> personDao.save(person));
+      personDataService.save(personDto);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -127,7 +124,7 @@ public class PersonController {
 
     return path;
   }
-
+/*
   @RequestMapping(value = "/{personId}/edit", method = RequestMethod.GET)
   public String edit(Model model, @PathVariable Long personId) {
     String path = null;

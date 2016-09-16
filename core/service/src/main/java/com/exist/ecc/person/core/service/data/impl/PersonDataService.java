@@ -84,9 +84,15 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
   }
 
   private void updateContacts(Person person, Set<Long> newContactIds) {
-    Set<Long> oldContactIds = person.getContacts().stream()
-                                    .map(c -> c.getContactId())
-                                    .collect(Collectors.toSet());
+    Set<Long> oldContactIds; 
+
+    try {
+      oldContactIds = person.getContacts().stream()
+                            .map(c -> c.getContactId())
+                            .collect(Collectors.toSet());
+    } catch (NullPointerException e) {
+      oldContactIds = new HashSet();
+    }
 
     Set<Long> addedContactIds = new HashSet(newContactIds);
     addedContactIds.removeAll(oldContactIds);
@@ -94,19 +100,31 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
     Set<Long> removedContactIds = new HashSet(oldContactIds);
     removedContactIds.removeAll(newContactIds);
 
-    List<Contact> addedContacts = contactDao.query(c -> 
-      c.add(Restrictions.in("contactId", addedContactIds)));
-    List<Contact> removedContacts = contactDao.query(c -> 
-      c.add(Restrictions.in("contactId", removedContactIds)));
+    if (!addedContactIds.isEmpty()) {
+      List<Contact> addedContacts = contactDao.query(c -> 
+        c.add(Restrictions.in("contactId", addedContactIds)));
+      
+      person.getContacts().addAll(addedContacts); 
+    }
 
-    person.getContacts().addAll(addedContacts);
-    person.getContacts().removeAll(removedContacts);
+    if (!removedContactIds.isEmpty()) {
+      List<Contact> removedContacts = contactDao.query(c -> 
+        c.add(Restrictions.in("contactId", removedContactIds)));
+
+      person.getContacts().removeAll(removedContacts);
+    }
   }
 
   private void updateRoles(Person person, Set<Long> newRoleIds) {
-    Set<Long> oldRoleIds = person.getRoles().stream()
-                                 .map(r -> r.getRoleId())
-                                 .collect(Collectors.toSet());
+    Set<Long> oldRoleIds; 
+
+    try {
+      oldRoleIds = person.getRoles().stream()
+                         .map(r -> r.getRoleId())
+                         .collect(Collectors.toSet());
+    } catch (NullPointerException e) {
+      oldRoleIds = new HashSet();
+    }
 
     Set<Long> addedRoleIds = new HashSet(newRoleIds);
     addedRoleIds.removeAll(oldRoleIds);
@@ -114,12 +132,18 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
     Set<Long> removedRoleIds = new HashSet(oldRoleIds);
     removedRoleIds.removeAll(newRoleIds);
 
-    List<Role> addedRoles = roleDao.query(c -> 
-      c.add(Restrictions.in("roleId", addedRoleIds)));
-    List<Role> removedRoles = roleDao.query(c -> 
-      c.add(Restrictions.in("roleId", removedRoleIds)));
+    if (!addedRoleIds.isEmpty()) {
+      List<Role> addedRoles = roleDao.query(c -> 
+        c.add(Restrictions.in("roleId", addedRoleIds)));
 
-    person.getRoles().addAll(addedRoles);
-    person.getRoles().removeAll(removedRoles);
+      person.getRoles().addAll(addedRoles);
+    }
+
+    if (!removedRoleIds.isEmpty()) {
+      List<Role> removedRoles = roleDao.query(c -> 
+        c.add(Restrictions.in("roleId", removedRoleIds)));
+
+      person.getRoles().removeAll(removedRoles);
+    }
   }
 }
