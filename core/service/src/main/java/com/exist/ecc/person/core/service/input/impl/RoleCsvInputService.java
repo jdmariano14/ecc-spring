@@ -17,6 +17,10 @@ public class RoleCsvInputService extends CsvInputService {
 
   @Override
   public void processValueArray(String[] values) {
+    if (values.length != 2) {
+      return;
+    }
+
     Long roleId = Long.parseLong(values[0]);
     String name = values[1];
 

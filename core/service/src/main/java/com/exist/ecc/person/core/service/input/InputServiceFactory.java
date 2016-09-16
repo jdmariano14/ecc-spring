@@ -13,6 +13,9 @@ public class InputServiceFactory {
     switch (extension.toLowerCase()) {
       case "csv":
         switch(type.toLowerCase()) {
+          case "persons":
+            inputService = new PersonCsvInputService(session);
+            break;
           case "roles":
             inputService = new RoleCsvInputService(session);
             break;

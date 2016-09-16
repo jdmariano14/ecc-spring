@@ -25,7 +25,7 @@ import com.exist.ecc.person.core.dto.PersonDto;
 
 @Entity
 @Table(name = "PERSON")
-public class Person {
+public class Person extends OverridableIdModel<Long> {
 
   @Id
   @GeneratedValue
@@ -95,18 +95,18 @@ public class Person {
   }
 
   public void readDto(PersonDto dto) {
+    long dtoId = dto.getPersonId();
+
+    if (dtoId > 0) {
+      setOverrideId(dtoId);
+    }
+
     this.name.readDto(dto.getName());
     this.address.readDto(dto.getAddress());
     this.birthDate = dto.getBirthDate();
     this.dateHired = dto.getDateHired();
     this.gwa = dto.getGwa();
-    this.employed = dto.isEmployed();/*
-    this.contacts = dto.getContactIds().stream()
-                       .map(cid -> contactService.get(cid))
-                       .collect(Collectors.toSet());
-    this.roles = dto.getRoleIds().stream()
-                    .map(role -> roleService.get(rid))
-                    .collect(Collectors.toSet());*/
+    this.employed = dto.isEmployed();
   }
 
   private Set<Long> getContactIds() {

@@ -16,6 +16,10 @@ public class DateUtil {
     return dateFormat;
   }
 
+  public static Date parse(String dateString) {
+    return parse(getDateFormat(), dateString);
+  }
+
   public static Date parse(DateFormat dateFormat, String dateString) {
     Date date = null;
 

@@ -160,24 +160,26 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
       oldContactIds = new HashSet();
     }
 
-    Set<Long> addedContactIds = new HashSet(newContactIds);
-    addedContactIds.removeAll(oldContactIds);
+    if (newContactIds != null) {
+      Set<Long> addedContactIds = new HashSet(newContactIds);
+      addedContactIds.removeAll(oldContactIds);
 
-    Set<Long> removedContactIds = new HashSet(oldContactIds);
-    removedContactIds.removeAll(newContactIds);
+      Set<Long> removedContactIds = new HashSet(oldContactIds);
+      removedContactIds.removeAll(newContactIds);
 
-    if (!addedContactIds.isEmpty()) {
-      List<Contact> addedContacts = contactDao.query(c -> 
-        c.add(Restrictions.in("contactId", addedContactIds)));
-      
-      person.getContacts().addAll(addedContacts); 
-    }
+      if (!addedContactIds.isEmpty()) {
+        List<Contact> addedContacts = contactDao.query(c -> 
+          c.add(Restrictions.in("contactId", addedContactIds)));
+        
+        person.getContacts().addAll(addedContacts); 
+      }
 
-    if (!removedContactIds.isEmpty()) {
-      List<Contact> removedContacts = contactDao.query(c -> 
-        c.add(Restrictions.in("contactId", removedContactIds)));
+      if (!removedContactIds.isEmpty()) {
+        List<Contact> removedContacts = contactDao.query(c -> 
+          c.add(Restrictions.in("contactId", removedContactIds)));
 
-      person.getContacts().removeAll(removedContacts);
+        person.getContacts().removeAll(removedContacts);
+      }
     }
   }
 
@@ -192,24 +194,26 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
       oldRoleIds = new HashSet();
     }
 
-    Set<Long> addedRoleIds = new HashSet(newRoleIds);
-    addedRoleIds.removeAll(oldRoleIds);
+    if (newRoleIds != null) {
+      Set<Long> addedRoleIds = new HashSet(newRoleIds);
+      addedRoleIds.removeAll(oldRoleIds);
 
-    Set<Long> removedRoleIds = new HashSet(oldRoleIds);
-    removedRoleIds.removeAll(newRoleIds);
+      Set<Long> removedRoleIds = new HashSet(oldRoleIds);
+      removedRoleIds.removeAll(newRoleIds);
 
-    if (!addedRoleIds.isEmpty()) {
-      List<Role> addedRoles = roleDao.query(c -> 
-        c.add(Restrictions.in("roleId", addedRoleIds)));
+      if (!addedRoleIds.isEmpty()) {
+        List<Role> addedRoles = roleDao.query(c -> 
+          c.add(Restrictions.in("roleId", addedRoleIds)));
 
-      person.getRoles().addAll(addedRoles);
-    }
+        person.getRoles().addAll(addedRoles);
+      }
 
-    if (!removedRoleIds.isEmpty()) {
-      List<Role> removedRoles = roleDao.query(c -> 
-        c.add(Restrictions.in("roleId", removedRoleIds)));
+      if (!removedRoleIds.isEmpty()) {
+        List<Role> removedRoles = roleDao.query(c -> 
+          c.add(Restrictions.in("roleId", removedRoleIds)));
 
-      person.getRoles().removeAll(removedRoles);
+        person.getRoles().removeAll(removedRoles);
+      }
     }
   }
 }
