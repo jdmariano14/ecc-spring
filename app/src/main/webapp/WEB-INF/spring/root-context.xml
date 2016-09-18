@@ -2,13 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-  
-  <!-- Root Context: defines shared resources visible to all other web components -->
 
+  <!-- Beans from core module -->
   <bean id="personDataService" class="com.exist.ecc.person.core.service.data.impl.PersonDataService"/>
   <bean id="roleDataService" class="com.exist.ecc.person.core.service.data.impl.RoleDataService"/>
   <bean id="contactDataService" class="com.exist.ecc.person.core.service.data.impl.ContactDataService"/>
 
   <bean id="inputServiceFactory" class="com.exist.ecc.person.core.service.input.InputServiceFactory"/>
-    
+  
 </beans>

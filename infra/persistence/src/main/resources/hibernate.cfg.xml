@@ -6,9 +6,15 @@
 <hibernate-configuration>
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+    <property name="hibernate.connection.provider_class">com.zaxxer.hikari.hibernate.HikariConnectionProvider</property>
 
     <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.enable_lazy_load_no_trans">true</property>
+
+    <property name="hibernate.hikari.minimumIdle">5</property>
+    <property name="hibernate.hikari.maximumPoolSize">10</property>
+    <property name="hibernate.hikari.idleTimeout">30000</property>
+    <property name="hibernate.hikari.dataSourceClassName">org.postgresql.ds.PGPoolingDataSource</property>
 
     <mapping class="com.exist.ecc.person.core.model.Person"/>
     <mapping class="com.exist.ecc.person.core.model.Role"/>
