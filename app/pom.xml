@@ -31,6 +31,12 @@
       <artifactId>spring-webmvc</artifactId>
     </dependency>
 
+    <!-- HikariCP -->
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+    </dependency>
+
     <!-- AspectJ -->
     <dependency>
       <groupId>org.aspectj</groupId>
