@@ -8,23 +8,33 @@
 <%@attribute name="backUrl" type="java.lang.String"%>
 
 <form class="ui form" name="contact" action="${url}" method="post">
-  <c:if test="${contact.contactId le 0}">
-    <div class="four wide field">
-      <label for="contactType">Type</label>
-      <select name="contactType">
-        <option value="">Please select a type</option>
-        <c:forEach items="${contactTypes}" var="contactType">
-          <option value="${contactType}"><c:out value="${contactType}"/></option>
-        </c:forEach>
-      </select>
+  <c:choose>
+    <c:when test="${contact.contactId le 0}">
+      <div class="four wide field">
+        <label for="contactType">Type</label>
+        <select name="contactType">
+          <option value="">Please select a type</option>
+          <c:forEach items="${contactTypes}" var="contactType">
+            <option value="${contactType}"><c:out value="${contactType}"/></option>
+          </c:forEach>
+        </select>
+      </div>
+    </c:when>
+    <c:otherwise>
+    <div class="hidden field">
+      <input type="hidden" name="id" value="${contact.contactId}"><br>
     </div>
-  </c:if>
-  <div class="hidden field">
-    <input type="hidden" name="personId" value="${contact.personId}"><br>
-  </div>
+      <div class="hidden field">
+        <input type="hidden" name="contactType" value="${contact.contactType}"><br>
+      </div>
+    </c:otherwise>
+  </c:choose>
   <div class="field">
     <label for="value">Value</label>
     <input type="text" name="value" value="${contact.value}"><br>
+  </div>
+  <div class="hidden field">
+    <input type="hidden" name="personId" value="${contact.personId}"><br>
   </div>
   <p>
     <button class="ui primary button" type="submit">

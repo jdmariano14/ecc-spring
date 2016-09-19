@@ -61,63 +61,55 @@ public class ContactsController extends MultiActionController {
   public String create(HttpServletRequest req, HttpServletResponse res)
     throws Exception
   {
-    String view = null;
-
     long personId = -1;
-
+    
     try {
       personId = getPersonId(req);
+    } catch (NullPointerException | NumberFormatException e) {
 
-      ContactDto contactDto = getContactDto(req);
-
-      contactDataService.save(contactDto);
-    } catch (Exception e){
-      e.printStackTrace();
-    } finally {
-      view = "redirect:/persons/show?id=" + personId;
     }
 
-    return view;
+    return save(req, "redirect:/persons/show?id=" + personId);
   }
 
-  /*
-  @RequestMapping(value = "/{contactId}/edit", method = RequestMethod.GET)
-  public String edit(Model model, @PathVariable Long contactId) {
+  public ModelAndView edit(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
+    Model model = new ExtendedModelMap();
     String view = null;
+
     long personId = -1;
 
     try {
+      long contactId = getContactId(req);
+
       ContactDto contactDto = contactDataService.get(contactId);
       personId = contactDto.getPersonId();
       model.addAttribute("contact", contactDto);
       view = "contacts/edit";
     } catch (Exception e) {
       e.printStackTrace();
-      view = "redirect:/persons/" + personId;
+      view = "redirect:/persons/show?id=" + personId;
     }
-    
-    return view;
+
+    return new ModelAndView(view, model.asMap());
   }
 
-  @RequestMapping(value = "/{contactId}", method = RequestMethod.POST)
-  public String update(@ModelAttribute ContactDto contactDto,
-                       @PathVariable Long contactId)
-  { 
-    String view = null;
+  public String update(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
     long personId = -1;
-
+    
     try {
-      contactDataService.save(contactDto);
-      personId = contactDto.getPersonId();
-    } catch (Exception e){
-      e.printStackTrace();
-    } finally {
-      view = "redirect:/persons/" + personId;
+      personId = getPersonId(req);
+    } catch (NullPointerException | NumberFormatException e) {
+
     }
 
-    return view;
+    return save(req, "redirect:/persons/show?id=" + personId);
   }
 
+  /*
   @RequestMapping(value = "/{contactId}/delete", method = RequestMethod.GET)
   public String delete(@PathVariable Long contactId) {
     String view = null;
@@ -137,7 +129,7 @@ public class ContactsController extends MultiActionController {
   }*/
 
   private long getContactId(HttpServletRequest req) {
-    return Long.parseLong(req.getParameter("contactId"));
+    return Long.parseLong(req.getParameter("id"));
   }
 
   private long getPersonId(HttpServletRequest req) {
@@ -165,13 +157,28 @@ public class ContactsController extends MultiActionController {
     return new ContactDto(contactId, contactType, value, personId);
   }
 
-
   private List<String> getContactTypes() {
     List<String> contactTypes = 
       Stream.of("Email", "Landline", "Mobile")
             .collect(Collectors.toList());
 
     return contactTypes;
+  }
+
+  private String save(HttpServletRequest req, String redirectUrl) {
+    String view = null;
+
+    try {
+      ContactDto contactDto = getContactDto(req);
+
+      contactDataService.save(contactDto);
+    } catch (Exception e){
+      e.printStackTrace();
+    } finally {
+      view = redirectUrl;
+    }
+
+    return view;
   }
 
 }
