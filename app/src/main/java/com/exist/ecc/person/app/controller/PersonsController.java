@@ -140,7 +140,7 @@ public class PersonsController extends MultiActionController {
     return save(req, redirectUrl);
   }
 
-  /*
+  
   public String delete(HttpServletRequest req, HttpServletResponse res)
     throws Exception
   {
@@ -160,7 +160,7 @@ public class PersonsController extends MultiActionController {
     return view;
   }
 
-  */
+  
   private long getPersonId(HttpServletRequest req) {
     return Long.parseLong(req.getParameter("id"));
   }

@@ -21,6 +21,6 @@
     <app:primaryButton url="/persons/edit?id=${person.personId}" text="Edit ${person.name.shortName}" icon="write" iconOnly="true"/>
   </td>
   <td class="center aligned">
-    <app:primaryButton url="/persons/${person.personId}/delete" text="Delete ${person.name.shortName}" icon="trash outline" iconOnly="true"/>
+    <app:primaryButton url="/persons/delete?id=${person.personId}" text="Delete ${person.name.shortName}" icon="trash outline" iconOnly="true"/>
   </td>
 </tr>
