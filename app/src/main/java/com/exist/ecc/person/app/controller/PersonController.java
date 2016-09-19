@@ -1,42 +1,7 @@
 package com.exist.ecc.person.app.controller;
 
-import java.math.BigDecimal;
-
-import java.text.DateFormat;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import com.exist.ecc.person.core.dto.ContactDto;
-import com.exist.ecc.person.core.dto.PersonDto;
-import com.exist.ecc.person.core.dto.RoleDto;
-import com.exist.ecc.person.core.service.data.impl.ContactDataService;
-import com.exist.ecc.person.core.service.data.impl.PersonDataService;
-import com.exist.ecc.person.core.service.data.impl.RoleDataService;
-
-import com.exist.ecc.person.util.BigDecimalUtil;
-import com.exist.ecc.person.util.DateUtil;
-
-@Controller
-@RequestMapping("/jersons")
 public class PersonController {
-  
+  /*
   @Autowired
   private PersonDataService personDataService;
 
@@ -329,5 +294,5 @@ public class PersonController {
             .collect(Collectors.toList());
 
     return queryProperties;
-  }
+  }*/
 }

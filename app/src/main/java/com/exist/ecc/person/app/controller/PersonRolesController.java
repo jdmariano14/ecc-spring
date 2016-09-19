@@ -18,7 +18,6 @@ import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 public class PersonRolesController extends MultiActionController {
 
   private PersonDataService personDataService;
-
   private RoleDataService roleDataService;
 
   public void setPersonDataService(PersonDataService personDataService) {
