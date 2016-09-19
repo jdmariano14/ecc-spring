@@ -50,24 +50,65 @@ public class RolesController extends MultiActionController {
   public String create(HttpServletRequest req, HttpServletResponse res)
     throws Exception
   {
+    return save(req, "redirect:/roles/index");
+  }
+
+  public ModelAndView edit(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
+    Model model = new ExtendedModelMap();
     String view = null;
 
     try {
-      RoleDto roleDto = getRoleDto(req);
-      
-      roleDataService.save(roleDto);
+      long roleId = getRoleId(req);
+      RoleDto role = roleDataService.get(roleId);
+      model.addAttribute("role", role);
+      view = "roles/edit";
     } catch (Exception e) {
       e.printStackTrace();
-    } finally {
       view = "redirect:/roles/index";
-    }
+    } 
 
-    return view;
+    return new ModelAndView(view, model.asMap());
+  }
+
+  public String update(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
+    return save(req, "redirect:/roles/index");
+  }
+
+  private long getRoleId(HttpServletRequest req) {
+    return Long.parseLong(req.getParameter("id"));
   }
 
   private RoleDto getRoleDto(HttpServletRequest req) {
     String name = req.getParameter("name");
 
     return new RoleDto(-1, name, null);
+  }
+
+  private String save(HttpServletRequest req, String redirectUrl)
+    throws Exception 
+  {
+    String view = null;
+
+    try {
+      RoleDto roleDto = getRoleDto(req);
+      
+      try {
+        roleDto.setRoleId(getRoleId(req));
+      } catch (NullPointerException | NumberFormatException e) {
+
+      }
+
+      roleDataService.save(roleDto);
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      view = redirectUrl;
+    }
+
+    return view;
   }
 }
