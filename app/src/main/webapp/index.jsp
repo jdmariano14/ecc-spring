@@ -10,11 +10,11 @@
         <div class="ui container">
           <h1 class="ui header">ECC Spring Activity</h1>
           <nav class="ui two item labeled icon menu">
-            <a class="item" href="/persons">
+            <a class="item" href="/persons/index">
               <i class="users icon"></i>
               Persons
             </a>
-            <a class="item" href="/roles">
+            <a class="item" href="/roles/index">
               <i class="law icon"></i>
               Roles
             </a>

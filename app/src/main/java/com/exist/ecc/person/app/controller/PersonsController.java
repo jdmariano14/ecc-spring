@@ -70,7 +70,7 @@ public class PersonsController extends MultiActionController {
       view = "persons/index";
     } catch (Exception e) {
       e.printStackTrace();
-      view = "redirect:/";
+      view = "redirect:/index.jsp";
     }
 
     return new ModelAndView(view, model.asMap());

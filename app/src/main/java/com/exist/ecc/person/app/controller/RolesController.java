@@ -34,7 +34,7 @@ public class RolesController extends MultiActionController {
       view = "roles/index";
     } catch (Exception e) {
       e.printStackTrace();
-      view = "redirect:/";
+      view = "redirect:/index.jsp";
     }
 
     return new ModelAndView(view, model.asMap());

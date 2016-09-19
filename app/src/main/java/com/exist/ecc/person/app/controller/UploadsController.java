@@ -39,8 +39,12 @@ public class UploadsController extends MultiActionController {
     Model model = new ExtendedModelMap();
     String view = null;
 
-    model.addAttribute("uploadType", req.getParameter("uploadType"));
-    view = "uploads/upload";
+    try {
+      model.addAttribute("uploadType", req.getParameter("uploadType"));
+      view = "uploads/upload";
+    } catch (Exception e) {
+      view = "redirect:/index.jsp";
+    }
 
     return new ModelAndView(view, model.asMap());
   }

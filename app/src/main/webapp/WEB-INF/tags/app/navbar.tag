@@ -3,7 +3,7 @@
 
 <nav class="ui stackable navbar menu">
   <div class="header item">ECC Spring Activity</div>
-  <a class="item" href="/"><spring:message code="home"/></a>
+  <a class="item" href="/index.jsp"><spring:message code="home"/></a>
   <a class="item" href="/persons/index"><spring:message code="persons"/></a>
   <a class="item" href="/roles/index"><spring:message code="roles"/></a>
   <div class="ui simple dropdown item">
