@@ -34,7 +34,7 @@ import com.exist.ecc.person.util.BigDecimalUtil;
 import com.exist.ecc.person.util.DateUtil;
 
 @Controller
-@RequestMapping("/persons")
+@RequestMapping("/jersons")
 public class PersonController {
   
   @Autowired

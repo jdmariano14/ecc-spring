@@ -1,23 +1,21 @@
 package com.exist.ecc.person.core.service.input.impl;
 
-import java.math.BigDecimal;
-
-import java.util.Date;
 import java.util.List;
 
-import com.exist.ecc.person.core.dto.AddressDto;
-import com.exist.ecc.person.core.dto.NameDto;
 import com.exist.ecc.person.core.dto.PersonDto;
 import com.exist.ecc.person.core.service.data.impl.PersonDataService;
-import com.exist.ecc.person.util.BigDecimalUtil;
-import com.exist.ecc.person.util.DateUtil;
+import com.exist.ecc.person.core.service.build.PersonBuildService;
 
 public class PersonCsvInputService extends CsvInputService {
   
   private PersonDataService personDataService;
+  private PersonBuildService personBuildService;
 
-  public PersonCsvInputService(PersonDataService personDataService) {
+  public PersonCsvInputService(PersonDataService personDataService,
+                               PersonBuildService personBuildService) 
+  {
     this.personDataService = personDataService;
+    this.personBuildService = personBuildService;
   }
 
   @Override
@@ -26,24 +24,23 @@ public class PersonCsvInputService extends CsvInputService {
       return;
     }
 
-    Long personId = Long.parseLong(values[0]);
-
-    Date birthDate = DateUtil.parse(values[1]);
-    Date dateHired = DateUtil.parse(values[3]);
-
-    BigDecimal gwa = BigDecimalUtil.parse(values[2]);
-
-    boolean employed = values[4].equals("t");
-
-    NameDto nameDto = new NameDto(values[5], values[7], values[6],
-                                  values[8], values[9]);
-
-    AddressDto addressDto = new AddressDto(values[10], values[11],  
-                                           values[12], values[13]);
-
-    PersonDto personDto = new PersonDto(personId, nameDto, addressDto,
-                                        birthDate, dateHired, gwa,
-                                        employed, null, null);
+    PersonDto personDto = 
+      personBuildService.getDtoBuilder()
+                        .setPersonId(values[0])
+                        .setBirthDate(values[1])
+                        .setGwa(values[2])
+                        .setDateHired(values[3])
+                        .setEmployed(values[4])
+                        .setFirstName(values[5])
+                        .setLastName(values[6])
+                        .setMiddleName(values[7])
+                        .setSuffix(values[8])
+                        .setTitle(values[9])
+                        .setStreetAddress(values[10])
+                        .setBarangay(values[11])
+                        .setMunicipality(values[12])
+                        .setZipCode(values[13])
+                        .build();
 
     personDataService.save(personDto);
   }

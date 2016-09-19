@@ -1,5 +1,6 @@
 package com.exist.ecc.person.core.service.input;
 
+import com.exist.ecc.person.core.service.build.PersonBuildService;
 import com.exist.ecc.person.core.service.data.impl.ContactDataService;
 import com.exist.ecc.person.core.service.data.impl.PersonDataService;
 import com.exist.ecc.person.core.service.data.impl.RoleDataService;
@@ -11,6 +12,8 @@ public class InputServiceFactory {
   private PersonDataService personDataService;
   private RoleDataService roleDataService;
   private ContactDataService contactDataService;
+
+  private PersonBuildService personBuildService;
 
   public void setPersonDataService(PersonDataService personDataService) {
     this.personDataService = personDataService;
@@ -24,6 +27,10 @@ public class InputServiceFactory {
     this.contactDataService = contactDataService;
   }
 
+  public void setPersonBuildService(PersonBuildService personBuildService) {
+    this.personBuildService = personBuildService;
+  }
+
   public InputService get(String type, String extension) {
     InputService inputService = null;
 
@@ -31,7 +38,8 @@ public class InputServiceFactory {
       case "csv":
         switch(type.toLowerCase()) {
           case "persons":
-            inputService = new PersonCsvInputService(personDataService);
+            inputService = new PersonCsvInputService(personDataService,
+                                                     personBuildService);
             break;
           case "roles":
             inputService = new RoleCsvInputService(roleDataService);

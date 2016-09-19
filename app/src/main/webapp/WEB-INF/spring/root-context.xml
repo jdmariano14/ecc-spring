@@ -44,36 +44,15 @@
   </tx:advice>
 
   <!-- Beans from core module -->
-  <bean id="personDao" class="com.exist.ecc.person.core.dao.impl.PersonCriteriaDao">
-    <property name="sessionFactory" ref="sessionFactory"/>
-  </bean>
+  <bean id="personDao" class="com.exist.ecc.person.core.dao.impl.PersonCriteriaDao" autowire="byName"/>
+  <bean id="roleDao" class="com.exist.ecc.person.core.dao.impl.RoleCriteriaDao" autowire="byName"/>
+  <bean id="contactDao" class="com.exist.ecc.person.core.dao.impl.ContactCriteriaDao" autowire="byName"/>
 
-  <bean id="roleDao" class="com.exist.ecc.person.core.dao.impl.RoleCriteriaDao">
-    <property name="sessionFactory" ref="sessionFactory"/>
-  </bean>
+  <bean id="personDataService" class="com.exist.ecc.person.core.service.data.impl.PersonDataService" autowire="byName"/>
+  <bean id="roleDataService" class="com.exist.ecc.person.core.service.data.impl.RoleDataService" autowire="byName"/>
+  <bean id="contactDataService" class="com.exist.ecc.person.core.service.data.impl.ContactDataService" autowire="byName"/>
 
-  <bean id="contactDao" class="com.exist.ecc.person.core.dao.impl.ContactCriteriaDao">
-    <property name="sessionFactory" ref="sessionFactory"/>
-  </bean>
+  <bean id="personBuildService" class="com.exist.ecc.person.core.service.build.PersonBuildService"/>
 
-  <bean id="personDataService" class="com.exist.ecc.person.core.service.data.impl.PersonDataService">
-    <property name="personDao" ref="personDao"/>
-    <property name="contactDao" ref="contactDao"/>
-    <property name="roleDao" ref="roleDao"/>
-  </bean>
-
-  <bean id="roleDataService" class="com.exist.ecc.person.core.service.data.impl.RoleDataService">
-    <property name="roleDao" ref="roleDao"/>
-  </bean>
-
-  <bean id="contactDataService" class="com.exist.ecc.person.core.service.data.impl.ContactDataService">
-    <property name="personDao" ref="personDao"/>
-    <property name="contactDao" ref="contactDao"/>
-  </bean>
-
-  <bean id="inputServiceFactory" class="com.exist.ecc.person.core.service.input.InputServiceFactory">
-    <property name="personDataService" ref="personDataService"/>
-    <property name="roleDataService" ref="roleDataService"/>
-    <property name="contactDataService" ref="contactDataService"/>
-  </bean>
+  <bean id="inputServiceFactory" class="com.exist.ecc.person.core.service.input.InputServiceFactory" autowire="byName"/>
 </beans>
