@@ -213,6 +213,23 @@ public class PersonsController extends MultiActionController {
     return new ModelAndView(view, model.asMap());
   }
 
+  public ModelAndView result(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
+    Model model = null;
+    String view = null;
+
+    try {
+      model = getResultModel(req);
+      view = "persons/result";
+    } catch (Exception e) {
+      e.printStackTrace();
+      view = "redirect:/persons";
+    }
+    
+    return new ModelAndView(view, model.asMap());
+  }
+
   private long getPersonId(HttpServletRequest req) {
     return Long.parseLong(req.getParameter("id"));
   }
@@ -253,6 +270,40 @@ public class PersonsController extends MultiActionController {
     }
 
     return view;
+  }
+
+  private Model getResultModel(HttpServletRequest req) {
+    Model model = new ExtendedModelMap();
+    String selectedProperty = req.getParameter("queryProperty");
+    List<PersonDto> personDtos = null;
+
+    switch (selectedProperty) {
+      case "Last name":
+        personDtos = personDataService.queryLastName(
+          req.getParameter("minString"),
+          req.getParameter("maxString"),
+          req.getParameter("likeString"),
+          req.getParameter("order").equals("desc"));
+        break;
+      case "Date hired":
+        personDtos = personDataService.queryDateHired(
+          DateUtil.parse(req.getParameter("minDate")),
+          DateUtil.parse(req.getParameter("maxDate")),
+          req.getParameter("order").equals("desc"));
+        break;
+      case "GWA":
+        personDtos = personDataService.queryGwa(
+          BigDecimalUtil.parse(req.getParameter("minBigDecimal")),
+          BigDecimalUtil.parse(req.getParameter("maxBigDecimal")),
+          req.getParameter("order").equals("desc"));
+        break;
+    }
+
+    model.addAttribute("persons", personDtos);
+    model.addAttribute("selectedProperty", selectedProperty);
+    model.addAttribute("queryProperties", getQueryProperties());
+
+    return model;
   }
 
   private List<String> getQueryProperties() {
