@@ -30,6 +30,9 @@ import com.exist.ecc.person.core.service.input.api.InputService;
 public class UploadController {
 
   @Autowired
+  private Sessions sessions;
+  
+  @Autowired
   private InputServiceFactory inputServiceFactory;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
@@ -44,7 +47,7 @@ public class UploadController {
   {
     String path = null;
 
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
 
     try {
       String filename = file.getOriginalFilename();

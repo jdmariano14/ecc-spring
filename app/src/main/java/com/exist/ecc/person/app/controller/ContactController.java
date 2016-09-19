@@ -29,6 +29,9 @@ import com.exist.ecc.person.core.service.data.impl.PersonDataService;
 public class ContactController {
 
   @Autowired
+  private Sessions sessions;
+
+  @Autowired
   private ContactDataService contactDataService;
 
   @Autowired
@@ -37,7 +40,7 @@ public class ContactController {
   public String _new(Model model, Long personId) { 
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
 
     try {
@@ -62,7 +65,7 @@ public class ContactController {
   public String create(ContactDto contactDto, Long personId) {
     String path = null;
 
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     contactDataService.setSession(dbSession);
 
     try {
@@ -83,7 +86,7 @@ public class ContactController {
     String path = null;
     long personId = -1;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     contactDataService.setSession(dbSession);
 
     try {
@@ -108,7 +111,7 @@ public class ContactController {
     String path = null;
     long personId = -1;
 
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     contactDataService.setSession(dbSession);
 
     try {
@@ -129,7 +132,7 @@ public class ContactController {
     String path = null;
     long personId = -1;
 
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     contactDataService.setSession(dbSession);
 
     try {

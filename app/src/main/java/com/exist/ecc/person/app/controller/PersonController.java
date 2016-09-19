@@ -39,6 +39,9 @@ import com.exist.ecc.person.util.DateUtil;
 @Controller
 @RequestMapping("/persons")
 public class PersonController {
+  
+  @Autowired
+  private Sessions sessions;
 
   @Autowired
   private PersonDataService personDataService;
@@ -59,7 +62,7 @@ public class PersonController {
   public String index(Locale locale, Model model) {
     String path = null;
 
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
 
     try {
@@ -82,7 +85,7 @@ public class PersonController {
   public String show(Model model, @PathVariable Long personId) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
     roleDataService.setSession(dbSession);
     contactDataService.setSession(dbSession);
@@ -123,7 +126,7 @@ public class PersonController {
   {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
 
     for (ObjectError error : result.getAllErrors()) {
@@ -146,7 +149,7 @@ public class PersonController {
   public String edit(Model model, @PathVariable Long personId) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
 
     try {
@@ -170,7 +173,7 @@ public class PersonController {
   {
     String path = null;
     
-    Session dbSession = Sessions.getSession();    
+    Session dbSession = sessions.getSession();    
     personDataService.setSession(dbSession);
 
     for (ObjectError error : result.getAllErrors()) {
@@ -193,7 +196,7 @@ public class PersonController {
   public String delete(@PathVariable Long personId) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
 
     try {
@@ -305,7 +308,7 @@ public class PersonController {
   {
     String path = null;
 
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
 
     try {

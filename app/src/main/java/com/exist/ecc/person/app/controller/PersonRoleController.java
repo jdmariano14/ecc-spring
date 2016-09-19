@@ -18,6 +18,9 @@ import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 public class PersonRoleController {
 
   @Autowired
+  private Sessions sessions;
+
+  @Autowired
   private PersonDataService personDataService;
 
   @Autowired
@@ -26,7 +29,7 @@ public class PersonRoleController {
   public String _new(Model model, Long personId) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
     roleDataService.setSession(dbSession);
 
@@ -50,7 +53,7 @@ public class PersonRoleController {
   public String create(Long personId, Long roleId) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
 
     try {
@@ -70,7 +73,7 @@ public class PersonRoleController {
   public String delete(Long personId, Long roleId) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     personDataService.setSession(dbSession);
 
     try {

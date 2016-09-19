@@ -4,12 +4,12 @@
   xmlns:aop="http://www.springframework.org/schema/aop"
   xmlns:tx="http://www.springframework.org/schema/tx"
   xsi:schemaLocation="
-      http://www.springframework.org/schema/beans
-      http://www.springframework.org/schema/beans/spring-beans.xsd
-      http://www.springframework.org/schema/tx
-      http://www.springframework.org/schema/tx/spring-tx.xsd
-      http://www.springframework.org/schema/aop
-      http://www.springframework.org/schema/aop/spring-aop.xsd">
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
   
   <!-- Hibernate config -->
   <bean id="hibernateConfig" class="com.exist.ecc.person.infra.persistence.DefaultHibernateConfiguration"/>
@@ -33,16 +33,45 @@
   <tx:advice id="txAdvice" transaction-manager="txManager">
     <tx:attributes>
       <tx:method name="get*" read-only="true"/>
-      <tx:method name="*"/>
+      <tx:method name="*" read-only="true" propagation="REQUIRED"/>
     </tx:attributes>
   </tx:advice>
 
   <!-- Beans from core module -->
-  <bean id="personDataService" class="com.exist.ecc.person.core.service.data.impl.PersonDataService"/>
-  <bean id="roleDataService" class="com.exist.ecc.person.core.service.data.impl.RoleDataService"/>
-  <bean id="contactDataService" class="com.exist.ecc.person.core.service.data.impl.ContactDataService"/>
+  <bean id="sessions" class="com.exist.ecc.person.core.dao.Sessions">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="personDao" class="com.exist.ecc.person.core.dao.impl.PersonCriteriaDao">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="roleDao" class="com.exist.ecc.person.core.dao.impl.RoleCriteriaDao">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="contactDao" class="com.exist.ecc.person.core.dao.impl.ContactCriteriaDao">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="personDataService" class="com.exist.ecc.person.core.service.data.impl.PersonDataService">
+    <property name="personDao" ref="personDao"/>
+    <property name="contactDao" ref="contactDao"/>
+    <property name="roleDao" ref="roleDao"/>
+  </bean>
+
+  <bean id="roleDataService" class="com.exist.ecc.person.core.service.data.impl.RoleDataService">
+    <property name="roleDao" ref="roleDao"/>
+  </bean>
+
+  <bean id="contactDataService" class="com.exist.ecc.person.core.service.data.impl.ContactDataService">
+    <property name="personDao" ref="personDao"/>
+    <property name="contactDao" ref="contactDao"/>
+  </bean>
 
   <bean id="inputServiceFactory" class="com.exist.ecc.person.core.service.input.InputServiceFactory">
     <property name="personDataService" ref="personDataService"/>
+    <property name="roleDataService" ref="roleDataService"/>
+    <property name="contactDataService" ref="contactDataService"/>
   </bean>
 </beans>

@@ -20,6 +20,9 @@ import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 @Controller
 @RequestMapping("/roles")
 public class RoleController {
+
+  @Autowired
+  private Sessions sessions;
   
   @Autowired
   private RoleDataService roleDataService;
@@ -28,7 +31,7 @@ public class RoleController {
   public String index(Locale locale, Model model) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     roleDataService.setSession(dbSession);
 
     try {
@@ -54,7 +57,7 @@ public class RoleController {
   public String create(@ModelAttribute RoleDto roleDto) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     roleDataService.setSession(dbSession);
 
     try {
@@ -73,7 +76,7 @@ public class RoleController {
   public String edit(Locale locale, Model model, @PathVariable Long roleId) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     roleDataService.setSession(dbSession);
 
     try {
@@ -94,7 +97,7 @@ public class RoleController {
   public String update(@ModelAttribute RoleDto roleDto, @PathVariable Long roleId) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     roleDataService.setSession(dbSession);
 
     try {
@@ -113,7 +116,7 @@ public class RoleController {
   public String delete(@PathVariable Long roleId) {
     String path = null;
     
-    Session dbSession = Sessions.getSession();
+    Session dbSession = sessions.getSession();
     roleDataService.setSession(dbSession);
 
     try {

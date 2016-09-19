@@ -7,24 +7,14 @@ import com.exist.ecc.person.infra.persistence.DefaultHibernateConfiguration;
 
 public class Sessions {
 
-  private static final SessionFactory sessionFactory = buildSessionFactory();
+  private SessionFactory sessionFactory;
+
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
   
-  private static SessionFactory buildSessionFactory() {
-    try {
-      DefaultHibernateConfiguration config = new DefaultHibernateConfiguration();
-      
-      return config.getSessionFactory();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static SessionFactory getSessionFactory() {
-    return sessionFactory;
-  }
-
-  public static Session getSession() {
-    return getSessionFactory().openSession();
+  public Session getSession() {
+    return sessionFactory.openSession();
   }
 
 }

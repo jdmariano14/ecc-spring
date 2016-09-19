@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Session;
-
 import com.exist.ecc.person.core.dto.AddressDto;
 import com.exist.ecc.person.core.dto.NameDto;
 import com.exist.ecc.person.core.dto.PersonDto;
@@ -15,10 +13,11 @@ import com.exist.ecc.person.util.BigDecimalUtil;
 import com.exist.ecc.person.util.DateUtil;
 
 public class PersonCsvInputService extends CsvInputService {
-  PersonDataService personDataService = new PersonDataService();
+  
+  private PersonDataService personDataService;
 
-  public PersonCsvInputService(Session session) {
-    personDataService.setSession(session);
+  public PersonCsvInputService(PersonDataService personDataService) {
+    this.personDataService = personDataService;
   }
 
   @Override

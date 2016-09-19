@@ -26,9 +26,21 @@ import com.exist.ecc.person.core.model.Role;
 
 public class PersonDataService extends AbstractDataService<PersonDto, Long> {
 
-  private PersonCriteriaDao personDao = new PersonCriteriaDao();
-  private ContactCriteriaDao contactDao = new ContactCriteriaDao();
-  private RoleCriteriaDao roleDao = new RoleCriteriaDao();
+  private PersonCriteriaDao personDao;
+  private ContactCriteriaDao contactDao;
+  private RoleCriteriaDao roleDao;
+
+  public void setPersonDao(PersonCriteriaDao personDao) {
+    this.personDao = personDao;
+  }
+
+  public void setContactDao(ContactCriteriaDao contactDao) {
+    this.contactDao = contactDao;
+  }
+
+  public void setRoleDao(RoleCriteriaDao roleDao) {
+    this.roleDao = roleDao;
+  }
 
   @Override
   public void setSession(Session session) {

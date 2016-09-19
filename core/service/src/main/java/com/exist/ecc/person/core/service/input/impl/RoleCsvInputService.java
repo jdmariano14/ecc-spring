@@ -2,16 +2,15 @@ package com.exist.ecc.person.core.service.input.impl;
 
 import java.util.List;
 
-import org.hibernate.Session;
-
 import com.exist.ecc.person.core.dto.RoleDto;
 import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 
 public class RoleCsvInputService extends CsvInputService {
-  RoleDataService roleDataService = new RoleDataService();
+
+  private RoleDataService roleDataService;
   
-  public RoleCsvInputService(Session session) {
-    roleDataService.setSession(session);
+  public RoleCsvInputService(RoleDataService roleDataService) {
+    this.roleDataService = roleDataService;
   }
 
   @Override

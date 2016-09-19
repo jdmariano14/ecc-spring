@@ -23,8 +23,16 @@ public class ContactDataService
   extends AbstractDataService<ContactDto, Long> 
 {
   
-  private ContactCriteriaDao contactDao = new ContactCriteriaDao();
-  private PersonCriteriaDao personDao = new PersonCriteriaDao();
+  private ContactCriteriaDao contactDao;
+  private PersonCriteriaDao personDao;
+
+  public void setPersonDao(PersonCriteriaDao personDao) {
+    this.personDao = personDao;
+  }
+
+  public void setContactDao(ContactCriteriaDao contactDao) {
+    this.contactDao = contactDao;
+  }
 
   @Override
   public void setSession(Session session) {

@@ -16,7 +16,11 @@ import com.exist.ecc.person.core.model.Role;
 
 public class RoleDataService extends AbstractDataService<RoleDto, Long> {
 
-  private RoleCriteriaDao roleDao = new RoleCriteriaDao();
+  private RoleCriteriaDao roleDao;
+
+  public void setRoleDao(RoleCriteriaDao roleDao) {
+    this.roleDao = roleDao;
+  }
 
   @Override
   public void setSession(Session session) {
@@ -51,6 +55,7 @@ public class RoleDataService extends AbstractDataService<RoleDto, Long> {
       roleDao.save(role);
     }
   }
+  
   
   @Override
   public void delete(RoleDto dto) {

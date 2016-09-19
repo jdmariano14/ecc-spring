@@ -12,6 +12,7 @@ import java.util.function.UnaryOperator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import com.exist.ecc.person.core.dao.Sessions;
@@ -23,15 +24,26 @@ public abstract class AbstractDao<T, I extends Serializable>
 
   private Class<T> persistentClass;
   private Session session;
+  private SessionFactory sessionFactory;
   
   public AbstractDao() {
     persistentClass = determinePersistentClass();
   }
-  
+
+  @Override
+  public SessionFactory getSessionFactory() {
+    return sessionFactory;
+  }
+
+  @Override
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
+
   @Override
   public Session getSession() {
     if (session == null) {
-      session = Sessions.getSessionFactory().getCurrentSession();
+      session = sessionFactory.getCurrentSession();
     }
     return session;
   }
@@ -53,7 +65,8 @@ public abstract class AbstractDao<T, I extends Serializable>
   
   @Override
   public void save(T entity) {
-    conduct(() -> getSession().saveOrUpdate(entity)); 
+    //conduct(() -> getSession().saveOrUpdate(entity));
+    getSession().saveOrUpdate(entity);
   }
 
   @Override

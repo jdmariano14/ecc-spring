@@ -4,11 +4,16 @@ import java.util.List;
 
 import java.util.function.Supplier;
 
-import org.hibernate.Session;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 public interface Dao<T, I> {
-  
+
+  public abstract SessionFactory getSessionFactory();
+
+  public abstract void setSessionFactory(SessionFactory sessionFactory);
+
   public abstract Session getSession();
 
   public abstract void setSession(Session session);
