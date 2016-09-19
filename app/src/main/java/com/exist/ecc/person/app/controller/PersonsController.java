@@ -103,7 +103,7 @@ public class PersonsController extends MultiActionController {
   {
     return save(req, "redirect:/persons/index");
   }
-  /*
+  
   public ModelAndView edit(HttpServletRequest req, HttpServletResponse res)
     throws Exception
   {
@@ -127,9 +127,20 @@ public class PersonsController extends MultiActionController {
   public String update(HttpServletRequest req, HttpServletResponse res)
     throws Exception
   {
-    return save(req, "redirect:/persons/index");
+    String redirectUrl = null;
+
+    try {
+      long personId = getPersonId(req);
+      redirectUrl = "redirect:/persons/show?id=" + personId;
+    } catch (Exception e) {
+      e.printStackTrace();
+      redirectUrl = "redirect:/persons/index";
+    }
+
+    return save(req, redirectUrl);
   }
 
+  /*
   public String delete(HttpServletRequest req, HttpServletResponse res)
     throws Exception
   {
