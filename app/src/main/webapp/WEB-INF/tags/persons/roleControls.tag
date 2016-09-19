@@ -4,5 +4,5 @@
 <%@attribute name="role" required="true" type="com.exist.ecc.person.core.dto.RoleDto"%>
 
 <span>
-(<a href="/personRoles/delete/?personId=${person.personId}&roleId=${role.roleId}">revoke</a>)
+(<a href="/personroles/delete?personId=${person.personId}&roleId=${role.roleId}">revoke</a>)
 </span>

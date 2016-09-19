@@ -2,11 +2,15 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@taglib prefix="persons" tagdir="/WEB-INF/tags/persons"%>
+<%@attribute name="person" required="true" type="com.exist.ecc.person.core.dto.PersonDto"%>
 <%@attribute name="roles" required="true" type="java.util.List"%>
 <%@attribute name="url" required="true" type="java.lang.String"%>
 <%@attribute name="backUrl" required="true" type="java.lang.String"%>
 
 <form class="ui form" name="person_role" action="${url}" method="post">
+  <div class="hidden field">
+    <input type="hidden" name="personId" value="${person.personId}"><br>
+  </div>
   <div class="field">
     <label for="roleId">Role</label>
     <select name="roleId">

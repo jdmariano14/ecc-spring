@@ -176,7 +176,6 @@ public class PersonsController extends MultiActionController {
     return view;
   }
 
-  
   private long getPersonId(HttpServletRequest req) {
     return Long.parseLong(req.getParameter("id"));
   }
@@ -218,6 +217,7 @@ public class PersonsController extends MultiActionController {
 
     return view;
   }
+
   private List<String> getQueryProperties() {
     List<String> queryProperties = 
       Stream.of("Last name", "Date hired", "GWA")

@@ -15,8 +15,9 @@
 
   <bean id="methodNameResolver" class="org.springframework.web.servlet.mvc.multiaction.InternalPathMethodNameResolver"/>
 
-  <bean class="com.exist.ecc.person.app.controller.PersonsController" autowire="byName"/>
-  <bean class="com.exist.ecc.person.app.controller.RolesController" autowire="byName"/>
+  <bean id="personsController" class="com.exist.ecc.person.app.controller.PersonsController" autowire="byName"/>
+  <bean id="rolesController" class="com.exist.ecc.person.app.controller.RolesController" autowire="byName"/>
+  <bean id="personRolesController" class="com.exist.ecc.person.app.controller.PersonRolesController" autowire="byName"/>
 
   <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/WEB-INF/views/" />
