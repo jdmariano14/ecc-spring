@@ -62,6 +62,7 @@ public class RolesController extends MultiActionController {
     try {
       long roleId = getRoleId(req);
       RoleDto role = roleDataService.get(roleId);
+
       model.addAttribute("role", role);
       view = "roles/edit";
     } catch (Exception e) {
@@ -78,14 +79,40 @@ public class RolesController extends MultiActionController {
     return save(req, "redirect:/roles/index");
   }
 
+  public String delete(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
+    String view = null;
+
+    try {
+      long roleId = getRoleId(req);
+      RoleDto roleDto = roleDataService.get(roleId);
+
+      roleDataService.delete(roleDto);
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      view = "redirect:/roles/index";
+    }
+
+    return view;
+  }
+
   private long getRoleId(HttpServletRequest req) {
     return Long.parseLong(req.getParameter("id"));
   }
 
   private RoleDto getRoleDto(HttpServletRequest req) {
+    long id = -1;
     String name = req.getParameter("name");
 
-    return new RoleDto(-1, name, null);
+    try {
+      id = getRoleId(req);
+    } catch (NullPointerException | NumberFormatException e) {
+
+    }
+
+    return new RoleDto(id, name, null);
   }
 
   private String save(HttpServletRequest req, String redirectUrl)
@@ -95,12 +122,6 @@ public class RolesController extends MultiActionController {
 
     try {
       RoleDto roleDto = getRoleDto(req);
-      
-      try {
-        roleDto.setRoleId(getRoleId(req));
-      } catch (NullPointerException | NumberFormatException e) {
-
-      }
 
       roleDataService.save(roleDto);
     } catch (Exception e) {

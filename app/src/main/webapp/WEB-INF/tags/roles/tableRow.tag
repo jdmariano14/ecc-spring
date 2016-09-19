@@ -10,6 +10,6 @@
     <app:primaryButton url="/roles/edit?id=${role.roleId}" text="Edit ${role.name}" icon="write" iconOnly="${true}"/>
   </td>
   <td class="center aligned">
-    <app:primaryButton url="/roles/${role.roleId}/delete" text="Delete ${role.name}" icon="trash outline" iconOnly="${true}"/>
+    <app:primaryButton url="/roles/delete?id=${role.roleId}" text="Delete ${role.name}" icon="trash outline" iconOnly="${true}"/>
   </td>
 </tr>
