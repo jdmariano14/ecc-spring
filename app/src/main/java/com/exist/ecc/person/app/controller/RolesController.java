@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
 import org.springframework.ui.ExtendedModelMap;
+import org.springframework.validation.support.BindingAwareModelMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
@@ -40,4 +41,33 @@ public class RolesController extends MultiActionController {
     return new ModelAndView(view, model.asMap());
   }
 
+  public String add(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
+    return "roles/add";
+  }
+
+  public String create(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
+    String view = null;
+
+    try {
+      RoleDto roleDto = getRoleDto(req);
+      
+      roleDataService.save(roleDto);
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      view = "redirect:/roles/index";
+    }
+
+    return view;
+  }
+
+  private RoleDto getRoleDto(HttpServletRequest req) {
+    String name = req.getParameter("name");
+
+    return new RoleDto(-1, name, null);
+  }
 }

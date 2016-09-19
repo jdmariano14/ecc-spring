@@ -6,7 +6,7 @@
 <%@attribute name="url" required="true" type="java.lang.String"%>
 <%@attribute name="backUrl" required="true" type="java.lang.String"%>
 
-<form class="ui form" name="role" action="/roles/${role.roleId}" method="post">
+<form class="ui form" name="role" action="${url}" method="post">
   <div class="field">
     <label for="name">Name:</label>
     <input type="text" name="name" value="${role.name}"><br>
