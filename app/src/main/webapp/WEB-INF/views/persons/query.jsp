@@ -17,7 +17,7 @@
                           minBigDecimal="${minBigDecimal}"            
                           maxBigDecimal="${maxBigDecimal}"
                           order="${order}"
-                          backUrl="/persons"/>
+                          backUrl="/persons/index"/>
     </section>
   </jsp:body>
 </app:layout>

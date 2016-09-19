@@ -176,6 +176,43 @@ public class PersonsController extends MultiActionController {
     return view;
   }
 
+  public ModelAndView query(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
+    Model model = new ExtendedModelMap();
+    String view = null;
+
+    String queryProperty = req.getParameter("queryProperty");
+
+    try {
+      switch (queryProperty) {
+        case "Last name":
+          model.addAttribute("minString", "abc");
+          model.addAttribute("maxString", "xyz");
+          model.addAttribute("likeString", "%man");
+          break;
+        case "Date hired":
+          model.addAttribute("minDate", "2000-01-15");
+          model.addAttribute("maxDate", "2015-12-31");
+          break;
+        case "GWA":
+          model.addAttribute("minBigDecimal", "1.0");
+          model.addAttribute("maxBigDecimal", "5.0");
+          break;
+        default:
+          throw new RuntimeException("Invalid query property");
+      }
+      
+      model.addAttribute("queryProperty", queryProperty);
+      view = "persons/query";
+    } catch(Exception e) {
+      e.printStackTrace();
+      view = "redirect:/persons/index";
+    }
+
+    return new ModelAndView(view, model.asMap());
+  }
+
   private long getPersonId(HttpServletRequest req) {
     return Long.parseLong(req.getParameter("id"));
   }
