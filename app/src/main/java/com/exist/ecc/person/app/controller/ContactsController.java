@@ -109,24 +109,26 @@ public class ContactsController extends MultiActionController {
     return save(req, "redirect:/persons/show?id=" + personId);
   }
 
-  /*
-  @RequestMapping(value = "/{contactId}/delete", method = RequestMethod.GET)
-  public String delete(@PathVariable Long contactId) {
+  public String delete(HttpServletRequest req, HttpServletResponse res)
+    throws Exception
+  {
     String view = null;
     long personId = -1;
 
     try {
+      long contactId = getContactId(req);
+
       ContactDto contactDto = contactDataService.get(contactId);
       personId = contactDto.getPersonId();
       contactDataService.delete(contactDto);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      view = "redirect:/persons/" + personId;
+      view = "redirect:/persons/show?id=" + personId;
     }
 
     return view;
-  }*/
+  }
 
   private long getContactId(HttpServletRequest req) {
     return Long.parseLong(req.getParameter("id"));
