@@ -6,8 +6,6 @@
   xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-    
-  <mvc:annotation-driven />
 
   <mvc:resources mapping="/resources/**" location="/resources/"/>
 
@@ -19,8 +17,9 @@
   <bean id="rolesController" class="com.exist.ecc.person.app.controller.RolesController" autowire="byName"/>
   <bean id="contactsController" class="com.exist.ecc.person.app.controller.ContactsController" autowire="byName"/>
   <bean id="personRolesController" class="com.exist.ecc.person.app.controller.PersonRolesController" autowire="byName"/>
+  <bean id="uploadsController" class="com.exist.ecc.person.app.controller.UploadsController" autowire="byName"/>
 
-  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/WEB-INF/views/" />
     <property name="suffix" value=".jsp" />
   </bean>
@@ -39,7 +38,7 @@
   </bean>
   
   <mvc:interceptors>
-    <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+    <bean id="localeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
       <property name="paramName" value="locale"/>
     </bean>
   </mvc:interceptors>

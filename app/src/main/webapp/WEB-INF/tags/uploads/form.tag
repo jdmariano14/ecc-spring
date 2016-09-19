@@ -2,9 +2,10 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="app" tagdir="/WEB-INF/tags/app"%>
 <%@attribute name="uploadType" required="true" type="java.lang.String"%>
+<%@attribute name="url" required="true" type="java.lang.String"%>
 <%@attribute name="backUrl" type="java.lang.String"%>
 
-<form class="ui form" method="post" enctype="multipart/form-data" action="/uploads">
+<form class="ui form" method="post" enctype="multipart/form-data" action="${url}">
   <div class="hidden field">
     <input type="hidden" name="uploadType" value="${uploadType}">
   </div>

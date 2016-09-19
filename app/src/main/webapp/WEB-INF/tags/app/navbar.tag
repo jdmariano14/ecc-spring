@@ -10,10 +10,10 @@
     <spring:message code="upload"/>
     <i class="dropdown icon"></i>
     <div class="menu">
-      <a class="item" href="/uploads/?uploadType=Persons"><spring:message code="persons"/></a>
-      <a class="item" href="/uploads/?uploadType=Roles"><spring:message code="roles"/></a>
-      <a class="item" href="/uploads/?uploadType=Contacts"><spring:message code="contacts"/></a>
-      <a class="item" href="/uploads/?uploadType=Person Roles"><spring:message code="person_roles"/></a>
+      <a class="item" href="/uploads/upload?uploadType=Persons"><spring:message code="persons"/></a>
+      <a class="item" href="/uploads/upload?uploadType=Roles"><spring:message code="roles"/></a>
+      <a class="item" href="/uploads/upload?uploadType=Contacts"><spring:message code="contacts"/></a>
+      <a class="item" href="/uploads/upload?uploadType=Person Roles"><spring:message code="person_roles"/></a>
     </div>
   </div>
 </nav>
