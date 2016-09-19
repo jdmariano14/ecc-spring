@@ -15,5 +15,5 @@
     </li>
   </c:forEach>
   </ul>
-  <p><app:primaryButton url="/persons/${person.personId}/roles/new" text="Grant role" icon="plus"/></p>
+  <p><app:primaryButton url="/personRoles/add?personId=${person.personId}" text="Grant role" icon="plus"/></p>
 </section>

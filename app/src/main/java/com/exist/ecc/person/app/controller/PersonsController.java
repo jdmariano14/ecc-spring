@@ -35,21 +35,15 @@ import com.exist.ecc.person.util.DateUtil;
 public class PersonsController extends MultiActionController {
 
   private PersonDataService personDataService;
-  private PersonBuildService personBuildService;/*
-  private ContactDataService contactDataService;
   private RoleDataService roleDataService;
+  private ContactDataService contactDataService;
 
-  private ContactController contactController;
-  private PersonRoleController personRoleController;*/
+  private PersonBuildService personBuildService;
 
   public void setPersonDataService(PersonDataService personDataService) {
     this.personDataService = personDataService;
   }
-
-  public void setPersonBuildService(PersonBuildService personBuildService) {
-    this.personBuildService = personBuildService;
-  }
-/*
+  
   public void setContactDataService(ContactDataService contactDataService) {
     this.contactDataService = contactDataService;
   }
@@ -58,14 +52,10 @@ public class PersonsController extends MultiActionController {
     this.roleDataService = roleDataService;
   }
 
-  public void setContactController(ContactController contactController) {
-    this.contactController = contactController;
+  public void setPersonBuildService(PersonBuildService personBuildService) {
+    this.personBuildService = personBuildService;
   }
 
-  public void setPersonRoleController(PersonRoleController personRoleController) {
-    this.personRoleController = personRoleController;
-  }
-*/
   public ModelAndView index(HttpServletRequest req, HttpServletResponse res)
     throws Exception 
   {
@@ -81,6 +71,32 @@ public class PersonsController extends MultiActionController {
     } catch (Exception e) {
       e.printStackTrace();
       view = "redirect:/";
+    }
+
+    return new ModelAndView(view, model.asMap());
+  }
+
+  public ModelAndView show(HttpServletRequest req, HttpServletResponse res)
+    throws Exception 
+  {
+    Model model = new ExtendedModelMap();
+    String view = null;
+
+    try {
+      long personId = getPersonId(req);
+      PersonDto personDto = personDataService.get(personId);
+      List<ContactDto> contactDtos = 
+        contactDataService.getFromPerson(personDto);
+      List<RoleDto> roleDtos = 
+        roleDataService.getFromPerson(personDto);
+
+      model.addAttribute("person", personDto);
+      model.addAttribute("contacts", contactDtos);
+      model.addAttribute("roles", roleDtos);
+      view = "persons/show";
+    } catch (Exception e) {
+      e.printStackTrace();
+      view = "redirect:/persons/index";
     }
 
     return new ModelAndView(view, model.asMap());

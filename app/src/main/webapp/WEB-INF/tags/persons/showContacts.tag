@@ -16,5 +16,5 @@
     </li>
   </c:forEach>
   </ul>
-  <p><app:primaryButton url="/persons/${person.personId}/contacts/new" text="Add contact" icon="plus"/></p>
+  <p><app:primaryButton url="/contacts/add?personId=${person.personId}" text="Add contact" icon="plus"/></p>
 </section>

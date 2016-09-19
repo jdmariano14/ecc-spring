@@ -18,7 +18,7 @@
       <props>
         <prop key="hibernate.hikari.dataSource.serverName">localhost</prop>
         <prop key="hibernate.hikari.dataSource.portNumber">5432</prop>
-        <prop key="hibernate.hikari.dataSource.databaseName">ecc-hibernate</prop>
+        <prop key="hibernate.hikari.dataSource.databaseName">ecc</prop>
         <prop key="hibernate.hikari.dataSource.user">ecc</prop>
         <prop key="hibernate.hikari.dataSource.password">ex1stgl0bal</prop>
       </props>
