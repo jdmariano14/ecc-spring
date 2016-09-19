@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -32,13 +31,6 @@ public class ContactDataService
 
   public void setContactDao(ContactCriteriaDao contactDao) {
     this.contactDao = contactDao;
-  }
-
-  @Override
-  public void setSession(Session session) {
-    super.setSession(session);
-    contactDao.setSession(session);
-    personDao.setSession(session);
   }
 
   @Override

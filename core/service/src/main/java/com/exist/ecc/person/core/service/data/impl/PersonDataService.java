@@ -10,7 +10,6 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -40,14 +39,6 @@ public class PersonDataService extends AbstractDataService<PersonDto, Long> {
 
   public void setRoleDao(RoleCriteriaDao roleDao) {
     this.roleDao = roleDao;
-  }
-
-  @Override
-  public void setSession(Session session) {
-    super.setSession(session);
-    personDao.setSession(session);
-    contactDao.setSession(session);
-    roleDao.setSession(session);
   }
 
   @Override

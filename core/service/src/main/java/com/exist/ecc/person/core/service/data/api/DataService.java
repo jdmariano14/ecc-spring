@@ -1,14 +1,10 @@
 package com.exist.ecc.person.core.service.data.api;
 
+import java.io.Serializable;
+
 import java.util.List;
 
-import org.hibernate.Session;
-
-public interface DataService<T, I> {
-
-  public abstract Session getSession();
-
-  public abstract void setSession(Session session);
+public interface DataService<T, I extends Serializable> {
   
   public abstract T get(I id);
   

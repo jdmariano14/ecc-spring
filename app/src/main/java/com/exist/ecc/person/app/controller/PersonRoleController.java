@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import org.hibernate.Session;
-
-import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dto.PersonDto;
 import com.exist.ecc.person.core.dto.RoleDto;
 import com.exist.ecc.person.core.service.data.impl.PersonDataService;
@@ -18,9 +15,6 @@ import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 public class PersonRoleController {
 
   @Autowired
-  private Sessions sessions;
-
-  @Autowired
   private PersonDataService personDataService;
 
   @Autowired
@@ -28,10 +22,6 @@ public class PersonRoleController {
 
   public String _new(Model model, Long personId) {
     String path = null;
-    
-    Session dbSession = sessions.getSession();
-    personDataService.setSession(null);
-    roleDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -43,8 +33,6 @@ public class PersonRoleController {
     } catch (Exception e) {
       e.printStackTrace();
       path = "redirect:/persons/" + personId;
-    } finally {
-      dbSession.close();
     }
 
     return path;
@@ -52,9 +40,6 @@ public class PersonRoleController {
 
   public String create(Long personId, Long roleId) {
     String path = null;
-    
-    Session dbSession = sessions.getSession();
-    personDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -63,7 +48,6 @@ public class PersonRoleController {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      dbSession.close();
       path = "redirect:/persons/" + personId;
     }
 
@@ -72,9 +56,6 @@ public class PersonRoleController {
 
   public String delete(Long personId, Long roleId) {
     String path = null;
-    
-    Session dbSession = sessions.getSession();
-    personDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -83,7 +64,6 @@ public class PersonRoleController {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      dbSession.close();
       path = "redirect:/persons/" + personId;
     }
 

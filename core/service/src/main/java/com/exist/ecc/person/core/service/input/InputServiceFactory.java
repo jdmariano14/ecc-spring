@@ -1,7 +1,5 @@
 package com.exist.ecc.person.core.service.input;
 
-import org.hibernate.Session;
-
 import com.exist.ecc.person.core.service.data.impl.ContactDataService;
 import com.exist.ecc.person.core.service.data.impl.PersonDataService;
 import com.exist.ecc.person.core.service.data.impl.RoleDataService;
@@ -26,7 +24,7 @@ public class InputServiceFactory {
     this.contactDataService = contactDataService;
   }
 
-  public InputService get(Session session, String type, String extension) {
+  public InputService get(String type, String extension) {
     InputService inputService = null;
 
     switch (extension.toLowerCase()) {

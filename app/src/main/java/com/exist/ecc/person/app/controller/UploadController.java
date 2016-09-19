@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.hibernate.Session;
-
-import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 import com.exist.ecc.person.core.service.input.InputServiceFactory;
 import com.exist.ecc.person.core.service.input.api.InputService;
@@ -28,9 +25,6 @@ import com.exist.ecc.person.core.service.input.api.InputService;
 @Controller
 @RequestMapping("/uploads")
 public class UploadController {
-
-  @Autowired
-  private Sessions sessions;
   
   @Autowired
   private InputServiceFactory inputServiceFactory;
@@ -47,20 +41,17 @@ public class UploadController {
   {
     String path = null;
 
-    Session dbSession = sessions.getSession();
-
     try {
       String filename = file.getOriginalFilename();
       String extension = filename.substring(filename.lastIndexOf(".") + 1);
 
       InputService inputService = 
-        inputServiceFactory.get(dbSession, uploadType, extension);
+        inputServiceFactory.get(uploadType, extension);
 
       inputService.execute(file.getInputStream(), clear);
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
-      dbSession.close();
       path = "redirect:/uploads?uploadType=" + uploadType;
     }
 

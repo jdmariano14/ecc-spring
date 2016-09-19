@@ -11,9 +11,7 @@
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop.xsd">
   
-  <!-- Hibernate config -->
-  <bean id="hibernateConfig" class="com.exist.ecc.person.infra.persistence.DefaultHibernateConfiguration"/>
-
+  <!-- Hibernate SessionFactory -->
   <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
     <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
     <property name="hibernateProperties">
@@ -46,10 +44,6 @@
   </tx:advice>
 
   <!-- Beans from core module -->
-  <bean id="sessions" class="com.exist.ecc.person.core.dao.Sessions">
-    <property name="sessionFactory" ref="sessionFactory"/>
-  </bean>
-
   <bean id="personDao" class="com.exist.ecc.person.core.dao.impl.PersonCriteriaDao">
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>

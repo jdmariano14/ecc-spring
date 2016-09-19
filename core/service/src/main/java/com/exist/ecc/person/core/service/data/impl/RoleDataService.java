@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -20,12 +19,6 @@ public class RoleDataService extends AbstractDataService<RoleDto, Long> {
 
   public void setRoleDao(RoleCriteriaDao roleDao) {
     this.roleDao = roleDao;
-  }
-
-  @Override
-  public void setSession(Session session) {
-    super.setSession(session);
-    roleDao.setSession(session);
   }
 
   @Override

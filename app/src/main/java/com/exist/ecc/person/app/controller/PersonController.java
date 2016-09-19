@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import org.hibernate.Session;
-
-import com.exist.ecc.person.core.dao.Sessions;
 import com.exist.ecc.person.core.dto.ContactDto;
 import com.exist.ecc.person.core.dto.PersonDto;
 import com.exist.ecc.person.core.dto.RoleDto;
@@ -40,9 +37,6 @@ import com.exist.ecc.person.util.DateUtil;
 @RequestMapping("/persons")
 public class PersonController {
   
-  @Autowired
-  private Sessions sessions;
-
   @Autowired
   private PersonDataService personDataService;
 
@@ -62,9 +56,6 @@ public class PersonController {
   public String index(Locale locale, Model model) {
     String path = null;
 
-    Session dbSession = sessions.getSession();
-    personDataService.setSession(null);
-
     try {
       List<PersonDto> personDtos = personDataService.getAll();
 
@@ -74,8 +65,6 @@ public class PersonController {
     } catch (Exception e) {
       e.printStackTrace();
       path = "redirect:/";
-    } finally {
-      dbSession.close();
     }
 
     return path;
@@ -84,11 +73,6 @@ public class PersonController {
   @RequestMapping(value = "/{personId}", method = RequestMethod.GET)
   public String show(Model model, @PathVariable Long personId) {
     String path = null;
-    
-    Session dbSession = sessions.getSession();
-    personDataService.setSession(null);
-    roleDataService.setSession(null);
-    contactDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -104,8 +88,6 @@ public class PersonController {
     } catch (Exception e) {
       e.printStackTrace();
       path = "redirect:/persons";
-    } finally {
-      dbSession.close();
     }
 
     return path;
@@ -125,9 +107,6 @@ public class PersonController {
     BindingResult result) 
   {
     String path = null;
-    
-    Session dbSession = sessions.getSession();
-    personDataService.setSession(null);
 
     for (ObjectError error : result.getAllErrors()) {
       System.out.println(error);
@@ -138,7 +117,6 @@ public class PersonController {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      dbSession.close();
       path = "redirect:/persons";
     }
 
@@ -148,9 +126,6 @@ public class PersonController {
   @RequestMapping(value = "/{personId}/edit", method = RequestMethod.GET)
   public String edit(Model model, @PathVariable Long personId) {
     String path = null;
-    
-    Session dbSession = sessions.getSession();
-    personDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -160,8 +135,6 @@ public class PersonController {
     } catch (Exception e) {
       e.printStackTrace();
       path = "redirect:/persons";
-    } finally {
-      dbSession.close();
     }
     
     return path;
@@ -172,9 +145,6 @@ public class PersonController {
     BindingResult result, @PathVariable Long personId)
   {
     String path = null;
-    
-    Session dbSession = sessions.getSession();    
-    personDataService.setSession(null);
 
     for (ObjectError error : result.getAllErrors()) {
       System.out.println(error);
@@ -185,7 +155,6 @@ public class PersonController {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      dbSession.close();
       path = "redirect:/persons/" + personId;
     }
 
@@ -195,9 +164,6 @@ public class PersonController {
   @RequestMapping(value = "/{personId}/delete", method = RequestMethod.GET)
   public String delete(@PathVariable Long personId) {
     String path = null;
-    
-    Session dbSession = sessions.getSession();
-    personDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -205,7 +171,6 @@ public class PersonController {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      dbSession.close();
       path = "redirect:/persons";
     }
 
@@ -308,9 +273,6 @@ public class PersonController {
   {
     String path = null;
 
-    Session dbSession = sessions.getSession();
-    personDataService.setSession(null);
-
     try {
       List<PersonDto> personDtos = query.get();
 
@@ -322,8 +284,6 @@ public class PersonController {
     } catch (Exception e) {
       e.printStackTrace();
       path = "redirect:/persons";
-    } finally {
-      dbSession.close();
     }
 
     return path;
@@ -370,6 +330,4 @@ public class PersonController {
 
     return queryProperties;
   }
-
-  //http://www.concretepage.com/spring/spring-mvc/spring-mvc-modelattribute-annotation-example
 }

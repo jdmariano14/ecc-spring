@@ -40,62 +40,29 @@ public abstract class AbstractDao<T, I extends Serializable>
     this.sessionFactory = sessionFactory;
   }
 
-  @Override
   public Session getSession() {
-    if (session == null) {
-      session = sessionFactory.getCurrentSession();
-    }
-    return session;
+    return sessionFactory.getCurrentSession();
   }
 
-  @Override
-  public void setSession(Session newSession) {
-    session = newSession;
-  }
-  
   public Class<T> getPersistentClass() {
     return persistentClass;
   }
 
   @Override
   public T get(I id) {
-    return extract(() ->
-      (T) getSession().load(getPersistentClass(), id));
+    return (T) getSession().load(getPersistentClass(), id);
   }
   
   @Override
   public void save(T entity) {
-    conduct(() -> getSession().saveOrUpdate(entity));
+    getSession().saveOrUpdate(entity);
   }
 
   @Override
   public void delete(T entity) {
-    conduct(() -> getSession().delete(entity));
+    getSession().delete(entity);
   }
   
-  @Override
-  public void flush() {
-    getSession().flush();
-  }
-
-  @Override
-  public void clear() {
-    getSession().clear();
-  }
-
-  @Override
-  public void conduct(Runnable action) {
-    action.run();
-    flush();
-  }
-
-  @Override
-  public <R> R extract(Supplier<R> supplier) {
-    R result = supplier.get();
-    flush();
-    return result;
-  }
-
   private Class<T> determinePersistentClass() {
     ParameterizedType parametrizedType =
       (ParameterizedType) getClass().getGenericSuperclass();
