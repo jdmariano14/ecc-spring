@@ -16,7 +16,7 @@ import com.exist.ecc.person.core.service.data.impl.RoleDataService;
 
 @Controller
 @RequestMapping("/roles")
-public class RoleController {
+public class RoleAnnotController {
   
   @Autowired
   private RoleDataService roleDataService;
