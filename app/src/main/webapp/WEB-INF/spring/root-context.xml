@@ -1,13 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop.xsd">
+  
+  <!-- Hibernate config -->
+  <bean id="hibernateConfig" class="com.exist.ecc.person.infra.persistence.DefaultHibernateConfiguration"/>
+
+  <bean id="sessionFactory" class="org.springframework.beans.factory.config.PropertyPathFactoryBean">
+    <property name="targetObject" ref="hibernateConfig"/>
+    <property name="propertyPath" value="sessionFactory"/>
+  </bean>
+
+  <!-- Transaction management -->
+  <bean id="txManager"
+        class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <aop:config proxy-target-class="true">
+    <aop:pointcut id="dataServiceOperation" expression="execution(* com.exist.ecc.person.core.service..*DataService.*(..))"/>
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="dataServiceOperation"/>
+  </aop:config>
+
+  <tx:advice id="txAdvice" transaction-manager="txManager">
+    <tx:attributes>
+      <tx:method name="get*" read-only="true"/>
+      <tx:method name="*"/>
+    </tx:attributes>
+  </tx:advice>
 
   <!-- Beans from core module -->
   <bean id="personDataService" class="com.exist.ecc.person.core.service.data.impl.PersonDataService"/>
   <bean id="roleDataService" class="com.exist.ecc.person.core.service.data.impl.RoleDataService"/>
   <bean id="contactDataService" class="com.exist.ecc.person.core.service.data.impl.ContactDataService"/>
 
-  <bean id="inputServiceFactory" class="com.exist.ecc.person.core.service.input.InputServiceFactory"/>
-  
+  <bean id="inputServiceFactory" class="com.exist.ecc.person.core.service.input.InputServiceFactory">
+    <property name="personDataService" ref="personDataService"/>
+  </bean>
 </beans>

@@ -30,9 +30,6 @@ import com.exist.ecc.person.core.service.input.api.InputService;
 public class UploadController {
 
   @Autowired
-  private RoleDataService roleDataService;
-
-  @Autowired
   private InputServiceFactory inputServiceFactory;
 
   @RequestMapping(value = "", method = RequestMethod.GET)

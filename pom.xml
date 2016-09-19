@@ -12,7 +12,7 @@
 
   <properties>
     <springVersion>4.1.6.RELEASE</springVersion>
-    <aspectjVersion>1.6.10</aspectjVersion>
+    <aspectjVersion>1.8.9</aspectjVersion>
     <slf4jVersion>1.7.21</slf4jVersion>
 
     <jettyVersion>9.4.0.M1</jettyVersion>
@@ -47,6 +47,11 @@
         <artifactId>spring-webmvc</artifactId>
         <version>${springVersion}</version>
       </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
+        <version>4.0.3.RELEASE</version>
+      </dependency>
 
       <!-- HikariCP -->
       <dependency>
@@ -59,6 +64,11 @@
       <dependency>
         <groupId>org.aspectj</groupId>
         <artifactId>aspectjrt</artifactId>
+        <version>${aspectjVersion}</version>
+      </dependency> 
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
         <version>${aspectjVersion}</version>
       </dependency> 
       

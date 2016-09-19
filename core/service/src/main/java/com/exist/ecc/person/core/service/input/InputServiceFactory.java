@@ -2,10 +2,17 @@ package com.exist.ecc.person.core.service.input;
 
 import org.hibernate.Session;
 
+import com.exist.ecc.person.core.service.data.impl.PersonDataService;
 import com.exist.ecc.person.core.service.input.api.InputService;
 import com.exist.ecc.person.core.service.input.impl.*;
 
 public class InputServiceFactory {
+
+  private PersonDataService personDataService;
+
+  public void setPersonDataService(PersonDataService personDataService) {
+    this.personDataService = personDataService;
+  }
 
   public InputService get(Session session, String type, String extension) {
     InputService inputService = null;
