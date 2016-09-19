@@ -41,7 +41,7 @@ public class ContactController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
+    personDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -66,7 +66,7 @@ public class ContactController {
     String path = null;
 
     Session dbSession = sessions.getSession();
-    contactDataService.setSession(dbSession);
+    contactDataService.setSession(null);
 
     try {
       contactDataService.save(contactDto);
@@ -87,7 +87,7 @@ public class ContactController {
     long personId = -1;
     
     Session dbSession = sessions.getSession();
-    contactDataService.setSession(dbSession);
+    contactDataService.setSession(null);
 
     try {
       ContactDto contactDto = contactDataService.get(contactId);
@@ -112,7 +112,7 @@ public class ContactController {
     long personId = -1;
 
     Session dbSession = sessions.getSession();
-    contactDataService.setSession(dbSession);
+    contactDataService.setSession(null);
 
     try {
       contactDataService.save(contactDto);
@@ -133,7 +133,7 @@ public class ContactController {
     long personId = -1;
 
     Session dbSession = sessions.getSession();
-    contactDataService.setSession(dbSession);
+    contactDataService.setSession(null);
 
     try {
       ContactDto contactDto = contactDataService.get(contactId);

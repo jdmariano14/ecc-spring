@@ -65,8 +65,7 @@ public abstract class AbstractDao<T, I extends Serializable>
   
   @Override
   public void save(T entity) {
-    //conduct(() -> getSession().saveOrUpdate(entity));
-    getSession().saveOrUpdate(entity);
+    conduct(() -> getSession().saveOrUpdate(entity));
   }
 
   @Override
@@ -86,40 +85,14 @@ public abstract class AbstractDao<T, I extends Serializable>
 
   @Override
   public void conduct(Runnable action) {
-    Transaction transaction = null;
-
-    try {
-      transaction = getSession().beginTransaction();
-      action.run();
-      flush();
-      transaction.commit();
-    } catch (Exception e) {
-      if (transaction != null) {
-        transaction.rollback();
-      }
-
-      throw new RuntimeException(e);
-    }
+    action.run();
+    flush();
   }
 
   @Override
   public <R> R extract(Supplier<R> supplier) {
-    R result = null;
-    Transaction transaction = null;
-
-    try {
-      transaction = getSession().beginTransaction();
-      result = supplier.get();
-      flush();
-      transaction.commit();
-    } catch (Exception e) {
-      if (transaction != null) {
-        transaction.rollback();
-      }
-
-      throw new RuntimeException(e);
-    }
-
+    R result = supplier.get();
+    flush();
     return result;
   }
 

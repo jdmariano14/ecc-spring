@@ -14,9 +14,17 @@
   <!-- Hibernate config -->
   <bean id="hibernateConfig" class="com.exist.ecc.person.infra.persistence.DefaultHibernateConfiguration"/>
 
-  <bean id="sessionFactory" class="org.springframework.beans.factory.config.PropertyPathFactoryBean">
-    <property name="targetObject" ref="hibernateConfig"/>
-    <property name="propertyPath" value="sessionFactory"/>
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.hikari.dataSource.serverName">localhost</prop>
+        <prop key="hibernate.hikari.dataSource.portNumber">5432</prop>
+        <prop key="hibernate.hikari.dataSource.databaseName">ecc-hibernate</prop>
+        <prop key="hibernate.hikari.dataSource.user">ecc</prop>
+        <prop key="hibernate.hikari.dataSource.password">ex1stgl0bal</prop>
+      </props>
+    </property>
   </bean>
 
   <!-- Transaction management -->
@@ -33,7 +41,7 @@
   <tx:advice id="txAdvice" transaction-manager="txManager">
     <tx:attributes>
       <tx:method name="get*" read-only="true"/>
-      <tx:method name="*" read-only="true" propagation="REQUIRED"/>
+      <tx:method name="*"/>
     </tx:attributes>
   </tx:advice>
 

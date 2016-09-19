@@ -63,7 +63,7 @@ public class PersonController {
     String path = null;
 
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
+    personDataService.setSession(null);
 
     try {
       List<PersonDto> personDtos = personDataService.getAll();
@@ -86,9 +86,9 @@ public class PersonController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
-    roleDataService.setSession(dbSession);
-    contactDataService.setSession(dbSession);
+    personDataService.setSession(null);
+    roleDataService.setSession(null);
+    contactDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -127,7 +127,7 @@ public class PersonController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
+    personDataService.setSession(null);
 
     for (ObjectError error : result.getAllErrors()) {
       System.out.println(error);
@@ -150,7 +150,7 @@ public class PersonController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
+    personDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -174,7 +174,7 @@ public class PersonController {
     String path = null;
     
     Session dbSession = sessions.getSession();    
-    personDataService.setSession(dbSession);
+    personDataService.setSession(null);
 
     for (ObjectError error : result.getAllErrors()) {
       System.out.println(error);
@@ -197,7 +197,7 @@ public class PersonController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
+    personDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -309,7 +309,7 @@ public class PersonController {
     String path = null;
 
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
+    personDataService.setSession(null);
 
     try {
       List<PersonDto> personDtos = query.get();

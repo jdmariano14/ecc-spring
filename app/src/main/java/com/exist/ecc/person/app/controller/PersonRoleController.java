@@ -30,8 +30,8 @@ public class PersonRoleController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
-    roleDataService.setSession(dbSession);
+    personDataService.setSession(null);
+    roleDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -54,7 +54,7 @@ public class PersonRoleController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
+    personDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);
@@ -74,7 +74,7 @@ public class PersonRoleController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    personDataService.setSession(dbSession);
+    personDataService.setSession(null);
 
     try {
       PersonDto personDto = personDataService.get(personId);

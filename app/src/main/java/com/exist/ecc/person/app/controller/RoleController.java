@@ -32,7 +32,7 @@ public class RoleController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    roleDataService.setSession(dbSession);
+    roleDataService.setSession(null);
 
     try {
       List<RoleDto> roleDtos = roleDataService.getAll();
@@ -58,7 +58,7 @@ public class RoleController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    roleDataService.setSession(dbSession);
+    roleDataService.setSession(null);
 
     try {
       roleDataService.save(roleDto);
@@ -77,7 +77,7 @@ public class RoleController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    roleDataService.setSession(dbSession);
+    roleDataService.setSession(null);
 
     try {
       RoleDto role = roleDataService.get(roleId);
@@ -98,7 +98,7 @@ public class RoleController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    roleDataService.setSession(dbSession);
+    roleDataService.setSession(null);
 
     try {
       roleDataService.save(roleDto);
@@ -117,7 +117,7 @@ public class RoleController {
     String path = null;
     
     Session dbSession = sessions.getSession();
-    roleDataService.setSession(dbSession);
+    roleDataService.setSession(null);
 
     try {
       RoleDto roleDto = roleDataService.get(roleId);
